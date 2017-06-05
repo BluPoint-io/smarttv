@@ -1,0 +1,8 @@
+node_modules
+coverage
+lib
+*.log
+.DS_Store
+lg
+folder
+.idea

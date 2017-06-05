@@ -1,0 +1,42 @@
+import Device from '../device';
+import Logger from '../../service/logger';
+
+/**
+ * Device class for Web development environments like Chrome, Firefox, Opera
+ *
+ * @extends Device
+ */
+class DeviceWeb extends Device {
+  constructor(config) {
+    super();
+    this.initEvents();
+    this.initPlayerClass();
+    Logger.addLog('Device_Arcelik', 'info', 'Arcelik Device Initialized');
+    this.Player.createVideoElement = this.createVideoElement;
+    this.Config = Object.assign(this.Config, config); // Merges default config with user config
+  }
+
+  /**
+   * Abstract Player createVideoElement function.
+   *
+   * @abstract
+   */
+  createVideoElement() {
+    console.log(this.Config);
+    this.videoElement = document.createElement('video');
+    this.videoElement.style.position = 'absolute';
+    this.videoElement.setAttribute('width', this.Config.width);
+    this.videoElement.setAttribute('height', this.Config.height);
+    this.videoElement.setAttribute('id', this.Config.videoPlayerId);
+    this.videoElement.setAttribute('data', '');
+    this.videoElement.setAttribute('class', 'player');
+    document.body.appendChild(this.videoElement);
+    this.setPlayerInfo();
+    this.registerVideoEvents();
+    Logger.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
+    this.initAudioClass();
+    return null;
+  }
+}
+
+export default DeviceWeb;

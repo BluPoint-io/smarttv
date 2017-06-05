@@ -1,69 +1,52 @@
 {
-  "name": "smarttv-core",
-  "version": "1.0.0",
-  "description": "DTV SmartTV Core Modules",
-  "license": "MIT",
-  "repository": "serdaraglamis/smarttv-core",
-  "main": "index.js",
+  "name": "blupoint-smarttv",
+  "version": "0.0.1",
+  "description": "SmartTV Framework",
+  "main": "dist/blupoint-smarttv.min.js",
   "author": {
     "name": "Serdar AGLAMIS",
-    "email": "serdaraglamis@gmail.com",
-    "url": "github.com/serdaraglamis"
+    "email": "serdaraglamis@gmail.com"
   },
-  "engines": {
-    "node": ">=6"
-  },
-  "files": [
-    "dist",
-    "index.js"
-  ],
+  "license": "MIT",
   "scripts": {
-    "test": "jest",
-    "coverage": "npm test -- --coverage",
-    "postcoverage": "opn coverage/lcov-report/index.html",
-    "lint": "eslint src test",
-    "flow": "flow check",
-    "docs": "documentation readme src --section=API",
-    "clean": "rimraf dist",
-    "prebuild": "npm run docs && npm run clean",
-    "build": "babel src -d dist",
-    "watch": "npm-watch",
-    "patch": "npm version patch && npm publish",
-    "minor": "npm version minor && npm publish",
-    "major": "npm version major && npm publish",
-    "prepublish": "npm run lint && npm test && npm run build",
-    "postpublish": "git push origin master --follow-tags"
+    "build": "webpack --mode=build",
+    "dev": "webpack --progress --colors --watch --mode=dev",
+    "test": "karma start karma.conf.js --single-run",
+    "cover": "open coverage/lcov-report/index.html",
+    "eslint": "eslint src --ext .js",
+    "eslint:fix": "eslint src .js --fix",
+    "eslint:test": "eslint -c test/.eslintrc test --ext .js",
+    "prepublish": "npm run build"
   },
-  "watch": {
-    "test": "{src,test}/*.js",
-    "lint": "{src,test}/*.js",
-    "build": "src"
-  },
-  "jest": {
-    "testRegex": "/test/.*",
-    "testEnvironment": "node"
-  },
-  "keywords": [
-    "smarttv-core"
-  ],
-  "dependencies": {},
   "devDependencies": {
-    "babel-cli": "^6.18.0",
-    "babel-eslint": "^7.1.1",
-    "babel-jest": "^19.0.0",
-    "babel-plugin-transform-flow-strip-types": "^6.21.0",
-    "babel-preset-env": "^1.1.8",
-    "babel-preset-stage-2": "^6.18.0",
-    "documentation": "4.0.0-beta.18",
-    "eslint": "^3.14.0",
-    "eslint-config-airbnb-base": "^11.0.1",
-    "eslint-plugin-flowtype": "^2.29.2",
-    "eslint-plugin-flowtype-errors": "^3.0.0",
+    "babel-core": "6.17.0",
+    "babel-eslint": "7.0.0",
+    "babel-loader": "6.2.5",
+    "babel-plugin-add-module-exports": "0.2.1",
+    "babel-preset-es2015": "6.16.0",
+    "es-module-loader": "^2.1.5",
+    "eslint": "^3.13.0",
+    "eslint-config-airbnb": "^14.0.0",
+    "eslint-loader": "1.5.0",
     "eslint-plugin-import": "^2.2.0",
-    "flow-bin": "^0.44.0",
-    "jest-cli": "^19.0.1",
-    "npm-watch": "^0.1.7",
-    "opn-cli": "^3.1.0",
-    "rimraf": "^2.6.1"
+    "eslint-plugin-jsx-a11y": "^3.0.2",
+    "eslint-plugin-mocha": "^4.7.0",
+    "eslint-plugin-react": "^6.9.0",
+    "isparta": "^4.0.0",
+    "isparta-loader": "^2.0.0",
+    "karma": "^1.3.0",
+    "karma-babel-preprocessor": "^6.0.1",
+    "karma-coverage": "^1.1.1",
+    "karma-mocha": "^1.1.1",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-spec-reporter": "0.0.26",
+    "karma-webpack": "^1.8.0",
+    "mocha": "3.1.2",
+    "phantomjs-prebuilt": "^2.1.3",
+    "pre-commit": "^1.1.3",
+    "webpack": "1.13.2",
+    "webpack-merge": "^0.14.1",
+    "yargs": "6.0.0"
   }
 }
