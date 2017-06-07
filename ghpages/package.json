@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "preview": "harp server src",
+    "compile": "npm run clean && harp compile src ../docs",
+    "publish": "npm run compile && bin/publish",
+    "clean": "rm -rf ../docs"
+  },
+  "dependencies": {
+    "harp": "^0.23.0",
+    "gh-pages": "^0.12.0"
+  }
+}

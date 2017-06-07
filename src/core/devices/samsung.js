@@ -1,12 +1,15 @@
 import Device from '../device';
 import Logger from '../../service/logger';
 
-/**
- * Device class for Samsung Orsay devices
- *
- * @extends Device
- */
 class DeviceSamsung extends Device {
+
+  /**
+   * This is extendable class for Samsung Orsay devices
+   *
+   * @class Device_Samsung
+   * @extends Device
+   * @constructor
+   */
   constructor() {
     super();
     Logger.addLog('Device_Samsung', 'info', 'Samsung device is in progress');

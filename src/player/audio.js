@@ -1,8 +1,16 @@
 import Logger from '../service/logger';
 
-/** Class representing Audio */
 class Audio {
 
+  /**
+   * This class is for Audio operations. It works with Player
+   *
+   * @class Audio
+   * @constructor
+   */
+  constructor() {
+    Logger.addLog('Audio', 'create', 'Audio class initialized');
+  }
   /**
    * Changes audio tracks with given order. It enables given index and disables other audio elements
    * Based on HTML5 video element audioTracks

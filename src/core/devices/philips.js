@@ -1,12 +1,14 @@
 import Device from '../device';
 import Logger from '../../service/logger';
 
-/**
- * Device class for Philips devices
- *
- * @extends Device
- */
 class DevicePhilips extends Device {
+  /**
+   * This is extendable class for Philips devices
+   *
+   * @class Device_Philips
+   * @extends Device
+   * @constructor
+   */
   constructor() {
     super();
     Logger.addLog('Device_Philips', 'info', 'Philips device is in progress');

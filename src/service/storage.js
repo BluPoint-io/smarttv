@@ -21,5 +21,8 @@ const plugins = [
   require('./storage/plugins/defaults'),
   require('./storage/plugins/update')
 ];
-
+/**
+ * @exports Storage
+ * @export Storage
+ */
 export default engine.createStore(storages, plugins);

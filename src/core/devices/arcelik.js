@@ -1,12 +1,14 @@
 import Device from '../device';
 import Logger from '../../service/logger';
 
-/**
- * Device class for Arcelik group devices (includes Beko, Grundig etc)
- *
- * @extends Device
- */
 class DeviceArcelik extends Device {
+  /**
+   * This is extendable class for Arcelik group devices (includes Beko, Grundig etc)
+   *
+   * @class Device_Arcelik
+   * @extends Device
+   * @constructor
+   */
   constructor(config) {
     super();
     this.initEvents();

@@ -141,10 +141,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	/** Class representing Device */
 	var Device = function () {
 	  /**
-	   * Initializes Device class.
+	   * Class representing Device
+	   *
+	   * @class Device
+	   * @constructor
 	   */
 	  function Device() {
 	    _classCallCheck(this, Device);
@@ -168,10 +170,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * This function have to be worked before all operations.
 	   * Because other classes and objects are includes device specific blocks
 	   *
+	   * @method setCurrentDevice
+	   * @for Device
 	   * @param {Array} [platforms] Platforms list to compare userAgent.
 	   * @return {Object} It returns currentDevice and sets it to Device class
 	   */
-	
 	
 	  _createClass(Device, [{
 	    key: 'setCurrentDevice',
@@ -188,6 +191,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Events are based on class. So it have to be constructed.
 	     *
+	     * @method initEvents
+	     * @for Device
 	     * @return {Object} It returns Events class
 	     */
 	
@@ -204,6 +209,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * It uses currentDevice and config info (extended during device extending)
 	     * It pass Events to Player class to use same initialized class
 	     *
+	     * @method initPlayerClass
+	     * @for Device
 	     * @return {Object} It returns Events class
 	     */
 	
@@ -416,13 +423,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	/** Class representing Player */
 	var Player = function () {
+	
 	  /**
-	   * Create Player
+	   * This is for Player operations. It depends to Device. Some methods are abstracted by Devices
+	   *
 	   * @param {Object} currentDevice - Current device object
 	   * @param {Object} events - Events class inheritance
 	   * @param {Object} config - Config object
+	   *
+	   * @class Player
+	   * @constructor
 	   */
 	  function Player(currentDevice, events, config) {
 	    _classCallCheck(this, Player);
@@ -1262,22 +1273,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	/** Class representing Audio */
 	var Audio = function () {
+	
+	  /**
+	   * This class is for Audio operations. It works with Player
+	   *
+	   * @class Audio
+	   * @constructor
+	   */
 	  function Audio() {
 	    _classCallCheck(this, Audio);
+	
+	    _logger2.default.addLog('Audio', 'create', 'Audio class initialized');
 	  }
+	  /**
+	   * Changes audio tracks with given order. It enables given index and disables other audio elements
+	   * Based on HTML5 video element audioTracks
+	   *
+	   * @param {Number} order - Language order to change
+	   */
+	
 	
 	  _createClass(Audio, [{
 	    key: 'changeAudioWithOrder',
-	
-	
-	    /**
-	     * Changes audio tracks with given order. It enables given index and disables other audio elements
-	     * Based on HTML5 video element audioTracks
-	     *
-	     * @param {Number} order - Language order to change
-	     */
 	    value: function changeAudioWithOrder(order) {
 	      var _this = this;
 	      var audioTracks = _this.videoElement.audioTracks;
@@ -1340,6 +1358,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Class representing Logger
+	 * @class Logger
 	 */
 	var Logger = function () {
 	  function Logger() {
@@ -1358,6 +1377,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param type - Type of log (info, error, create, progress, default)
 	     * @param message - Message of log
 	     * @param variable - Variable of log it can be Array, Object, string etc
+	     *
+	     * @method addLog
+	     * @static
+	     * @for Logger
 	     */
 	    value: function addLog(from, type, message, variable) {
 	      switch (type) {
@@ -1667,13 +1690,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  return -1;
 	};
-	
-	/**
-	 * Class for managing events.
-	 * Can be extended to provide event functionality in other classes.
-	 *
-	 * @class Events Manages event registering and emitting.
-	 */
 	
 	var Events = function () {
 	  /**
@@ -2213,7 +2229,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @type {[*]} - Require plugins
 	 */
 	var plugins = [__webpack_require__(16), __webpack_require__(17)];
-	
+	/**
+	 * @exports Storage
+	 * @export Storage
+	 */
 	exports.default = _storeEngine2.default.createStore(storages, plugins);
 	module.exports = exports['default'];
 
@@ -3155,14 +3174,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	/**
-	 * Device class for Arcelik group devices (includes Beko, Grundig etc)
-	 *
-	 * @extends Device
-	 */
 	var DeviceArcelik = function (_Device) {
 	  _inherits(DeviceArcelik, _Device);
 	
+	  /**
+	   * This is extendable class for Arcelik group devices (includes Beko, Grundig etc)
+	   *
+	   * @class Device_Arcelik
+	   * @extends Device
+	   * @constructor
+	   */
 	  function DeviceArcelik(config) {
 	    _classCallCheck(this, DeviceArcelik);
 	
@@ -3238,14 +3259,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	/**
-	 * Device class for LG NetCast Devices
-	 *
-	 * @extends Device
-	 */
 	var DeviceLG = function (_Device) {
 	  _inherits(DeviceLG, _Device);
 	
+	  /**
+	   * This is extendable class for LG NetCast devices
+	   *
+	   * @class Device_LG
+	   * @extends Device
+	   * @constructor
+	   */
 	  function DeviceLG() {
 	    _classCallCheck(this, DeviceLG);
 	
@@ -3287,14 +3310,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	/**
-	 * Device class for Philips devices
-	 *
-	 * @extends Device
-	 */
 	var DevicePhilips = function (_Device) {
 	  _inherits(DevicePhilips, _Device);
 	
+	  /**
+	   * This is extendable class for Philips devices
+	   *
+	   * @class Device_Philips
+	   * @extends Device
+	   * @constructor
+	   */
 	  function DevicePhilips() {
 	    _classCallCheck(this, DevicePhilips);
 	
@@ -3336,14 +3361,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	/**
-	 * Device class for Samsung Orsay devices
-	 *
-	 * @extends Device
-	 */
 	var DeviceSamsung = function (_Device) {
 	  _inherits(DeviceSamsung, _Device);
 	
+	  /**
+	   * This is extendable class for Samsung Orsay devices
+	   *
+	   * @class Device_Samsung
+	   * @extends Device
+	   * @constructor
+	   */
 	  function DeviceSamsung() {
 	    _classCallCheck(this, DeviceSamsung);
 	
@@ -3385,14 +3412,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	/**
-	 * Device class for Samsung Tizen devices
-	 *
-	 * @extends Device
-	 */
 	var DeviceTizen = function (_Device) {
 	  _inherits(DeviceTizen, _Device);
 	
+	  /**
+	   * This is extendable class for Samsung Tizen devices
+	   *
+	   * @class Device_Tizen
+	   * @extends Device
+	   * @constructor
+	   */
 	  function DeviceTizen(config) {
 	    _classCallCheck(this, DeviceTizen);
 	
@@ -3440,14 +3469,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	/**
-	 * Device class for Vestel group devices
-	 *
-	 * @extends Device
-	 */
 	var DeviceVestel = function (_Device) {
 	  _inherits(DeviceVestel, _Device);
 	
+	  /**
+	   * This is extendable class for Vestel group devices
+	   *
+	   * @class Device_Vestel
+	   * @extends Device
+	   * @constructor
+	   */
 	  function DeviceVestel(config) {
 	    _classCallCheck(this, DeviceVestel);
 	
@@ -3523,14 +3554,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	/**
-	 * Device class for Web development environments like Chrome, Firefox, Opera
-	 *
-	 * @extends Device
-	 */
 	var DeviceWeb = function (_Device) {
 	  _inherits(DeviceWeb, _Device);
 	
+	  /**
+	   * This is extendable class for Web Development Environment
+	   *
+	   * @class Device_Web
+	   * @extends Device
+	   * @constructor
+	   */
 	  function DeviceWeb(config) {
 	    _classCallCheck(this, DeviceWeb);
 	
@@ -3607,15 +3640,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var WebOsLibrary = __webpack_require__(27);
 	
-	/**
-	 * Device class for LG WebOs devices
-	 *
-	 * @extends Device
-	 */
-	
 	var DeviceWebOs = function (_Device) {
 	  _inherits(DeviceWebOs, _Device);
 	
+	  /**
+	   * This is extendable class for LG WebOs devices
+	   *
+	   * @class Device_WebOs
+	   * @extends Device
+	   * @constructor
+	   */
 	  function DeviceWebOs(config) {
 	    _classCallCheck(this, DeviceWebOs);
 	

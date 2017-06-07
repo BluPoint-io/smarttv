@@ -47,12 +47,7 @@ const indexOfListener = (listeners, listener) => {
   return -1;
 };
 
-/**
- * Class for managing events.
- * Can be extended to provide event functionality in other classes.
- *
- * @class Events Manages event registering and emitting.
- */
+
 class Events {
   /**
    *

@@ -2,12 +2,15 @@ import Device from '../device';
 import Logger from '../../service/logger';
 const WebOsLibrary = require('../../helpers/WebOS.js');
 
-/**
- * Device class for LG WebOs devices
- *
- * @extends Device
- */
 class DeviceWebOs extends Device {
+
+  /**
+   * This is extendable class for LG WebOs devices
+   *
+   * @class Device_WebOs
+   * @extends Device
+   * @constructor
+   */
   constructor(config) {
     super();
     this.initEvents();

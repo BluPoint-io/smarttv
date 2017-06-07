@@ -4,10 +4,12 @@ import Logger from '../service/logger';
 import Events from '../service/events';
 import Config from '../statics/config';
 
-/** Class representing Device */
 class Device {
   /**
-   * Initializes Device class.
+   * Class representing Device
+   *
+   * @class Device
+   * @constructor
    */
   constructor() {
     this.userAgent = navigator.userAgent;
@@ -29,9 +31,12 @@ class Device {
    * This function have to be worked before all operations.
    * Because other classes and objects are includes device specific blocks
    *
+   * @method setCurrentDevice
+   * @for Device
    * @param {Array} [platforms] Platforms list to compare userAgent.
    * @return {Object} It returns currentDevice and sets it to Device class
    */
+
   setCurrentDevice(platforms) {
     for (let platform = 0; platform < platforms.length; platform += 1) {
       if (this.userAgent.indexOf(platforms[platform].agentIndex) >= 0) {
@@ -45,6 +50,8 @@ class Device {
   /**
    * Events are based on class. So it have to be constructed.
    *
+   * @method initEvents
+   * @for Device
    * @return {Object} It returns Events class
    */
   initEvents() {
@@ -58,6 +65,8 @@ class Device {
    * It uses currentDevice and config info (extended during device extending)
    * It pass Events to Player class to use same initialized class
    *
+   * @method initPlayerClass
+   * @for Device
    * @return {Object} It returns Events class
    */
   initPlayerClass() {

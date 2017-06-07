@@ -1,5 +1,6 @@
 /**
  * Class representing Logger
+ * @class Logger
  */
 class Logger {
 
@@ -11,6 +12,10 @@ class Logger {
    * @param type - Type of log (info, error, create, progress, default)
    * @param message - Message of log
    * @param variable - Variable of log it can be Array, Object, string etc
+   *
+   * @method addLog
+   * @static
+   * @for Logger
    */
   static addLog(from, type, message, variable) {
     switch (type) {

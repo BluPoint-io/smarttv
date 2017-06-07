@@ -1,12 +1,15 @@
 import Device from '../device';
 import Logger from '../../service/logger';
 
-/**
- * Device class for Vestel group devices
- *
- * @extends Device
- */
 class DeviceVestel extends Device {
+
+  /**
+   * This is extendable class for Vestel group devices
+   *
+   * @class Device_Vestel
+   * @extends Device
+   * @constructor
+   */
   constructor(config) {
     super();
     this.initEvents();

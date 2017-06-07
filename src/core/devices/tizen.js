@@ -1,12 +1,14 @@
 import Device from '../device';
 import Logger from '../../service/logger';
 
-/**
- * Device class for Samsung Tizen devices
- *
- * @extends Device
- */
 class DeviceTizen extends Device {
+  /**
+   * This is extendable class for Samsung Tizen devices
+   *
+   * @class Device_Tizen
+   * @extends Device
+   * @constructor
+   */
   constructor(config) {
     super();
     this.initEvents();

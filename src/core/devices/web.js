@@ -1,12 +1,14 @@
 import Device from '../device';
 import Logger from '../../service/logger';
 
-/**
- * Device class for Web development environments like Chrome, Firefox, Opera
- *
- * @extends Device
- */
 class DeviceWeb extends Device {
+  /**
+   * This is extendable class for Web Development Environment
+   *
+   * @class Device_Web
+   * @extends Device
+   * @constructor
+   */
   constructor(config) {
     super();
     this.initEvents();

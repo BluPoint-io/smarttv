@@ -3,13 +3,17 @@ import Audio from './audio';
 import Logger from '../service/logger';
 import Vast from '../service/vast';
 
-/** Class representing Player */
 class Player {
+
   /**
-   * Create Player
+   * This is for Player operations. It depends to Device. Some methods are abstracted by Devices
+   *
    * @param {Object} currentDevice - Current device object
    * @param {Object} events - Events class inheritance
    * @param {Object} config - Config object
+   *
+   * @class Player
+   * @constructor
    */
   constructor(currentDevice, events, config) {
     this.currentDevice = currentDevice;
