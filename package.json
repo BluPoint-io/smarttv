@@ -1,6 +1,6 @@
 {
   "name": "blupoint-smarttv",
-  "version": "0.0.1-alpha.2",
+  "version": "0.1.0",
   "description": "SmartTV Framework",
   "main": "dist/blupoint-smarttv.min.js",
   "author": {

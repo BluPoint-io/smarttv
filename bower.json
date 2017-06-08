@@ -1,0 +1,42 @@
+{
+  "name": "blupoint-smarttv",
+  "description": "SmartTV Framework",
+  "main": "dist/blupoint-smarttv.min.js",
+  "authors": [
+    "Serdar AGLAMIS <serdaraglamis@gmail.com>",
+    "Irfan SIMSAR <isimsar@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "smarttv",
+    "smart",
+    "tv",
+    "samsung",
+    "webos",
+    "tizen",
+    "smart",
+    "apps"
+  ],
+  "homepage": "https://dogantv.github.io/smarttv/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "src",
+    "test",
+    ".babelrc",
+    ".editorconfig",
+    "eslintingore",
+    ".eslintrc",
+    "circle.yml",
+    "karma.conf.js",
+    "webpack.config.js",
+    "ghpages",
+    "lg",
+    "folder",
+    "docs",
+    "dist/.idea"
+  ]
+}
