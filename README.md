@@ -1,19 +1,5 @@
-# smarttv-core
+# blupoint-smarttv
 
-> SmartTV
-
-### Development Setup
-
-```bash
-# install dependencies
-$ npm install
-
-# dev mode
-$ npm run dev
-
-# test
-$ npm run test
-
-# build
-$ npm run build
-```
+Framework is still under development. 
+Documentations and code samples will be available in next days
+follow https://dogantv.github.io/smarttv/

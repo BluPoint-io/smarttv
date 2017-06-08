@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/player/player.js</title>
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="../assets/vendor/yui-min.js"></script>
+</head>
+<body>
+
+<div id="doc">
+    <header class="main-header">
+        <div class="content">
+            <div class="project-title">
+            </div>
+            <ul class="jump-links">
+                <li><a href="#index" class="index-jump-link">index</a></li>
+                <li><a href="#top" class="top-jump-link">top</a></li>
+            </ul>
+        </div>
+    </header>
+    <div id="bd" class="main-body">
+
+        <div id="docs-sidebar" class="sidebar apidocs">
+            <div id="api-list">
+                <div id="api-tabview" class="tabview">
+                    <ul class="tabs">
+                        <li><a href="#api-classes">Classes</a></li>
+                        <li><a href="#api-modules">Modules</a></li>
+                    </ul>
+            
+                    <div id="api-tabview-filter">
+                        <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                    </div>
+            
+                    <div id="api-tabview-panel">
+                        <ul id="api-classes" class="apis classes">
+                            <li><a class="type" href="../classes/Audio.html">Audio</a></li>
+                            <li><a class="type" href="../classes/Device.html">Device</a></li>
+                            <li><a class="type" href="../classes/Device_Arcelik.html">Device_Arcelik</a></li>
+                            <li><a class="type" href="../classes/Device_LG.html">Device_LG</a></li>
+                            <li><a class="type" href="../classes/Device_Philips.html">Device_Philips</a></li>
+                            <li><a class="type" href="../classes/Device_Samsung.html">Device_Samsung</a></li>
+                            <li><a class="type" href="../classes/Device_Tizen.html">Device_Tizen</a></li>
+                            <li><a class="type" href="../classes/Device_Vestel.html">Device_Vestel</a></li>
+                            <li><a class="type" href="../classes/Device_Web.html">Device_Web</a></li>
+                            <li><a class="type" href="../classes/Device_WebOs.html">Device_WebOs</a></li>
+                            <li><a class="type" href="../classes/Events.html">Events</a></li>
+                            <li><a class="type" href="../classes/Logger.html">Logger</a></li>
+                            <li><a class="type" href="../classes/Player.html">Player</a></li>
+                            <li><a class="type" href="../classes/Storage.html">Storage</a></li>
+                            <li><a class="type" href="../classes/Subtitle.html">Subtitle</a></li>
+                            <li><a class="type" href="../classes/Xhr.html">Xhr</a></li>
+                        </ul>
+            
+                        <ul id="api-modules" class="apis modules">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="docs-main" class="apidocs">
+            <div class="content container">
+                <h1 class="file-heading">File: src/player/player.js</h1>
+                
+                <div class="file">
+                    <pre class="code prettyprint linenums">
+                import Audio from &#x27;./audio&#x27;;
+                // import Subtitle from &#x27;./subtitle&#x27;;
+                import Logger from &#x27;../service/logger&#x27;;
+                import Vast from &#x27;../service/vast&#x27;;
+                
+                class Player {
+                
+                  /**
+                   * This is for Player operations. It depends to Device. Some methods are abstracted by Devices
+                   *
+                   * @param {Object} currentDevice - Current device object
+                   * @param {Object} events - Events class inheritance
+                   * @param {Object} config - Config object
+                   *
+                   * @class Player
+                   * @constructor
+                   */
+                  constructor(currentDevice, events, config) {
+                    this.currentDevice = currentDevice;
+                    this.Events = events;
+                    Logger.addLog(&#x27;Player&#x27;, &#x27;create&#x27;, &#x27;Player Class Initialized&#x27;);
+                    this.Config = config;
+                  }
+                
+                  /**
+                   * Creates Video element. It creates a HTML5 video element with config videoPlayerId
+                   * Then you can reach this video element with this.videoElement
+                   * It appends this video element to body. You have to set it to a fixed position with css.
+                   * Most of Tv manufacturers runs its own video player and its position fixed to (0,0) cooridnates
+                   * Its important to consider your design
+                   *
+                   * @method createVideoElement
+                   * @for Player
+                   * @return null
+                   */
+                  createVideoElement() {
+                    if (this.videoElement) {
+                      this.deleteVideoElement();
+                    }
+                    this.videoElement = document.createElement(&#x27;video&#x27;);
+                    this.videoElement.style.position = &#x27;absolute&#x27;;
+                    this.videoElement.setAttribute(&#x27;class&#x27;, &#x27;player&#x27;);
+                    this.videoElement.setAttribute(&#x27;id&#x27;, &#x27;dtv-video&#x27;);
+                    document.body.appendChild(this.videoElement);
+                    this.registerVideoEvents();
+                    Logger.addLog(&#x27;Player&#x27;, &#x27;info&#x27;, &#x27;Player Element Created and Registered Video Events&#x27;);
+                    return null;
+                  }
+                
+                  /**
+                   * Sets this.playerInfo with initial values. This values usefull for later usages
+                   * For example Vast, device specific, DRM Type etc we are using this object
+                   *
+                   * @for Player
+                   * @method setPlayerInfo
+                   * @return {Object} this.playerInfo
+                   */
+                  setPlayerInfo() {
+                    this.playerInfo = {
+                      canPlay: false,
+                      canPlayThrough: false,
+                      playbackRate: 1,
+                      duration: null,
+                      currentState: null,
+                      dataLoaded: false,
+                      metaDataLoaded: false,
+                      isSeeking: false,
+                      isStalled: false,
+                      currentVolume: this.videoElement.volume,
+                      customData: null,
+                      drmType: null,
+                      drmOrganizer: null,
+                      src: null,
+                      adsEnabled: false,
+                      adsType: null
+                    };
+                    return this.playerInfo;
+                  }
+                
+                  /**
+                   * Removes videoElement from DOM.
+                   * Its recommended to call this function if you are consider to close video
+                   * TODO We have to check DRM inited if yes we have to detach DRM before removing
+                   *
+                   * @for Player
+                   * @method deleteVideoElement
+                   * @return {Boolean}
+                   */
+                  deleteVideoElement() {
+                    this.pause();
+                    document.body.removeChild(this.videoElement);
+                    this.videoElement = false;
+                    return true;
+                  }
+                
+                  /**
+                   * Adds video source to element.
+                   * If trying to play DRM video you have to send customData with video source
+                   * It sets this customData to player info so it can be accessible.
+                   * Checks content address if it includes manifest regex it will start DRM functions automatically
+                   * It catches DRM providers with currentDevice
+                   * You can send HLS, Live HLS and Microsoft SS (PlayReady) content
+                   * TODO DRM providers can be included in another function
+                   *
+                   * @param {String} src - Source url for video content
+                   * @param {String} customData - Custom Data
+                   *
+                   * @for Player
+                   * @method addVideoSource
+                   *
+                   */
+                  addVideoSource(src, customData) {
+                    this.playerInfo.customData = customData;
+                    this.playerInfo.src = src;
+                    const _this = this;
+                    if (src.match(/\/manifest/i)) {
+                      if (this.currentDevice.brandName === &#x27;webos&#x27;) {
+                        this.playerInfo.drmType = &#x27;playready&#x27;;
+                      } else {
+                        this.playerInfo.drmType = &#x27;playReady&#x27;;
+                      }
+                      switch (this.playerInfo.drmOrganizer) {
+                        case &#x27;OIPF&#x27;: // eslint-disable-line
+                          Logger.addLog(&#x27;Player&#x27;, &#x27;info&#x27;, &#x60;Found playReady Content &amp; drmType is ${this.playerInfo.drmType}&#x60;);
+                          this.createOIPFDrmAgent();
+                          const oipfMessage = &#x27;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&#x27; +
+                            &#x27;&lt;PlayReadyInitiator xmlns=&quot;http://schemas.microsoft.com/DRM/2007/03/protocols/&quot;&gt;&#x27; +
+                            &#x27;&lt;SetCustomData&gt;&lt;CustomData&gt;dummy&lt;/CustomData&gt;&lt;/SetCustomData&gt;&lt;/PlayReadyInitiator&gt;&#x27;;
+                          const mimeType = this.Config.playReady.mimeType;
+                          const DRMSystemID = this.Config.playReady.DRMSystemID;
+                          this.OIPFDrmObject.sendDRMMessage(mimeType, oipfMessage, DRMSystemID);
+                          this.videoElement.setAttribute(&#x27;src&#x27;, this.playerInfo.src);
+                          break;
+                        case &#x27;TIZEN&#x27;:
+                          console.log(&#x27;TIZEN&#x27;);
+                
+                          break;
+                        case &#x27;WEBOS&#x27;:
+                          this.setupWebOSDrm();
+                          this.Events.addListener(&#x27;DRM_WebOSReady&#x27;, () =&gt; {
+                            _this.sourceElement = document.createElement(&#x27;source&#x27;);
+                            _this.sourceElement.setAttribute(&#x27;src&#x27;, _this.playerInfo.src);
+                            _this.sourceElement.setAttribute(&#x27;type&#x27;, &#x60;application/vnd.ms-sstr+xml;mediaOption=${_this._WebOS.mediaOption}&#x60;);
+                            _this.videoElement.appendChild(_this.sourceElement);
+                            document.body.setAttribute(&#x27;onunload&#x27;, _this.unloadDrmClient);
+                          });
+                          break;
+                        default:
+                          console.log(&#x27;STANDART&#x27;);
+                      }
+                    } else {
+                      Logger.addLog(&#x27;Player&#x27;, &#x27;info&#x27;, &#x27;This is a DRM-Free Content&#x27;);
+                      // _this.sourceElement = document.createElement(&#x27;source&#x27;);
+                      // _this.sourceElement.setAttribute(&#x27;src&#x27;, _this.playerInfo.src);
+                      // _this.videoElement.appendChild(_this.sourceElement);
+                      this.videoElement.setAttribute(&#x27;src&#x27;, _this.playerInfo.src);
+                    }
+                  }
+                
+                  /**
+                   * Initialize ads with given source and type. So type is mandatory field to operate
+                   *
+                   * @param {String} type - Type of ads source &#x27;VMAP&#x27; or just &#x27;VAST&#x27;
+                   * @param url - Url of ads source VMAP or VAST Url
+                   *
+                   * @for Player
+                   * @method initAds
+                   * @return {*}
+                   */
+                  initAds(type, url) {
+                    const _this = this;
+                    _this.playerInfo.adsType = type;
+                    _this.playerInfo.adsEnabled = true;
+                    switch (type) {
+                      case &#x27;VMAP&#x27;: // eslint-disable-line
+                        const xhr = new window.XMLHttpRequest();
+                        xhr.open(&#x27;GET&#x27;, url);
+                        xhr.send();
+                        _this.Events.on(&#x27;vmapLoaded&#x27;, (vmapObject) =&gt; {
+                          _this.prepareVastFromVmap(vmapObject);
+                        });
+                        xhr.onreadystatechange = function() {
+                          if (xhr.readyState === 4) {
+                            // Parse VMAP
+                            Vast.parseVMAP(xhr.responseXML, _this.Events);
+                            Logger.addLog(&#x27;Player - ADS&#x27;, &#x27;info&#x27;, &#x27;VMAP Target Loaded Successfully&#x27;);
+                            _this.addAdsCaption();
+                          }
+                        };
+                        break;
+                      case &#x27;VAST&#x27;:
+                        console.log(&#x27;VAST&#x27;);
+                        break;
+                      default:
+                        return Logger.addLog(&#x27;Player - Ads&#x27;, &#x27;error&#x27;, &#x27;&#x27;);
+                    }
+                  }
+                
+                  /**
+                   * If ads type is VMAP and detected in initAds method it will call automatically this function
+                   *
+                   * @param {Object} vmapObject - Vmap object its response of VMAP XML
+                   *
+                   * @for Player
+                   * @method prepareVastFromVmap
+                   */
+                  prepareVastFromVmap(vmapObject) {
+                    // Create Wrapper Div
+                    this.wrapperDiv = document.createElement(&#x27;div&#x27;);
+                    this.wrapperDiv.className = &#x27;vastWrapper&#x27;;
+                    this.wrapperDiv.id = &#x60;vastWrapper_${this.Config.videoPlayerId}&#x60;;
+                    this.videoElement.parentNode.insertBefore(this.wrapperDiv, this.videoElement);
+                    this.wrapperDiv.appendChild(this.videoElement);
+                    this.vastElement = this.videoElement.cloneNode(true);
+                    this.vastElement.id = &#x27;vast-player&#x27;;
+                    this.vastElement.style.visibility = &#x27;hidden&#x27;;
+                    // this.vastElement.childNodes[0].src = &#x27;&#x27;;
+                    this.vastElement.src = &#x27;&#x27;;
+                    this.wrapperDiv.appendChild(this.vastElement);
+                    this.vastTrackElement = document.createElement(&#x27;img&#x27;);
+                    this.vastTrackElement.setAttribute(&#x27;src&#x27;, &#x27;deneme&#x27;);
+                    document.body.appendChild(this.vastTrackElement);
+                    this.vastReadyItems = [];
+                    this.adsInProgress = false;
+                    for (let i = 0; i &lt; vmapObject.length; i += 1) {
+                      this.vastReadyItems.push(this.readVastFile(vmapObject[i].url, this.Config.vastOptions));
+                    }
+                    for (let j = 0; j &lt; Vast.vastArray.length; j += 1) {
+                      if (Vast.vastArray[j].time === &#x27;end&#x27;) {
+                        Vast.vastArray[j].time = (Math.floor(this.videoElement.duration) - 1);
+                      }
+                    }
+                  }
+                
+                  /**
+                   * Reads Vast file and seperates its source and options (extensions, type etc)
+                   *
+                   * @param {String} vastUrl - URL address for Vast
+                   * @param {Object} options - It stands for this.config.vastOptions
+                   * @for Player
+                   * @method readVastFile
+                   * @return {{}}
+                   */
+                  readVastFile(vastUrl, options) { // eslint-disable-line
+                
+                    // Read XML file
+                    let xmlHttpReq;
+                    let xmlDoc;
+                    if (window.XMLHttpRequest) {
+                      xmlHttpReq = new XMLHttpRequest();
+                    } else {
+                      xmlHttpReq = new ActiveXObject(&#x27;Microsoft.XMLHTTP&#x27;); // eslint-disable-line
+                    }
+                    xmlHttpReq.open(&#x27;GET&#x27;, vastUrl, false);
+                    xmlHttpReq.send();
+                    xmlDoc = xmlHttpReq.responseXML; // eslint-disable-line
+                
+                    const vastObj = {};
+                
+                    // Get impression tag
+                    const impression = xmlDoc.getElementsByTagName(&#x27;Impression&#x27;);
+                    if (impression != null) {
+                      // obj_vast.impression_url = impression[0].childNodes[0].nodeValue;
+                      vastObj.impression = impression;
+                      // alert(obj_vast.impression_url);
+                    }
+                
+                    // Get Creative
+                    const creative = xmlDoc.getElementsByTagName(&#x27;Creative&#x27;);
+                    let mediaFiles;
+                    let trackingEvents;
+                    for (let i = 0; i &lt; creative.length; i += 1) {
+                      const creativeLinear = creative[i].getElementsByTagName(&#x27;Linear&#x27;);
+                      if (creativeLinear != null) {
+                        for (let j = 0; j &lt; creativeLinear.length; j += 1) {
+                          // Get media files
+                          const creativeLinearMediaFiles = creativeLinear[j].getElementsByTagName(&#x27;MediaFiles&#x27;);
+                          if (creativeLinearMediaFiles != null) {
+                            for (let k = 0; k &lt; creativeLinearMediaFiles.length; k += 1) {
+                              const creativeLinearMediaFile = creativeLinearMediaFiles[k].getElementsByTagName(&#x27;MediaFile&#x27;);
+                              if (creativeLinearMediaFile != null) {
+                                mediaFiles = creativeLinearMediaFile;
+                              }
+                            }
+                          }
+                
+                          // Get Clickthrough URL
+                          const creativeLinearVideoClicks = creativeLinear[j].getElementsByTagName(&#x27;VideoClicks&#x27;);
+                          if (creativeLinearVideoClicks != null) {
+                            for (let k = 0; k &lt; creativeLinearVideoClicks.length; k += 1) {
+                              const creativeLineartVClicksClickthrough = creativeLinearVideoClicks[k].getElementsByTagName(&#x27;ClickThrough&#x27;)[0].childNodes[0].nodeValue;
+                              const creativeLineartVClicksClickthroughTracking = creativeLinearVideoClicks[k].getElementsByTagName(&#x27;ClickTracking&#x27;);
+                              if (creativeLineartVClicksClickthrough != null) {
+                                vastObj.clickthroughUrl = creativeLineartVClicksClickthrough;
+                              }
+                              if (creativeLineartVClicksClickthroughTracking != null) {
+                                vastObj.clickthroughTracking = creativeLineartVClicksClickthroughTracking;
+                              }
+                            }
+                          }
+                
+                          // Get Tracking Events
+                          const creativeLinearTrackingEvents = creativeLinear[j].getElementsByTagName(&#x27;TrackingEvents&#x27;);
+                          if (creativeLinearTrackingEvents != null) {
+                            for (let k = 0; k &lt; creativeLinearTrackingEvents.length; k += 1) {
+                              const creativeLinearTrackingEventsTracking = creativeLinearTrackingEvents[k].getElementsByTagName(&#x27;Tracking&#x27;);
+                              if (creativeLinearTrackingEventsTracking != null) {
+                                trackingEvents = creativeLinearTrackingEventsTracking;
+                              }
+                            }
+                          }
+                
+                          // Get AD Duration
+                
+                          const creativeLinearDuration = creativeLinear[j].getElementsByTagName(&#x27;Duration&#x27;)[0];
+                          if (creativeLinearDuration != null) {
+                            vastObj.duration = creativeLinearDuration.childNodes[0].nodeValue;
+                            // alert(obj_vast.duration);
+                            const arrD = vastObj.duration.split(&#x27;:&#x27;);
+                            const strSecs = (+arrD[0]) * 60 * 60 + (+arrD[1]) * 60 + (+arrD[2]);
+                            vastObj.duration = strSecs;
+                          }
+                        }
+                      }
+                    }
+                
+                    if (typeof mediaFiles !== &#x27;undefined&#x27;) {
+                      for (let i = 0; i &lt; mediaFiles.length; i += 1) {
+                        if (mediaFiles[i].getAttribute(&#x27;type&#x27;) === options.media_type) {
+                          if ((mediaFiles[i].getAttribute(&#x27;bitrate&#x27;) &gt; options.media_bitrate_min) &amp;&amp; (mediaFiles[i].getAttribute(&#x27;bitrate&#x27;) &lt; options.media_bitrate_max)) {
+                            vastObj.mediaFile = mediaFiles[i].childNodes[0].nodeValue;
+                          }
+                        }
+                      }
+                    }
+                
+                    if (typeof trackingEvents !== &#x27;undefined&#x27;) {
+                      for (let i = 0; i &lt; trackingEvents.length; i += 1) {
+                        if (trackingEvents[i].getAttribute(&#x27;event&#x27;) === &#x27;start&#x27;) {
+                          if (vastObj.trackingStart != null) {
+                            vastObj.trackingStart += &#x60; ${trackingEvents[i].childNodes[0].nodeValue}&#x60;;
+                          } else {
+                            vastObj.trackingStart = trackingEvents[i].childNodes[0].nodeValue;
+                          }
+                          vastObj.trackingStartTracked = false;
+                        }
+                        if (trackingEvents[i].getAttribute(&#x27;event&#x27;) === &#x27;firstQuartile&#x27;) {
+                          if (vastObj.trackingFirstQuartile != null) {
+                            vastObj.trackingFirstQuartile += &#x60; ${trackingEvents[i].childNodes[0].nodeValue}&#x60;;
+                          } else {
+                            vastObj.trackingFirstQuartile = trackingEvents[i].childNodes[0].nodeValue;
+                          }
+                          vastObj.tracking_first_quartile_tracked = false;
+                        }
+                        if (trackingEvents[i].getAttribute(&#x27;event&#x27;) === &#x27;midpoint&#x27;) {
+                          if (vastObj.trackingMidpoint != null) {
+                            vastObj.trackingMidpoint += &#x60; ${trackingEvents[i].childNodes[0].nodeValue}&#x60;;
+                          } else {
+                            vastObj.trackingMidpoint = trackingEvents[i].childNodes[0].nodeValue;
+                          }
+                          vastObj.trackingMidpointTracked = false;
+                        }
+                        if (trackingEvents[i].getAttribute(&#x27;event&#x27;) === &#x27;thirdQuartile&#x27;) {
+                          if (vastObj.trackingThirdQuartile != null) {
+                            vastObj.trackingThirdQuartile += &#x60; ${trackingEvents[i].childNodes[0].nodeValue}&#x60;;
+                          } else {
+                            vastObj.trackingThirdQuartile = trackingEvents[i].childNodes[0].nodeValue;
+                          }
+                          vastObj.trackingThirdQuartileTracked = false;
+                        }
+                        if (trackingEvents[i].getAttribute(&#x27;event&#x27;) === &#x27;complete&#x27;) {
+                          if (vastObj.trackingComplete != null) {
+                            vastObj.trackingComplete += &#x60; ${trackingEvents[i].childNodes[0].nodeValue}&#x60;;
+                          } else {
+                            vastObj.trackingComplete = trackingEvents[i].childNodes[0].nodeValue;
+                          }
+                          vastObj.trackingCompleteTracked = false;
+                        }
+                        if (trackingEvents[i].getAttribute(&#x27;event&#x27;) === &#x27;mute&#x27;) {
+                          if (vastObj.trackingMute != null) {
+                            vastObj.trackingMute += &#x60; ${trackingEvents[i].childNodes[0].nodeValue}&#x60;;
+                          } else {
+                            vastObj.trackingMute = trackingEvents[i].childNodes[0].nodeValue;
+                          }
+                          vastObj.trackingMuteTracked = false;
+                        }
+                        if (trackingEvents[i].getAttribute(&#x27;event&#x27;) === &#x27;unmute&#x27;) {
+                          if (vastObj.trackingUnmute != null) {
+                            vastObj.trackingUnmute += &#x60; ${trackingEvents[i].childNodes[0].nodeValue}&#x60;;
+                          } else {
+                            vastObj.trackingUnmute = trackingEvents[i].childNodes[0].nodeValue;
+                          }
+                          vastObj.trackingUnmuteTracked = false;
+                        }
+                        if (trackingEvents[i].getAttribute(&#x27;event&#x27;) === &#x27;pause&#x27;) {
+                          if (vastObj.trackingPause != null) {
+                            vastObj.trackingPause += &#x60; ${trackingEvents[i].childNodes[0].nodeValue}&#x60;;
+                          } else {
+                            vastObj.trackingPause = trackingEvents[i].childNodes[0].nodeValue;
+                          }
+                          vastObj.trackingPauseTracked = false;
+                        }
+                        if (trackingEvents[i].getAttribute(&#x27;event&#x27;) === &#x27;resume&#x27;) {
+                          if (vastObj.trackingResume != null) {
+                            vastObj.trackingResume += &#x60; ${trackingEvents[i].childNodes[0].nodeValue}&#x60;;
+                          } else {
+                            vastObj.trackingResume = trackingEvents[i].childNodes[0].nodeValue;
+                          }
+                          vastObj.trackingResumeTracked = false;
+                        }
+                        if (trackingEvents[i].getAttribute(&#x27;event&#x27;) === &#x27;fullscreen&#x27;) {
+                          if (vastObj.trackingFullscreen != null) {
+                            vastObj.trackingFullscreen += &#x60; ${trackingEvents[i].childNodes[0].nodeValue}&#x60;;
+                          } else {
+                            vastObj.trackingFullscreen = trackingEvents[i].childNodes[0].nodeValue;
+                          }
+                          vastObj.trackingFullscreenTracked = false;
+                        }
+                      }
+                    }
+                
+                    // Tracking events
+                
+                    return vastObj;
+                  }
+                
+                  /**
+                   * This function is triggered with timeUpdate event of video player.
+                   * It compares with Vast time with current time
+                   *
+                   * @for Player
+                   * @method checkAdsStatus
+                   */
+                  checkAdsStatus() {
+                    if (!this.adsInProgress) {
+                      // let currentTime = Math.floor(this.videoElement.currentTime);
+                      if (this.videoElement.currentTime &gt;= Vast.vastArray[0].time) {
+                        this.adsInProgress = true;
+                        this.pause();
+                        this.initVastAd(this.videoElement.currentTime);
+                      }
+                    }
+                  }
+                
+                  /**
+                   * It starts ads in videoPlayer. Pauses current video then starting ads
+                   * After completing ads it starts old src url with initial seeking with time
+                   *
+                   * @param time - current time of video player
+                   * @for Player
+                   * @method initVastAd
+                   */
+                  initVastAd(time) {
+                    const _this = this;
+                    this.videoElement.src = &#x27;&#x27;;
+                    this.captionDiv.style.visibility = &#x27;visible&#x27;;
+                    this.captionDiv.innerHTML = &#x27;Reklamlar Yükleniyor&#x27;;
+                    this.vastElement.src = this.vastReadyItems[0].mediaFile;
+                    this.vastElement.removeAttribute(&#x27;controls&#x27;);
+                    this.vastElement.addEventListener(&#x27;loadedmetadata&#x27;, () =&gt; {
+                      _this.videoElement.style.visibility = &#x27;hidden&#x27;;
+                      _this.vastElement.style.visibility = &#x27;visible&#x27;;
+                      _this.captionDiv.innerHTML = _this.Config.vastOptions.ad_caption;
+                      console.log(&#x27;Meta Data YüklenDi&#x27;);
+                      _this.vastElement.play();
+                    });
+                    this.vastElement.addEventListener(&#x27;ended&#x27;, () =&gt; {
+                      console.log(&#x27;Bitti&#x27;);
+                      _this.vastElement.style.visibility = &#x27;hidden&#x27;;
+                      _this.videoElement.style.visibility = &#x27;visible&#x27;;
+                      _this.captionDiv.style.visibility = &#x27;hidden&#x27;;
+                      _this.adsInProgress = false;
+                      _this.videoElement.src = _this.playerInfo.src;
+                      _this.videoElement.currentTime = time;
+                      _this.play();
+                    });
+                    this.vastElement.addEventListener(&#x27;play&#x27;, () =&gt; {
+                      console.log(&#x27;Reklam Başladı&#x27;);
+                    });
+                    console.log(&#x60;init ettik${time}&#x60;);
+                    Vast.vastArray.splice(0, 1);
+                    _this.vastReadyItems.splice(0, 1);
+                
+                  }
+                
+                  /**
+                   * Adds ads caption to video player to end user notified about Ads
+                   * This text can be edited via config
+                   *
+                   * @return {boolean}
+                   *
+                   * @for Player
+                   * @method addAdsCaption
+                   */
+                  addAdsCaption() {
+                    this.captionDiv = document.createElement(&#x27;div&#x27;);
+                    this.captionDiv.className = &#x27;vastCaption&#x27;;
+                    this.captionDiv.id = &#x60;vastCaption_${this.Config.videoPlayerId}&#x60;;
+                    this.captionDiv.innerHTML = this.Config.vastOptions.ad_caption;
+                    this.wrapperDiv.appendChild(this.captionDiv);
+                    // Adjust style
+                    this.captionDiv.style.left = &#x60;${(this.vastElement.offsetWidth / 2) - (document.getElementsByClassName(&#x27;vastCaption&#x27;)[0].offsetWidth / 2)}px&#x60;;    this.captionDiv.style.visibility = &#x27;hidden&#x27;;
+                    return true;
+                  }
+                
+                  /**
+                   * Unloads DRM client. !IMPORTANT! Some devices may be crash if you are not unloaded drm client
+                   *
+                   * @for Player
+                   * @method unloadDrmClient
+                   */
+                  unloadDrmClient() {
+                    console.log(&#x27;Unload Geldi&#x27;);
+                    const _this = this;
+                    if (this.currentDevice.brandName === &#x27;webos&#x27; &amp;&amp; _this._WebOS.isDrmClientLoaded) {
+                      const request = webOS.service.request(&#x27;luna://com.webos.service.drm&#x27;, { // eslint-disable-line
+                        method: &#x27;unload&#x27;,
+                        parameters: { clientId: _this._WebOS.clientId },
+                        onSuccess: (result) =&gt; {
+                          _this._WebOS.isDrmClientLoaded = false;
+                          console.log(&#x27;DRM Client is unloaded successfully.&#x27;);
+                        },
+                        onFailure: (result) =&gt; {
+                          console.log(&#x60;[${result.errorCode}] ${result.errorText}&#x60;);
+                          // Do something for error handling
+                        }
+                      });
+                    }
+                  }
+                
+                  /**
+                   * Initialize WebOs DRM
+                   * TODO This can be move to webos device with abstract
+                   *
+                   * @for Player
+                   * @method setupWebOSDrm
+                   */
+                  setupWebOSDrm() {
+                    const _this = this;
+                    _this._WebOS = {};
+                
+                    _this._WebOS.appId = &#x27;com.dtv.smarttv&#x27;;
+                    _this._WebOS.clientId = &#x27;&#x27;;
+                    _this._WebOS.isDrmClientLoaded = &#x27;&#x27;;
+                
+                    let request = webOS.service.request(&#x27;luna://com.webos.service.drm&#x27;, { // eslint-disable-line
+                      method: &#x27;load&#x27;,
+                      parameters: {
+                        drmType: _this.playerInfo.drmType,
+                        appId: _this._WebOS.appId
+                      },
+                      onSuccess: (result) =&gt; {
+                        _this._WebOS.clientId = result.clientId;
+                        _this._WebOS.isDrmClientLoaded = true;
+                        console.log(&#x27;DRM Client is loaded successfully.&#x27;);
+                        _this.sendWebOSDrm();
+                      },
+                      onFailure: (result) =&gt; {
+                        console.log(&#x60;[${result.errorCode}] ${result.errorText}&#x60;);
+                        // Do something for error handling
+                      }
+                    });
+                  }
+                
+                  /**
+                   * WebOs Drm trigger
+                   *
+                   * @for Player
+                   * @method sendWebOSDrm
+                   */
+                  sendWebOSDrm() {
+                    this._WebOS.msg = &#x60;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+                    &lt;PlayReadyInitiator xmlns= &quot;http://schemas.microsoft.com/DRM/2007/03/protocols/&quot;&gt;
+                    &lt;LicenseAcquisition&gt;
+                    &lt;Header&gt;&lt;WRMHEADER xmlns= &quot;http://schemas.microsoft.com/DRM/2007/03/PlayReadyHeader&quot; version=&quot;4.0.0.0&quot;&gt;
+                    &lt;DATA&gt;
+                    &lt;PROTECTINFO&gt;
+                    &lt;KEYLEN&gt;16
+                    &lt;/KEYLEN&gt;
+                    &lt;ALGID&gt;AESCTR&lt;/ALGID&gt;
+                    &lt;/PROTECTINFO&gt;
+                    &lt;LA_URL&gt;${this.Config.DRM.licenserUrl}&lt;/LA_URL&gt;
+                    &lt;KID&gt;lFmb2gxg0Cr5bfEnJXgJeA==&lt;/KID&gt;
+                    &lt;CHECKSUM&gt;P7ORpD2IpA==&lt;/CHECKSUM&gt;
+                    &lt;/DATA&gt;
+                    &lt;/WRMHEADER&gt;
+                    &lt;/Header&gt;
+                    &lt;CustomData&gt;${this.playerInfo.customData}&lt;/CustomData&gt;
+                    &lt;/LicenseAcquisition&gt;
+                    &lt;/PlayReadyInitiator&gt;&#x60;;
+                
+                    const _this = this;
+                
+                    let request = webOS.service.request(&#x27;luna://com.webos.service.drm&#x27;, { // eslint-disable-line
+                      method: &#x27;sendDrmMessage&#x27;,
+                      parameters: {
+                        clientId: this._WebOS.clientId,
+                        msgType: this.Config.DRM.mimeType,
+                        msg: this._WebOS.msg,
+                        drmSystemId: this.Config.DRM.drmSystemId
+                      },
+                      onSuccess: (result) =&gt; {
+                        _this._WebOS.msgId = result.msgId;
+                        _this._WebOS.resultCode = result.resultCode;
+                        _this._WebOS.resultMsg = result.resultMsg;
+                        console.log(&#x60;Message ID: ${_this._WebOS.msgId}&#x60;);
+                        console.log(&#x60;[${_this._WebOS.resultCode}] ${_this._WebOS.resultMsg}&#x60;);
+                        _this._WebOS.options = {};
+                        _this._WebOS.options.option = {};
+                        _this._WebOS.options.option.drm = {};
+                        _this._WebOS.options.option.drm.type = _this.playerInfo.drmType;
+                        _this._WebOS.options.option.drm.clientId = _this._WebOS.clientId;
+                        _this._WebOS.mediaOption = escape(JSON.stringify(_this._WebOS.options));
+                        _this.Events.triggerEvent(&#x27;DRM_WebOSReady&#x27;);
+                        if (_this._WebOS.resultCode !== 0) {
+                          // Do Handling DRM message error
+                        }
+                      },
+                      onFailure: (result) =&gt; {
+                        console.log(&#x60;[${result.errorCode}] ${result.errorText}&#x60;);
+                      }
+                    });
+                
+                  }
+                
+                  /**
+                   * Constructor for Audio class
+                   *
+                   * @for Player
+                   * @method initAudioClass
+                   */
+                  initAudioClass() {
+                    this.Audio = new Audio();
+                    this.changeAudioWithOrder = this.Audio.changeAudioWithOrder;
+                    this.getCurrentAudioWithOrder = this.Audio.getCurrentAudioWithOrder;
+                    this.denemeSERDAR = this.Audio.getThis;
+                  }
+                
+                  /**
+                   * Play trigger for videoElement
+                   *
+                   * @for Player
+                   * @method play
+                   */
+                  play() {
+                    this.videoElement.play();
+                  }
+                
+                  /**
+                   * Pause trigger for videoElement
+                   *
+                   * @for Player
+                   * @method pause
+                   */
+                  pause() {
+                    this.videoElement.pause();
+                  }
+                
+                  /**
+                   * Play/Pause toggle trigger for videoElement
+                   *
+                   * @for Player
+                   * @method togglePlay
+                   */
+                  togglePlay() {
+                    if (this.videoElement.paused) {
+                      this.play();
+                    } else {
+                      this.pause();
+                    }
+                  }
+                
+                  /**
+                   * Trigger specific events for all videoElement trigger
+                   * @for Player
+                   * @method registerVideoEvents
+                   */
+                  registerVideoEvents() {
+                    const _this = this;
+                
+                    this.videoElement.oncanplay = () =&gt; {
+                      _this.playerInfo.canPlay = true;
+                      _this.Events.triggerEvent(&#x27;player_onCanPlay&#x27;);
+                    };
+                
+                    this.videoElement.oncanplaythrough = () =&gt; {
+                      _this.playerInfo.canPlayThrough = true;
+                      _this.Events.triggerEvent(&#x27;player_onCanPlayThrough&#x27;);
+                    };
+                
+                    this.videoElement.ondurationchange = () =&gt; {
+                      _this.Events.triggerEvent(&#x27;player_onDurationChange&#x27;, [_this.videoElement.duration]);
+                      _this.playerInfo.duration = _this.videoElement.duration;
+                    };
+                
+                    this.videoElement.onended = () =&gt; {
+                      _this.playerInfo.currentState = &#x27;Finished&#x27;;
+                      _this.Events.triggerEvent(&#x27;player_onEnded&#x27;, [&#x27;Video Finished&#x27;]);
+                    };
+                
+                    this.videoElement.onloadeddata = () =&gt; {
+                      _this.Events.triggerEvent(&#x27;player_onDataLoaded&#x27;, [&#x27;Data Loaded&#x27;]);
+                      _this.playerInfo.dataLoaded = true;
+                    };
+                
+                    this.videoElement.onloadedmetadata = () =&gt; {
+                      _this.Events.triggerEvent(&#x27;player_onMetaDataLoaded&#x27;, [&#x27;Meta Data Loaded&#x27;]);
+                      _this.playerInfo.metaDataLoaded = true;
+                    };
+                
+                    this.videoElement.onloadstart = () =&gt; {
+                      _this.Events.triggerEvent(&#x27;player_onLoadStart&#x27;, [&#x27;Load Started&#x27;]);
+                    };
+                
+                    this.videoElement.onpause = () =&gt; {
+                      _this.Events.triggerEvent(&#x27;player_onPause&#x27;, [&#x27;Pause&#x27;]);
+                      _this.playerInfo.currentState = &#x27;Paused&#x27;;
+                    };
+                
+                    this.videoElement.onplay = () =&gt; {
+                      _this.Events.triggerEvent(&#x27;player_onPlay&#x27;, [&#x27;Play&#x27;]);
+                      _this.playerInfo.currentState = &#x27;Play&#x27;;
+                    };
+                
+                    this.videoElement.onplaying = () =&gt; {
+                      _this.Events.triggerEvent(&#x27;player_onPlaying&#x27;, [&#x27;Playing&#x27;]);
+                      _this.playerInfo.currentState = &#x27;Playing&#x27;;
+                    };
+                
+                    this.videoElement.progress = () =&gt; {
+                      _this.Events.triggerEvent(&#x27;player_onProgress&#x27;, [&#x27;Downloading Video&#x27;]);
+                    };
+                
+                    this.videoElement.onratechange = () =&gt; {
+                      _this.Events.triggerEvent(&#x27;player_onRateChange&#x27;, [_this.videoElement.playbackRate]);
+                      _this.playerInfo.playbackRate = _this.videoElement.playbackRate;
+                    };
+                
+                    this.videoElement.onseeked = () =&gt; {
+                      _this.Events.triggerEvent(&#x27;player_onSeeked&#x27;, [&#x27;Seek Completed&#x27;]);
+                      _this.playerInfo.isSeeking = false;
+                    };
+                
+                    this.videoElement.onseeking = () =&gt; {
+                      _this.Events.triggerEvent(&#x27;player_onSeeking&#x27;, [&#x27;Seek In Progress&#x27;]);
+                      _this.playerInfo.isSeeking = true;
+                    };
+                
+                    this.videoElement.ontimeupdate = () =&gt; {
+                      _this.Events.triggerEvent(&#x27;player_onTimeUpdate&#x27;, [_this.videoElement.currentTime]);
+                      if (_this.playerInfo.adsEnabled) {
+                        _this.checkAdsStatus();
+                      }
+                    };
+                
+                    this.videoElement.onvolumechange = () =&gt; {
+                      _this.Events.triggerEvent(&#x27;player_onVolumeChange&#x27;, [_this.videoElement.volume]);
+                      _this.videoElement.currentVolume = _this.videoElement.volume;
+                    };
+                
+                    this.videoElement.onwaiting = () =&gt; {
+                      _this.Events.triggerEvent(&#x27;player_onWaiting&#x27;);
+                      _this.playerInfo.currentState = &#x27;Waiting&#x27;;
+                    };
+                  }
+                
+                  /**
+                   * Drm initiator for OIPF Devices such as Vestel and Arcelik
+                   *
+                   * @for Player
+                   * @method createOIPFDrmAgent
+                   */
+                  createOIPFDrmAgent() {
+                    this.OIPFDrmObject = document.createElement(&#x27;object&#x27;);
+                    this.OIPFDrmObject.setAttribute(&#x27;type&#x27;, &#x27;application/oipfDrmAgent&#x27;);
+                    this.OIPFDrmObject.setAttribute(&#x27;id&#x27;, &#x27;oipfDrm&#x27;);
+                    this.OIPFDrmObject.style.display = &#x27;none&#x27;;
+                    document.head.appendChild(this.OIPFDrmObject);
+                    this.OIPFDrmObject.onDRMMessageResult = function(msgId, resultMsg, resultCode) {
+                      if (resultCode === 0) {
+                        Logger.addLog(&#x27;Player&#x27;, &#x27;create&#x27;, &#x60;DRM Initialized Successfuly, Result Code = ${resultCode}!&#x60;);
+                      } else {
+                        switch (resultCode) {
+                          case 1:
+                            Logger.addLog(&#x27;Player&#x27;, &#x27;error&#x27;, &#x27;Error Code : 1 / Unknown Error - &#x27;, HtmlEncode(resultMsg)); // eslint-disable-line no-undef
+                            break;
+                          case 2:
+                            Logger.addLog(&#x27;Player&#x27;, &#x27;error&#x27;, &#x27;Error Code : 2 / Cannot Process Result&#x27;);
+                            break;
+                          case 3:
+                            Logger.addLog(&#x27;Player&#x27;, &#x27;error&#x27;, &#x27;Error Code : 3 / Unknown MIME Type&#x27;);
+                            break;
+                          case 4:
+                            Logger.addLog(&#x27;Player&#x27;, &#x27;error&#x27;, &#x27;Error Code : 4 / User Consent Required&#x27;);
+                            break;
+                          default:
+                            Logger.addLog(&#x27;Player&#x27;, &#x27;error&#x27;, &#x27;Error&#x27;, resultCode);
+                            break;
+                        }
+                      }
+                    };
+                  }
+                
+                  /**
+                   * Seek with given value adding
+                   *
+                   * @param {Number} value
+                   * @for Player
+                   * @method seekWithTimeAdd
+                   */
+                  seekWithTimeAdd(value) {
+                    this.videoElement.currentTime += value;
+                  }
+                
+                  /**
+                   * Seek to given time
+                   * TODO Check device performances if needed use pause method first
+                   *
+                   * @param value
+                   *
+                   * @for Player
+                   * @method seekToTime
+                   */
+                  seekToTime(value) {
+                    this.videoElement.currentTime = value;
+                  }
+                
+                  /**
+                   * Sets currentTime to 0 and plays automatically
+                   *
+                   * @for Player
+                   * @method restart
+                   */
+                  restart() {
+                    this.pause();
+                    this.videoElement.currentTime = 0;
+                    this.play();
+                  }
+                
+                }
+                
+                export default Player;
+                
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/vendor/jquery.min.js"></script>
+<script src="../assets/js/jquery-offscreen-trigger.js"></script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

@@ -1,2 +1,97 @@
-<h1>Welcome to SmartTV Docs.</h1>
-<h3>This documentation will be served at GitHub Pages</h3>
+<!-- Header Back -->
+<div class="header-back header-back-light header-back-full-page js-full-page header-back-bg-soft header-back-subscribe">
+  <div class="header-back-container">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <!-- Page Info -->
+          <div class="page-info helper center">
+            <h1 class="page-title"><%= sections.slider.sloganText %></h1>
+            <h2 class="page-description"><%= sections.slider.subSloganText %></h2>
+          </div>
+          <!-- End Page Info -->
+          <div class="header-back-buttons helper center">
+            <a href="#" class="button stroke rounded large white">Download</a>
+            <a href="<%= _project.githubUrl %>" target="_blank" class="button stroke rounded large white">GitHub</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Next Section Button -->
+    <span class="next-section js-scroll-to " data-target="#content">
+					<i class="fa-angle-down fa"></i>
+				</span>
+  </div>
+</div>
+<!-- End of Header Back -->
+<div id="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Promo Title -->
+        <div class="promo-title-wrapper helper pt60">
+          <h3 class="promo-title" data-icon="&#xe6af"> <%= sections.features.title %> </h3>
+          <p class="promo-description"> <%= sections.features.subTitle %> </p>
+        </div>
+        <!-- End of Promo Title -->
+        <% for(var i = 0; i < sections.features.data.length; i++) { %>
+        <% if(i % 2 == 0) { %>
+        <div class="row">
+          <% } %>
+          <div class="col-md-6">
+            <div class="box box-small-icon-alt">
+              <i class="<%= sections.features.data[i].icon %> box-icon"></i>
+              <h4 class="box-title"><%= sections.features.data[i].title %></h4>
+              <p class="box-description"><%- sections.features.data[i].description %></p>
+            </div>
+          </div>
+          <% if(i % 2 === 1) { %>
+        </div>
+        <% } %>
+        <% } %>
+      </div>
+      <div class="row">
+
+      </div>
+      <!-- Promo Title -->
+      <div class="promo-title-wrapper ">
+        <h3 class="promo-title" data-icon="&#xe629"> <%=sections.highlight.title%> </h3>
+        <p class="promo-description"><%= sections.highlight.subTitle %></p>
+      </div>
+      <!-- End of Promo Title -->
+      <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 col-sm-12">
+          <div class="code-highlight ">
+            <span class="js-copy-to-clipboard copy-code">copy</span>
+            <pre><code class="language-javascript js-code">
+
+// We assumed you included library to your project
+//from npm, yarn, bower or directly.
+
+let Device = new Device();
+let Storage = new Storage();
+
+console.log(Device); // Thats all, you can use modules like Events, Player etc :)
+console.log(Storage);
+</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="call-to-action helper mt60">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h3 class="call-to-action-title"> <%= sections.promo.title %> </h3>
+        <p class="call-to-action-description"> <%= sections.promo.subTitle %></p>
+        <div class="call-to-action-buttons">
+          <a href="<%= _project.githubUrl %>" target="_blank" class="call-to-action-button">Github Page</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Footer -->

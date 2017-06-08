@@ -192,7 +192,7 @@ window.webOS = window.webOS || {};
       var soundFile = params.soundFile || "";
       var soundDurationMs = params.soundDurationMs || "";
       if (webOS.platform.legacy || webOS.platform.open) {
-        var response = params.response || {banner: true};
+        // var response = params.response || {banner: true};
         var id = PalmSystem.addBannerMessage(message, JSON.stringify(toastParams), icon, soundClass, soundFile, soundDurationMs);
         callback && callback(id)
       } else {
@@ -274,7 +274,7 @@ window.webOS = window.webOS || {};
 
 // pmloglib.js
 (function () {
-  var levelNone = -1;
+  // var levelNone = -1;
   var levelEmergency = 0;
   var levelAlert = 1;
   var levelCritical = 2;
@@ -387,7 +387,7 @@ window.webOS = window.webOS || {};
       } catch (e) {
         parsedMsg = {errorCode: -1, errorText: msg}
       }
-      if ((parsedMsg.errorCode || parsedMsg.returnValue == false) && self.onFailure) {
+      if ((parsedMsg.errorCode || parsedMsg.returnValue === false) && self.onFailure) {
         self.onFailure(parsedMsg);
         if (self.resubscribe && self.subscribe) {
           self.delayID = setTimeout(function () {

@@ -22,7 +22,12 @@ const plugins = [
   require('./storage/plugins/update')
 ];
 /**
- * @exports Storage
- * @export Storage
+ * Initializes Storage Class
+ * This class have private methods
+ * @class Storage
+ * @constructor Storage
+ *
+ * @param {Array} storages
+ * @param {Array} plugins
  */
 export default engine.createStore(storages, plugins);

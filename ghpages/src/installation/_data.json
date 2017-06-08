@@ -1,0 +1,11 @@
+{
+  "manual": {
+    "activeSlug": "install/manually"
+  },
+  "npm-yarn": {
+    "activeSlug": "install/npm-yarn"
+  },
+  "bower": {
+    "activeSlug": "install/bower"
+  }
+}

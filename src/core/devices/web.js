@@ -22,6 +22,9 @@ class DeviceWeb extends Device {
    * Abstract Player createVideoElement function.
    *
    * @abstract
+   * @for Device_Web
+   * @method createVideoElement
+   * @return {Boolean} true
    */
   createVideoElement() {
     console.log(this.Config);

@@ -1,0 +1,11 @@
+{
+  "analytics": {
+    "activeSlug": "helpers_services/analytics"
+  },
+  "logger": {
+    "activeSlug": "helpers_services/logger"
+  },
+  "xhr": {
+    "activeSlug": "helpers_services/xhr"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "events": {
+    "activeSlug": "player/events"
+  },
+  "controls": {
+    "activeSlug": "player/controls"
+  },
+  "multi-audio": {
+    "activeSlug": "player/multi-audio"
+  },
+  "subtitle": {
+    "activeSlug": "player/subtitle"
+  }
+}

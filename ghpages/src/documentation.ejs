@@ -1,0 +1,201 @@
+<div id="content">
+  <div class="container-fluid container-spaced">
+    <div class="layout with-left-sidebar js-layout">
+      <div class="row">
+        <div class="col-md-3 hidden-sm hidden-xs">
+          <div class="sidebar js-sidebar-fixed">
+            <!-- Vertical Menu -->
+            <nav class="menu-vertical-wrapper">
+              <ul class="menu-vertical js-menu-vertical" data-prepend-to=".js-layout" data-select="Menu">
+                <% for (var a=0; a < docs_menu.length; a++) { %>
+                <li class="<% if(docs_menu[a].slug === activeSlug) { %>selected<% } %>">
+                  <a href="<%= docs_menu[a].url %>"><%= docs_menu[a].title %></a>
+                  <% if(docs_menu[a].hasSubs) { %>
+                  <ul>
+                    <% for(var i=0; i < docs_menu[a].subs.length; i++) { %>
+                    <li class="<% if(docs_menu[a].subs[i].slug == activeSlug) { %> selected <% } %>">
+                      <a href="<%= docs_menu[a].subs[i].url %>"><%= docs_menu[a].subs[i].title %></a>
+                      <% if(docs_menu[a].subs[i].hasSubs) { %>
+                      <ul>
+                        <% for(var j = 0; j < docs_menu[a].subs[i].subs.length; j++) { %>
+                        <li class="<% if(docs_menu[a].subs[i].subs[j].slug === activeSlug) { %>selected<% } %>">
+                          <a href="<%= docs_menu[a].subs[i].subs[j].url %>">
+                            <%= docs_menu[a].subs[i].subs[j].title %>
+                          </a>
+                          <% if(docs_menu[a].subs[i].subs[j].hasSubs) { %>
+                          <ul>
+                            <% for(var x = 0; x < docs_menu[a].subs[i].subs[j].subs.length; x++) { %>
+                            <li class="<% if(docs_menu[a].subs[i].subs[j].subs[x].slug === activeSlug) { %>selected<% } %>">
+                              <a href="<%= docs_menu[a].subs[i].subs[j].subs[x].url %>">
+                                <%= docs_menu[a].subs[i].subs[j].subs[x].title %>
+                              </a>
+                            </li>
+                            <% } %>
+                          </ul>
+                          <% } %>
+                        </li>
+                        <% } %>
+                      </ul>
+                      <% } %>
+                    </li>
+                    <% } %>
+                  </ul>
+                  <% } %>
+                </li>
+                <% } %>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="main-content">
+            <!-- Category Info -->
+            <div class="category-info helper pt0" id="list-view">
+              </h3>
+              <h4 class="category-description">Our framework is still under development. Necessary informations like installation, usage etc. can be found at left menu. </h4>
+              <div class="numbers">
+                <div class="row">
+                  <div class="col-md-5 col-sm-6 col-xs-6">
+                    <!-- Number Box -->
+                    <div class="number-box">
+                      <div class="number-icon">
+                        <i class="pe-7s-leaf"></i>
+                      </div>
+                      <div class="number-wrapper">
+                        <span class="number-rotator js-animate-number">0.0.1-alpha.2</span>
+                      </div>
+                      <div class="number-description"> Current Version </div>
+                    </div>
+                    <!-- End of Number Box -->
+                  </div>
+                  <div class="col-md-3 col-sm-6 col-xs-6">
+                    <!-- Number Box -->
+                    <div class="number-box">
+                      <div class="number-icon">
+                        <i class="pe-7s-plane"></i>
+                      </div>
+                      <div class="number-wrapper">
+                        <span class="number-rotator js-animate-number" data-number="61">0</span>kb </div>
+                      <div class="number-description"> production weight </div>
+                    </div>
+                    <!-- End of Number Box -->
+                  </div>
+                  <div class="col-md-3 col-sm-6 col-xs-6">
+                    <!-- Number Box -->
+                    <div class="number-box">
+                      <div class="number-icon">
+                        <i class="pe-7s-config"></i>
+                      </div>
+                      <div class="number-wrapper">
+                        <span class="number-rotator js-animate-number" data-number="140">0</span>kb </div>
+                      <div class="number-description"> development weight </div>
+                    </div>
+                    <!-- End of Number Box -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Category Info -->
+            <div class="category-info " id="browser-support-table">
+              <h3 class="category-title"> Device Support Table
+              </h3>
+              <h4 class="category-description">Here you can find our support table for features</h4>
+              <h4 class="category-description">&#9881; : Work In Progress | &#9745; : Completed</h4>
+            </div>
+            <!-- End of Caregory Info -->
+            <div class="row">
+              <div class="col-md-12">
+                <!-- Browsers Table -->
+                <table class="browsers-table">
+                  <tr class="browsers-table-row">
+                    <td>
+                     Manufacturer</td>
+                    <td class="browsers-table-comment">DRM</td>
+                    <td class="browsers-table-comment">Ads</td>
+                    <td class="browsers-table-comment">Storage</td>
+                    <td class="browsers-table-comment">Multi-Audio</td>
+                    <td class="browsers-table-comment">Live Streams</td>
+                    <td class="browsers-table-comment">Events</td>
+                  </tr>
+                  <tr class="browsers-table-row">
+                    <td>
+                      Samsung Orsay (2012 - 2014)</td>
+                    <td class="browsers-table-comment">&#9881;</td>
+                    <td class="browsers-table-comment">&#9881;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-comment">&#9881;</td>
+                    <td class="browsers-table-comment">&#9881;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                  </tr>
+                  <tr class="browsers-table-row">
+                    <td>
+                      Samsung Tizen</td>
+                    <td class="browsers-table-comment">&#9881;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-comment">&#9881;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                  </tr>
+                  <tr class="browsers-table-row">
+                    <td>
+                      LG NetCast</td>
+                    <td class="browsers-table-comment">&#9881;</td>
+                    <td class="browsers-table-comment">&#9881;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-comment">&#9881;</td>
+                    <td class="browsers-table-comment">&#9881;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                  </tr>
+                  <tr class="browsers-table-row">
+                    <td>
+                      LG WebOs</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                  </tr>
+                  <tr class="browsers-table-row">
+                    <td>
+                      Vestel</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                  </tr>
+                  <tr class="browsers-table-row">
+                    <td>
+                      Arçelik / Beko / Grundig</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                  </tr>
+                  <tr class="browsers-table-row">
+                    <td>
+                      Philips</td>
+                    <td class="browsers-table-comment">&#9881;</td>
+                    <td class="browsers-table-comment">&#9881;</td>
+                    <td class="browsers-table-comment">&#9881;</td>
+                    <td class="browsers-table-comment">&#9881;</td>
+                    <td class="browsers-table-comment">&#9881;</td>
+                    <td class="browsers-table-recommended browsers-table-comment">&#9745;</td>
+                  </tr>
+                </table>
+                <!-- End of Browsers Table -->
+              </div>
+            </div>
+            <!-- Category Info -->
+            <!-- End of Caregory Info -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -4,6 +4,8 @@
  * @param {String} name The name of the target method.
  * @return {Function} The aliased method
  * @api private
+ * @for Events
+ * @method alias
  */
 const alias = (name) => { // eslint-disable-line arrow-body-style
   return function aliasClosure() {
@@ -14,6 +16,9 @@ const alias = (name) => { // eslint-disable-line arrow-body-style
 /**
  *
  * @param listener
+ *
+ * @for Events
+ * @method isValidListener
  * @return {*}
  */
 const isValidListener = (listener) => {
@@ -33,6 +38,9 @@ const isValidListener = (listener) => {
  *
  * @param {Function[]} listeners Array of listeners to search through.
  * @param {Function} listener Method to look for.
+ *
+ * @for Events
+ * @method indexOfListener
  * @return {Number} Index of the specified listener, -1 if not found
  * @api private
  */
@@ -52,6 +60,8 @@ class Events {
   /**
    *
    * @param loggerClass
+   * @class Events
+   * @constructor
    */
   constructor(loggerClass) {
     this.logger = loggerClass;
@@ -73,6 +83,9 @@ class Events {
    * Each property in the object response is an array of listener functions.
    *
    * @param {String|RegExp} evt Name of the event to return the listeners from.
+   *
+   * @for Events
+   * @method getListeners
    * @return {Function[]|Object} All listener functions for the event.
    */
   getListeners(evt) {
@@ -100,6 +113,9 @@ class Events {
    * Takes a list of listener objects and flattens it into a list of listener functions.
    *
    * @param {Object[]} listeners Raw listener objects.
+   *
+   * @for Events
+   * @method flattenListeners
    * @return {Function[]} Just the listener functions.
    */
   flattenListeners(listeners) { /*
@@ -120,6 +136,8 @@ class Events {
    * This is mainly for internal use but others may find it useful.
    *
    * @param {String|RegExp} evt Name of the event to return the listeners from.
+   * @for Events
+   * @method getListenersAsObject
    * @return {Object} All listener functions for an event in an object.
    */
   getListenersAsObject(evt) {
@@ -145,6 +163,8 @@ class Events {
    * @param {String|RegExp} evt Name of the event to attach the listener to.
    * @param {Function} listener Method to be called when the event is emitted.
    * If the function returns true then it will be removed after calling.
+   * @for Events
+   * @method addListener
    * @return {Object} Current instance of EventEmitter for chaining.
    */
   addListener(evt, listener) {
@@ -176,6 +196,8 @@ class Events {
    * @param {String|RegExp} evt Name of the event to attach the listener to.
    * @param {Function} listener Method to be called when the event is emitted.
    * If the function returns true then it will be removed after calling.
+   * @for Events
+   * @method addOnceListener
    * @return {Object} Current instance of EventEmitter for chaining.
    */
   addOnceListener(evt, listener) {
@@ -193,6 +215,8 @@ class Events {
    * You need to tell it what event names should be matched by a regex.
    *
    * @param {String} evt Name of the event to create.
+   * @for Events
+   * @method defineEvent
    * @return {Object} Current instance of EventEmitter for chaining.
    */
   defineEvent(evt) {
@@ -204,6 +228,8 @@ class Events {
    * Uses defineEvent to define multiple events.
    *
    * @param {String[]} evts An array of event names to define.
+   * @for Events
+   * @method defineEvents
    * @return {Object} Current instance of EventEmitter for chaining.
    */
   defineEvents(evts) {
@@ -220,6 +246,8 @@ class Events {
    *
    * @param {String|RegExp} evt Name of the event to remove the listener from.
    * @param {Function} listener Method to remove from the event.
+   * @for Events
+   * @method removeListener
    * @return {Object} Current instance of EventEmitter for chaining.
    */
   removeListener(evt, listener) {
@@ -251,6 +279,8 @@ class Events {
    * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next.
    * An object if you wish to add to multiple events at once.
    * @param {Function[]} [listeners] An optional array of listener functions to add.
+   * @for Events
+   * @method addListeners
    * @return {Object} Current instance of EventEmitter for chaining.
    */
   addListeners(evt, listeners) {
@@ -268,6 +298,8 @@ class Events {
    * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next.
    * An object if you wish to remove from multiple events at once.
    * @param {Function[]} [listeners] An optional array of listener functions to remove.
+   * @for Events
+   * @method removeListeners
    * @return {Object} Current instance of EventEmitter for chaining.
    */
   removeListeners(evt, listeners) {
@@ -287,6 +319,8 @@ class Events {
    * @param {Boolean} remove True if you want to remove listeners, false if you want to add.
    * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next.
    * @param {Function[]} [listeners] An optional array of listener functions to add/remove.
+   * @for Events
+   * @method manipulateListeners
    * @return {Object} Current instance of EventEmitter for chaining.
    */
   manipulateListeners(remove, evt, listeners) {
@@ -330,6 +364,8 @@ class Events {
    * You can also pass a regex to remove all events that match it.
    *
    * @param {String|RegExp} [evt] Optional name of the event to remove all listeners for.
+   * @for Events
+   * @method removeEvent
    * @return {Object} Current instance of EventEmitter for chaining.
    */
   removeEvent(evt) {
@@ -368,6 +404,8 @@ class Events {
    *
    * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
    * @param {Array} [args] Optional array of arguments to be passed to each listener.
+   * @for Events
+   * @method triggerEvent
    * @return {Object} Current instance of EventEmitter for chaining.
    */
   triggerEvent(evt, args) {
@@ -410,6 +448,8 @@ class Events {
    *
    * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
    * @param {...*} Optional additional arguments to be passed to each listener.
+   * @for Events
+   * @method emit
    * @return {Object} Current instance of EventEmitter for chaining.
    */
   emit(evt) {
@@ -423,6 +463,8 @@ class Events {
    * after execution. This value defaults to true.
    *
    * @param {*} value The new value to check for when executing listeners.
+   * @for Events
+   * @method setOnceReturnValue
    * @return {Object} Current instance of EventEmitter for chaining.
    */
   setOnceReturnValue(value) {
@@ -435,6 +477,8 @@ class Events {
    * the listeners return value matches this one then it should be removed
    * automatically. It will return true by default.
    *
+   * @for Events
+   * @method _getOnceReturnValue
    * @return {*|Boolean} The current value to check for or the default, true.
    * @api private
    */
@@ -451,6 +495,8 @@ class Events {
   /**
    * Fetches the events object and creates one if required.
    *
+   * @for Events
+   * @method _getEvents
    * @return {Object} The events storage object.
    * @api private
    */

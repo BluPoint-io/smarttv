@@ -29,6 +29,9 @@ class Player {
    * Most of Tv manufacturers runs its own video player and its position fixed to (0,0) cooridnates
    * Its important to consider your design
    *
+   * @method createVideoElement
+   * @for Player
+   * @return null
    */
   createVideoElement() {
     if (this.videoElement) {
@@ -48,6 +51,8 @@ class Player {
    * Sets this.playerInfo with initial values. This values usefull for later usages
    * For example Vast, device specific, DRM Type etc we are using this object
    *
+   * @for Player
+   * @method setPlayerInfo
    * @return {Object} this.playerInfo
    */
   setPlayerInfo() {
@@ -77,6 +82,8 @@ class Player {
    * Its recommended to call this function if you are consider to close video
    * TODO We have to check DRM inited if yes we have to detach DRM before removing
    *
+   * @for Player
+   * @method deleteVideoElement
    * @return {Boolean}
    */
   deleteVideoElement() {
@@ -97,6 +104,10 @@ class Player {
    *
    * @param {String} src - Source url for video content
    * @param {String} customData - Custom Data
+   *
+   * @for Player
+   * @method addVideoSource
+   *
    */
   addVideoSource(src, customData) {
     this.playerInfo.customData = customData;
@@ -151,6 +162,9 @@ class Player {
    *
    * @param {String} type - Type of ads source 'VMAP' or just 'VAST'
    * @param url - Url of ads source VMAP or VAST Url
+   *
+   * @for Player
+   * @method initAds
    * @return {*}
    */
   initAds(type, url) {
@@ -186,6 +200,9 @@ class Player {
    * If ads type is VMAP and detected in initAds method it will call automatically this function
    *
    * @param {Object} vmapObject - Vmap object its response of VMAP XML
+   *
+   * @for Player
+   * @method prepareVastFromVmap
    */
   prepareVastFromVmap(vmapObject) {
     // Create Wrapper Div
@@ -220,6 +237,8 @@ class Player {
    *
    * @param {String} vastUrl - URL address for Vast
    * @param {Object} options - It stands for this.config.vastOptions
+   * @for Player
+   * @method readVastFile
    * @return {{}}
    */
   readVastFile(vastUrl, options) { // eslint-disable-line
@@ -408,6 +427,9 @@ class Player {
   /**
    * This function is triggered with timeUpdate event of video player.
    * It compares with Vast time with current time
+   *
+   * @for Player
+   * @method checkAdsStatus
    */
   checkAdsStatus() {
     if (!this.adsInProgress) {
@@ -425,6 +447,8 @@ class Player {
    * After completing ads it starts old src url with initial seeking with time
    *
    * @param time - current time of video player
+   * @for Player
+   * @method initVastAd
    */
   initVastAd(time) {
     const _this = this;
@@ -464,6 +488,9 @@ class Player {
    * This text can be edited via config
    *
    * @return {boolean}
+   *
+   * @for Player
+   * @method addAdsCaption
    */
   addAdsCaption() {
     this.captionDiv = document.createElement('div');
@@ -478,12 +505,15 @@ class Player {
 
   /**
    * Unloads DRM client. !IMPORTANT! Some devices may be crash if you are not unloaded drm client
+   *
+   * @for Player
+   * @method unloadDrmClient
    */
   unloadDrmClient() {
     console.log('Unload Geldi');
     const _this = this;
     if (this.currentDevice.brandName === 'webos' && _this._WebOS.isDrmClientLoaded) {
-      const request = webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
+      webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
         method: 'unload',
         parameters: { clientId: _this._WebOS.clientId },
         onSuccess: (result) => {
@@ -501,6 +531,9 @@ class Player {
   /**
    * Initialize WebOs DRM
    * TODO This can be move to webos device with abstract
+   *
+   * @for Player
+   * @method setupWebOSDrm
    */
   setupWebOSDrm() {
     const _this = this;
@@ -510,7 +543,7 @@ class Player {
     _this._WebOS.clientId = '';
     _this._WebOS.isDrmClientLoaded = '';
 
-    let request = webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
+    webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
       method: 'load',
       parameters: {
         drmType: _this.playerInfo.drmType,
@@ -531,6 +564,9 @@ class Player {
 
   /**
    * WebOs Drm trigger
+   *
+   * @for Player
+   * @method sendWebOSDrm
    */
   sendWebOSDrm() {
     this._WebOS.msg = `<?xml version="1.0" encoding="utf-8"?>
@@ -555,7 +591,7 @@ class Player {
 
     const _this = this;
 
-    let request = webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
+    webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
       method: 'sendDrmMessage',
       parameters: {
         clientId: this._WebOS.clientId,
@@ -589,6 +625,9 @@ class Player {
 
   /**
    * Constructor for Audio class
+   *
+   * @for Player
+   * @method initAudioClass
    */
   initAudioClass() {
     this.Audio = new Audio();
@@ -599,6 +638,9 @@ class Player {
 
   /**
    * Play trigger for videoElement
+   *
+   * @for Player
+   * @method play
    */
   play() {
     this.videoElement.play();
@@ -606,6 +648,9 @@ class Player {
 
   /**
    * Pause trigger for videoElement
+   *
+   * @for Player
+   * @method pause
    */
   pause() {
     this.videoElement.pause();
@@ -613,6 +658,9 @@ class Player {
 
   /**
    * Play/Pause toggle trigger for videoElement
+   *
+   * @for Player
+   * @method togglePlay
    */
   togglePlay() {
     if (this.videoElement.paused) {
@@ -624,6 +672,8 @@ class Player {
 
   /**
    * Trigger specific events for all videoElement trigger
+   * @for Player
+   * @method registerVideoEvents
    */
   registerVideoEvents() {
     const _this = this;
@@ -716,6 +766,9 @@ class Player {
 
   /**
    * Drm initiator for OIPF Devices such as Vestel and Arcelik
+   *
+   * @for Player
+   * @method createOIPFDrmAgent
    */
   createOIPFDrmAgent() {
     this.OIPFDrmObject = document.createElement('object');
@@ -752,6 +805,8 @@ class Player {
    * Seek with given value adding
    *
    * @param {Number} value
+   * @for Player
+   * @method seekWithTimeAdd
    */
   seekWithTimeAdd(value) {
     this.videoElement.currentTime += value;
@@ -762,6 +817,9 @@ class Player {
    * TODO Check device performances if needed use pause method first
    *
    * @param value
+   *
+   * @for Player
+   * @method seekToTime
    */
   seekToTime(value) {
     this.videoElement.currentTime = value;
@@ -769,6 +827,9 @@ class Player {
 
   /**
    * Sets currentTime to 0 and plays automatically
+   *
+   * @for Player
+   * @method restart
    */
   restart() {
     this.pause();

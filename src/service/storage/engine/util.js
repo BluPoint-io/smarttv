@@ -1,7 +1,22 @@
+/**
+ * @for Storage
+ * @method isList
+ * @private
+ * @param val
+ * @return {boolean}
+ */
 function isList(val) {
   return (val !== null && typeof val !== 'function' && typeof val.length === 'number');
 }
 
+/**
+ * @for Storage
+ * @private
+ * @method pluck
+ * @param obj
+ * @param fn
+ * @return {*}
+ */
 function pluck(obj, fn) {
   if (isList(obj)) {
     for (let i = 0; i < obj.length; i += 1) {
@@ -20,6 +35,13 @@ function pluck(obj, fn) {
   }
 }
 
+/**
+ * @for Storage
+ * @private
+ * @method each
+ * @param obj
+ * @param fn
+ */
 function each(obj, fn) {
   pluck(obj, (key, val) => {
     fn(key, val);
@@ -27,15 +49,35 @@ function each(obj, fn) {
   });
 }
 
+/**
+ * @for Storage
+ * @private
+ * @method slice
+ * @param arr
+ * @param index
+ * @return {*}
+ */
 function slice(arr, index) {
   return Array.prototype.slice.call(arr, index || 0);
 }
 
+/**
+ * @for Storage
+ * @private
+ * @method makeAssign
+ * @return {*}
+ */
 function makeAssign() {
   return Object.assign;
 }
 const assign = makeAssign();
 
+/**
+ * @for Storage
+ * @private
+ * @method makeCreate
+ * @return {*}
+ */
 function makeCreate() {
   let returnValue;
   if (Object.create) {
@@ -56,6 +98,12 @@ function makeCreate() {
   return returnValue;
 }
 
+/**
+ * @for Storage
+ * @private
+ * @method makeTrim
+ * @return {*}
+ */
 function makeTrim() {
   let returnValue;
   if (String.prototype.trim) {
@@ -70,16 +118,33 @@ function makeTrim() {
   return returnValue;
 }
 
+
 const create = makeCreate();
 const trim = makeTrim();
 const Global = (typeof window !== 'undefined' ? window : global);
 
+/**
+ * @for Storage
+ * @private
+ * @method bind
+ * @param obj
+ * @param fn
+ * @return {Function}
+ */
 function bind(obj, fn) {
   return function(...args) {
     return fn.apply(obj, Array.prototype.slice.call(args, 0));
   };
 }
 
+/**
+ * @for Storage
+ * @private
+ * @method map
+ * @param obj
+ * @param fn
+ * @return {*}
+ */
 function map(obj, fn) {
   const res = (isList(obj) ? [] : {});
   pluck(obj, (v, k) => {
@@ -89,10 +154,24 @@ function map(obj, fn) {
   return res;
 }
 
+/**
+ * @for Storage
+ * @private
+ * @method isFunction
+ * @param val
+ * @return {*|boolean}
+ */
 function isFunction(val) {
   return val && {}.toString.call(val) === '[object Function]';
 }
 
+/**
+ * @for Storage
+ * @private
+ * @method isObject
+ * @param val
+ * @return {*|boolean}
+ */
 function isObject(val) {
   return val && {}.toString.call(val) === '[object Object]';
 }

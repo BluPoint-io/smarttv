@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Player</title>
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="../assets/vendor/yui-min.js"></script>
+</head>
+<body>
+
+<div id="doc">
+    <header class="main-header">
+        <div class="content">
+            <div class="project-title">
+            </div>
+            <ul class="jump-links">
+                <li><a href="#index" class="index-jump-link">index</a></li>
+                <li><a href="#top" class="top-jump-link">top</a></li>
+            </ul>
+        </div>
+    </header>
+    <div id="bd" class="main-body">
+
+        <div id="docs-sidebar" class="sidebar apidocs">
+            <div id="api-list">
+                <div id="api-tabview" class="tabview">
+                    <ul class="tabs">
+                        <li><a href="#api-classes">Classes</a></li>
+                        <li><a href="#api-modules">Modules</a></li>
+                    </ul>
+            
+                    <div id="api-tabview-filter">
+                        <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                    </div>
+            
+                    <div id="api-tabview-panel">
+                        <ul id="api-classes" class="apis classes">
+                            <li><a class="type" href="../classes/Audio.html">Audio</a></li>
+                            <li><a class="type" href="../classes/Device.html">Device</a></li>
+                            <li><a class="type" href="../classes/Device_Arcelik.html">Device_Arcelik</a></li>
+                            <li><a class="type" href="../classes/Device_LG.html">Device_LG</a></li>
+                            <li><a class="type" href="../classes/Device_Philips.html">Device_Philips</a></li>
+                            <li><a class="type" href="../classes/Device_Samsung.html">Device_Samsung</a></li>
+                            <li><a class="type" href="../classes/Device_Tizen.html">Device_Tizen</a></li>
+                            <li><a class="type" href="../classes/Device_Vestel.html">Device_Vestel</a></li>
+                            <li><a class="type" href="../classes/Device_Web.html">Device_Web</a></li>
+                            <li><a class="type" href="../classes/Device_WebOs.html">Device_WebOs</a></li>
+                            <li><a class="type" href="../classes/Events.html">Events</a></li>
+                            <li><a class="type" href="../classes/Logger.html">Logger</a></li>
+                            <li><a class="type" href="../classes/Player.html">Player</a></li>
+                            <li><a class="type" href="../classes/Storage.html">Storage</a></li>
+                            <li><a class="type" href="../classes/Subtitle.html">Subtitle</a></li>
+                            <li><a class="type" href="../classes/Xhr.html">Xhr</a></li>
+                        </ul>
+            
+                        <ul id="api-modules" class="apis modules">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="docs-main" class="apidocs">
+            <div class="content container">
+                <h1>Player Class</h1>
+                <div class="box meta">
+                
+                
+                        <div class="foundat">
+                            Defined in: <a href="../files/src_player_player.js.html#l8"><code>src&#x2F;player&#x2F;player.js:8</code></a>
+                        </div>
+                
+                
+                </div>
+                
+                
+                <div class="box intro">
+                    <p>This is for Player operations. It depends to Device. Some methods are abstracted by Devices</p>
+                
+                </div>
+                
+                <!-- Class member index -->
+                
+                <a name="index" class="anchor-link"></a>
+                <div class="index">
+                <h2>Index</h2>
+                
+                    <div id="api-options">
+                        Show:
+                        <label for="api-show-inherited">
+                            <input type="checkbox" id="api-show-inherited">
+                            Inherited
+                        </label>
+                
+                        <label for="api-show-protected">
+                            <input type="checkbox" id="api-show-protected">
+                            Protected
+                        </label>
+                
+                        <label for="api-show-private">
+                            <input type="checkbox" id="api-show-private">
+                            Private
+                        </label>
+                        <label for="api-show-deprecated">
+                            <input type="checkbox" id="api-show-deprecated">
+                            Deprecated
+                        </label>
+                
+                    </div>
+                
+                
+                
+                
+                
+                    <div class="index-section methods">
+                        <h3>Methods</h3>
+                
+                        <ul class="index-list methods">
+                
+                                <li class="index-item method constructor">
+                                    <a href="#method_Player">Player</a>
+                
+                                    <span class="flag constructor">constructor</span>
+                
+                                </li>
+                
+                                <li class="index-item method">
+                                    <a href="#method_addAdsCaption">addAdsCaption</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_addVideoSource">addVideoSource</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_checkAdsStatus">checkAdsStatus</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_createOIPFDrmAgent">createOIPFDrmAgent</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_createVideoElement">createVideoElement</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_deleteVideoElement">deleteVideoElement</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_initAds">initAds</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_initAudioClass">initAudioClass</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_initVastAd">initVastAd</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_pause">pause</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_play">play</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_prepareVastFromVmap">prepareVastFromVmap</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_readVastFile">readVastFile</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_registerVideoEvents">registerVideoEvents</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_restart">restart</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_seekToTime">seekToTime</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_seekWithTimeAdd">seekWithTimeAdd</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_sendWebOSDrm">sendWebOSDrm</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_setPlayerInfo">setPlayerInfo</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_setupWebOSDrm">setupWebOSDrm</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_togglePlay">togglePlay</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_unloadDrmClient">unloadDrmClient</a>
+                
+                                </li>
+                        </ul>
+                    </div>
+                
+                </div>
+                
+                
+                <div class="class-detail">
+                
+                
+                
+                    <div class="constructor">
+                        <h2>Constructor</h2>
+                        <a name="method_Player" class="anchor-link"></a>
+                        <div class="method item">
+                            <h3 class="name"><code>Player</code>
+                        
+                                <div class="args">
+                                    <span class="paren">(</span><ul class="args-list inline commas">
+                                        <li class="arg">
+                                                <code>currentDevice</code>
+                                        </li>
+                                        <li class="arg">
+                                                <code>events</code>
+                                        </li>
+                                        <li class="arg">
+                                                <code>config</code>
+                                        </li>
+                                    </ul><span class="paren">)</span>
+                                </div>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                            </h3>
+                        
+                            <div class="meta">
+                                        <p>
+                                        Defined in
+                                <a href="../files/src_player_player.js.html#l8"><code>src&#x2F;player&#x2F;player.js:8</code></a>
+                                </p>
+                        
+                        
+                        
+                            </div>
+                        
+                            <div class="extended-detail">
+                        
+                                <div class="description">
+                                    
+                                </div>
+                        
+                                    <div class="params">
+                                        <h4>Parameters:</h4>
+                        
+                                        <ul class="params-list">
+                                            <li class="param">
+                                                    <code class="param-name">currentDevice</code>
+                                                    <span class="type">Object</span>
+                        
+                        
+                                                <div class="param-description">
+                                                    <ul>
+                        <li>Current device object</li>
+                        </ul>
+                        
+                                                </div>
+                        
+                                            </li>
+                                            <li class="param">
+                                                    <code class="param-name">events</code>
+                                                    <span class="type">Object</span>
+                        
+                        
+                                                <div class="param-description">
+                                                    <ul>
+                        <li>Events class inheritance</li>
+                        </ul>
+                        
+                                                </div>
+                        
+                                            </li>
+                                            <li class="param">
+                                                    <code class="param-name">config</code>
+                                                    <span class="type">Object</span>
+                        
+                        
+                                                <div class="param-description">
+                                                    <ul>
+                        <li>Config object</li>
+                        </ul>
+                        
+                                                </div>
+                        
+                                            </li>
+                                        </ul>
+                                    </div>
+                        
+                        
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="methods-detail">
+                        <h2>Methods</h2>
+                
+                            <a name="method_addAdsCaption" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>addAdsCaption</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                                    <span class="returns-inline">
+                                        <span class="type">Boolean</span>
+                                    </span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l486"><code>src&#x2F;player&#x2F;player.js:486</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Adds ads caption to video player to end user notified about Ads
+                            This text can be edited via config</p>
+                            
+                                    </div>
+                            
+                            
+                                        <div class="returns">
+                                            <h4>Returns:</h4>
+                            
+                                            <div class="returns-description">
+                                                        <span class="type">Boolean</span>:
+                                            </div>
+                                        </div>
+                            
+                                </div>
+                            </div>
+                            <a name="method_addVideoSource" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>addVideoSource</code>
+                            
+                                    <div class="args">
+                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                            <li class="arg">
+                                                    <code>src</code>
+                                            </li>
+                                            <li class="arg">
+                                                    <code>customData</code>
+                                            </li>
+                                        </ul><span class="paren">)</span>
+                                    </div>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l96"><code>src&#x2F;player&#x2F;player.js:96</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Adds video source to element.
+                            If trying to play DRM video you have to send customData with video source
+                            It sets this customData to player info so it can be accessible.
+                            Checks content address if it includes manifest regex it will start DRM functions automatically
+                            It catches DRM providers with currentDevice
+                            You can send HLS, Live HLS and Microsoft SS (PlayReady) content
+                            TODO DRM providers can be included in another function</p>
+                            
+                                    </div>
+                            
+                                        <div class="params">
+                                            <h4>Parameters:</h4>
+                            
+                                            <ul class="params-list">
+                                                <li class="param">
+                                                        <code class="param-name">src</code>
+                                                        <span class="type">String</span>
+                            
+                            
+                                                    <div class="param-description">
+                                                        <ul>
+                            <li>Source url for video content</li>
+                            </ul>
+                            
+                                                    </div>
+                            
+                                                </li>
+                                                <li class="param">
+                                                        <code class="param-name">customData</code>
+                                                        <span class="type">String</span>
+                            
+                            
+                                                    <div class="param-description">
+                                                        <ul>
+                            <li>Custom Data</li>
+                            </ul>
+                            
+                                                    </div>
+                            
+                                                </li>
+                                            </ul>
+                                        </div>
+                            
+                            
+                                </div>
+                            </div>
+                            <a name="method_checkAdsStatus" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>checkAdsStatus</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l427"><code>src&#x2F;player&#x2F;player.js:427</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>This function is triggered with timeUpdate event of video player.
+                            It compares with Vast time with current time</p>
+                            
+                                    </div>
+                            
+                            
+                            
+                                </div>
+                            </div>
+                            <a name="method_createOIPFDrmAgent" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>createOIPFDrmAgent</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l767"><code>src&#x2F;player&#x2F;player.js:767</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Drm initiator for OIPF Devices such as Vestel and Arcelik</p>
+                            
+                                    </div>
+                            
+                            
+                            
+                                </div>
+                            </div>
+                            <a name="method_createVideoElement" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>createVideoElement</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                                    <span class="returns-inline">
+                                        <span class="type"></span>
+                                    </span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l25"><code>src&#x2F;player&#x2F;player.js:25</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Creates Video element. It creates a HTML5 video element with config videoPlayerId
+                            Then you can reach this video element with this.videoElement
+                            It appends this video element to body. You have to set it to a fixed position with css.
+                            Most of Tv manufacturers runs its own video player and its position fixed to (0,0) cooridnates
+                            Its important to consider your design</p>
+                            
+                                    </div>
+                            
+                            
+                                        <div class="returns">
+                                            <h4>Returns:</h4>
+                            
+                                            <div class="returns-description">
+                                                    <p>null</p>
+                            
+                                            </div>
+                                        </div>
+                            
+                                </div>
+                            </div>
+                            <a name="method_deleteVideoElement" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>deleteVideoElement</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                                    <span class="returns-inline">
+                                        <span class="type">Boolean</span>
+                                    </span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l80"><code>src&#x2F;player&#x2F;player.js:80</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Removes videoElement from DOM.
+                            Its recommended to call this function if you are consider to close video
+                            TODO We have to check DRM inited if yes we have to detach DRM before removing</p>
+                            
+                                    </div>
+                            
+                            
+                                        <div class="returns">
+                                            <h4>Returns:</h4>
+                            
+                                            <div class="returns-description">
+                                                        <span class="type">Boolean</span>:
+                                            </div>
+                                        </div>
+                            
+                                </div>
+                            </div>
+                            <a name="method_initAds" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>initAds</code>
+                            
+                                    <div class="args">
+                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                            <li class="arg">
+                                                    <code>type</code>
+                                            </li>
+                                            <li class="arg">
+                                                    <code>url</code>
+                                            </li>
+                                        </ul><span class="paren">)</span>
+                                    </div>
+                            
+                                    <span class="returns-inline">
+                                        <span class="type"></span>
+                                    </span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l160"><code>src&#x2F;player&#x2F;player.js:160</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Initialize ads with given source and type. So type is mandatory field to operate</p>
+                            
+                                    </div>
+                            
+                                        <div class="params">
+                                            <h4>Parameters:</h4>
+                            
+                                            <ul class="params-list">
+                                                <li class="param">
+                                                        <code class="param-name">type</code>
+                                                        <span class="type">String</span>
+                            
+                            
+                                                    <div class="param-description">
+                                                        <ul>
+                            <li>Type of ads source 'VMAP' or just 'VAST'</li>
+                            </ul>
+                            
+                                                    </div>
+                            
+                                                </li>
+                                                <li class="param">
+                                                        <code class="param-name">url</code>
+                                                        <span class="type">Object</span>
+                            
+                            
+                                                    <div class="param-description">
+                                                        <ul>
+                            <li>Url of ads source VMAP or VAST Url</li>
+                            </ul>
+                            
+                                                    </div>
+                            
+                                                </li>
+                                            </ul>
+                                        </div>
+                            
+                                        <div class="returns">
+                                            <h4>Returns:</h4>
+                            
+                                            <div class="returns-description">
+                                                        <span class="type"></span>:
+                                            </div>
+                                        </div>
+                            
+                                </div>
+                            </div>
+                            <a name="method_initAudioClass" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>initAudioClass</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l626"><code>src&#x2F;player&#x2F;player.js:626</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Constructor for Audio class</p>
+                            
+                                    </div>
+                            
+                            
+                            
+                                </div>
+                            </div>
+                            <a name="method_initVastAd" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>initVastAd</code>
+                            
+                                    <div class="args">
+                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                            <li class="arg">
+                                                    <code>time</code>
+                                            </li>
+                                        </ul><span class="paren">)</span>
+                                    </div>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l445"><code>src&#x2F;player&#x2F;player.js:445</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>It starts ads in videoPlayer. Pauses current video then starting ads
+                            After completing ads it starts old src url with initial seeking with time</p>
+                            
+                                    </div>
+                            
+                                        <div class="params">
+                                            <h4>Parameters:</h4>
+                            
+                                            <ul class="params-list">
+                                                <li class="param">
+                                                        <code class="param-name">time</code>
+                                                        <span class="type">Object</span>
+                            
+                            
+                                                    <div class="param-description">
+                                                        <ul>
+                            <li>current time of video player</li>
+                            </ul>
+                            
+                                                    </div>
+                            
+                                                </li>
+                                            </ul>
+                                        </div>
+                            
+                            
+                                </div>
+                            </div>
+                            <a name="method_pause" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>pause</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l649"><code>src&#x2F;player&#x2F;player.js:649</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Pause trigger for videoElement</p>
+                            
+                                    </div>
+                            
+                            
+                            
+                                </div>
+                            </div>
+                            <a name="method_play" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>play</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l639"><code>src&#x2F;player&#x2F;player.js:639</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Play trigger for videoElement</p>
+                            
+                                    </div>
+                            
+                            
+                            
+                                </div>
+                            </div>
+                            <a name="method_prepareVastFromVmap" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>prepareVastFromVmap</code>
+                            
+                                    <div class="args">
+                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                            <li class="arg">
+                                                    <code>vmapObject</code>
+                                            </li>
+                                        </ul><span class="paren">)</span>
+                                    </div>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l199"><code>src&#x2F;player&#x2F;player.js:199</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>If ads type is VMAP and detected in initAds method it will call automatically this function</p>
+                            
+                                    </div>
+                            
+                                        <div class="params">
+                                            <h4>Parameters:</h4>
+                            
+                                            <ul class="params-list">
+                                                <li class="param">
+                                                        <code class="param-name">vmapObject</code>
+                                                        <span class="type">Object</span>
+                            
+                            
+                                                    <div class="param-description">
+                                                        <ul>
+                            <li>Vmap object its response of VMAP XML</li>
+                            </ul>
+                            
+                                                    </div>
+                            
+                                                </li>
+                                            </ul>
+                                        </div>
+                            
+                            
+                                </div>
+                            </div>
+                            <a name="method_readVastFile" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>readVastFile</code>
+                            
+                                    <div class="args">
+                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                            <li class="arg">
+                                                    <code>vastUrl</code>
+                                            </li>
+                                            <li class="arg">
+                                                    <code>options</code>
+                                            </li>
+                                        </ul><span class="paren">)</span>
+                                    </div>
+                            
+                                    <span class="returns-inline">
+                                        <span class="type"></span>
+                                    </span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l235"><code>src&#x2F;player&#x2F;player.js:235</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Reads Vast file and seperates its source and options (extensions, type etc)</p>
+                            
+                                    </div>
+                            
+                                        <div class="params">
+                                            <h4>Parameters:</h4>
+                            
+                                            <ul class="params-list">
+                                                <li class="param">
+                                                        <code class="param-name">vastUrl</code>
+                                                        <span class="type">String</span>
+                            
+                            
+                                                    <div class="param-description">
+                                                        <ul>
+                            <li>URL address for Vast</li>
+                            </ul>
+                            
+                                                    </div>
+                            
+                                                </li>
+                                                <li class="param">
+                                                        <code class="param-name">options</code>
+                                                        <span class="type">Object</span>
+                            
+                            
+                                                    <div class="param-description">
+                                                        <ul>
+                            <li>It stands for this.config.vastOptions</li>
+                            </ul>
+                            
+                                                    </div>
+                            
+                                                </li>
+                                            </ul>
+                                        </div>
+                            
+                                        <div class="returns">
+                                            <h4>Returns:</h4>
+                            
+                                            <div class="returns-description">
+                                                    <p>}</p>
+                            
+                                            </div>
+                                        </div>
+                            
+                                </div>
+                            </div>
+                            <a name="method_registerVideoEvents" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>registerVideoEvents</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l673"><code>src&#x2F;player&#x2F;player.js:673</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Trigger specific events for all videoElement trigger</p>
+                            
+                                    </div>
+                            
+                            
+                            
+                                </div>
+                            </div>
+                            <a name="method_restart" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>restart</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l828"><code>src&#x2F;player&#x2F;player.js:828</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Sets currentTime to 0 and plays automatically</p>
+                            
+                                    </div>
+                            
+                            
+                            
+                                </div>
+                            </div>
+                            <a name="method_seekToTime" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>seekToTime</code>
+                            
+                                    <div class="args">
+                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                            <li class="arg">
+                                                    <code>value</code>
+                                            </li>
+                                        </ul><span class="paren">)</span>
+                                    </div>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l815"><code>src&#x2F;player&#x2F;player.js:815</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Seek to given time
+                            TODO Check device performances if needed use pause method first</p>
+                            
+                                    </div>
+                            
+                                        <div class="params">
+                                            <h4>Parameters:</h4>
+                            
+                                            <ul class="params-list">
+                                                <li class="param">
+                                                        <code class="param-name">value</code>
+                                                        <span class="type">Object</span>
+                            
+                            
+                                                    <div class="param-description">
+                                                         
+                                                    </div>
+                            
+                                                </li>
+                                            </ul>
+                                        </div>
+                            
+                            
+                                </div>
+                            </div>
+                            <a name="method_seekWithTimeAdd" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>seekWithTimeAdd</code>
+                            
+                                    <div class="args">
+                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                            <li class="arg">
+                                                    <code>value</code>
+                                            </li>
+                                        </ul><span class="paren">)</span>
+                                    </div>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l804"><code>src&#x2F;player&#x2F;player.js:804</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Seek with given value adding</p>
+                            
+                                    </div>
+                            
+                                        <div class="params">
+                                            <h4>Parameters:</h4>
+                            
+                                            <ul class="params-list">
+                                                <li class="param">
+                                                        <code class="param-name">value</code>
+                                                        <span class="type">Number</span>
+                            
+                            
+                                                    <div class="param-description">
+                                                         
+                                                    </div>
+                            
+                                                </li>
+                                            </ul>
+                                        </div>
+                            
+                            
+                                </div>
+                            </div>
+                            <a name="method_sendWebOSDrm" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>sendWebOSDrm</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l565"><code>src&#x2F;player&#x2F;player.js:565</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>WebOs Drm trigger</p>
+                            
+                                    </div>
+                            
+                            
+                            
+                                </div>
+                            </div>
+                            <a name="method_setPlayerInfo" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>setPlayerInfo</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                                    <span class="returns-inline">
+                                        <span class="type">Object</span>
+                                    </span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l50"><code>src&#x2F;player&#x2F;player.js:50</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Sets this.playerInfo with initial values. This values usefull for later usages
+                            For example Vast, device specific, DRM Type etc we are using this object</p>
+                            
+                                    </div>
+                            
+                            
+                                        <div class="returns">
+                                            <h4>Returns:</h4>
+                            
+                                            <div class="returns-description">
+                                                        <span class="type">Object</span>:
+                                                    <p>this.playerInfo</p>
+                            
+                                            </div>
+                                        </div>
+                            
+                                </div>
+                            </div>
+                            <a name="method_setupWebOSDrm" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>setupWebOSDrm</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l531"><code>src&#x2F;player&#x2F;player.js:531</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Initialize WebOs DRM
+                            TODO This can be move to webos device with abstract</p>
+                            
+                                    </div>
+                            
+                            
+                            
+                                </div>
+                            </div>
+                            <a name="method_togglePlay" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>togglePlay</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l659"><code>src&#x2F;player&#x2F;player.js:659</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Play/Pause toggle trigger for videoElement</p>
+                            
+                                    </div>
+                            
+                            
+                            
+                                </div>
+                            </div>
+                            <a name="method_unloadDrmClient" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>unloadDrmClient</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_player_player.js.html#l506"><code>src&#x2F;player&#x2F;player.js:506</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Unloads DRM client. !IMPORTANT! Some devices may be crash if you are not unloaded drm client</p>
+                            
+                                    </div>
+                            
+                            
+                            
+                                </div>
+                            </div>
+                
+                        <div class="no-visible-items-message">
+                            <p>There are no methods that match your current filter settings. You can change your filter settings in the index section on this page. <a href="#index" class="index-jump-link">index</a></p>
+                        </div>
+                
+                    </div>
+                
+                
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/vendor/jquery.min.js"></script>
+<script src="../assets/js/jquery-offscreen-trigger.js"></script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

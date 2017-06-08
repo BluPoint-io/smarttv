@@ -1,0 +1,14 @@
+{
+  "device": {
+    "activeSlug": "framework/device"
+  },
+  "appconfig": {
+    "activeSlug": "framework/appconfig"
+  },
+  "events": {
+    "activeSlug": "framework/events"
+  },
+  "storage": {
+    "activeSlug": "framework/storage"
+  }
+}

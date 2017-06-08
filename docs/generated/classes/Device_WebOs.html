@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Device_WebOs</title>
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="../assets/vendor/yui-min.js"></script>
+</head>
+<body>
+
+<div id="doc">
+    <header class="main-header">
+        <div class="content">
+            <div class="project-title">
+            </div>
+            <ul class="jump-links">
+                <li><a href="#index" class="index-jump-link">index</a></li>
+                <li><a href="#top" class="top-jump-link">top</a></li>
+            </ul>
+        </div>
+    </header>
+    <div id="bd" class="main-body">
+
+        <div id="docs-sidebar" class="sidebar apidocs">
+            <div id="api-list">
+                <div id="api-tabview" class="tabview">
+                    <ul class="tabs">
+                        <li><a href="#api-classes">Classes</a></li>
+                        <li><a href="#api-modules">Modules</a></li>
+                    </ul>
+            
+                    <div id="api-tabview-filter">
+                        <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                    </div>
+            
+                    <div id="api-tabview-panel">
+                        <ul id="api-classes" class="apis classes">
+                            <li><a class="type" href="../classes/Audio.html">Audio</a></li>
+                            <li><a class="type" href="../classes/Device.html">Device</a></li>
+                            <li><a class="type" href="../classes/Device_Arcelik.html">Device_Arcelik</a></li>
+                            <li><a class="type" href="../classes/Device_LG.html">Device_LG</a></li>
+                            <li><a class="type" href="../classes/Device_Philips.html">Device_Philips</a></li>
+                            <li><a class="type" href="../classes/Device_Samsung.html">Device_Samsung</a></li>
+                            <li><a class="type" href="../classes/Device_Tizen.html">Device_Tizen</a></li>
+                            <li><a class="type" href="../classes/Device_Vestel.html">Device_Vestel</a></li>
+                            <li><a class="type" href="../classes/Device_Web.html">Device_Web</a></li>
+                            <li><a class="type" href="../classes/Device_WebOs.html">Device_WebOs</a></li>
+                            <li><a class="type" href="../classes/Events.html">Events</a></li>
+                            <li><a class="type" href="../classes/Logger.html">Logger</a></li>
+                            <li><a class="type" href="../classes/Player.html">Player</a></li>
+                            <li><a class="type" href="../classes/Storage.html">Storage</a></li>
+                            <li><a class="type" href="../classes/Subtitle.html">Subtitle</a></li>
+                            <li><a class="type" href="../classes/Xhr.html">Xhr</a></li>
+                        </ul>
+            
+                        <ul id="api-modules" class="apis modules">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="docs-main" class="apidocs">
+            <div class="content container">
+                <h1>Device_WebOs Class</h1>
+                <div class="box meta">
+                
+                        <div class="extends">
+                            Extends <a href="../classes/Device.html" class="crosslink">Device</a>
+                        </div>
+                
+                        <div class="foundat">
+                            Defined in: <a href="../files/src_core_devices_webos.js.html#l7"><code>src&#x2F;core&#x2F;devices&#x2F;webos.js:7</code></a>
+                        </div>
+                
+                
+                </div>
+                
+                
+                <div class="box intro">
+                    <p>This is extendable class for LG WebOs devices</p>
+                
+                </div>
+                
+                <!-- Class member index -->
+                
+                <a name="index" class="anchor-link"></a>
+                <div class="index">
+                <h2>Index</h2>
+                
+                    <div id="api-options">
+                        Show:
+                        <label for="api-show-inherited">
+                            <input type="checkbox" id="api-show-inherited">
+                            Inherited
+                        </label>
+                
+                        <label for="api-show-protected">
+                            <input type="checkbox" id="api-show-protected">
+                            Protected
+                        </label>
+                
+                        <label for="api-show-private">
+                            <input type="checkbox" id="api-show-private">
+                            Private
+                        </label>
+                        <label for="api-show-deprecated">
+                            <input type="checkbox" id="api-show-deprecated">
+                            Deprecated
+                        </label>
+                
+                    </div>
+                
+                
+                
+                
+                
+                    <div class="index-section methods">
+                        <h3>Methods</h3>
+                
+                        <ul class="index-list methods extends">
+                
+                                <li class="index-item method constructor">
+                                    <a href="#method_Device_WebOs">Device_WebOs</a>
+                
+                                    <span class="flag constructor">constructor</span>
+                
+                                </li>
+                
+                                <li class="index-item method">
+                                    <a href="#method_addWebOsLib">addWebOsLib</a>
+                
+                                </li>
+                                <li class="index-item method">
+                                    <a href="#method_createVideoElement">createVideoElement</a>
+                
+                                </li>
+                                <li class="index-item method inherited">
+                                    <a href="#method_initEvents">initEvents</a>
+                
+                                </li>
+                                <li class="index-item method inherited">
+                                    <a href="#method_initPlayerClass">initPlayerClass</a>
+                
+                                </li>
+                                <li class="index-item method inherited">
+                                    <a href="#method_setCurrentDevice">setCurrentDevice</a>
+                
+                                </li>
+                        </ul>
+                    </div>
+                
+                </div>
+                
+                
+                <div class="class-detail">
+                
+                
+                
+                    <div class="constructor">
+                        <h2>Constructor</h2>
+                        <a name="method_Device_WebOs" class="anchor-link"></a>
+                        <div class="method item">
+                            <h3 class="name"><code>Device_WebOs</code>
+                        
+                                <span class="paren">()</span>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                            </h3>
+                        
+                            <div class="meta">
+                                        <p>
+                                        Defined in
+                                <a href="../files/src_core_devices_webos.js.html#l7"><code>src&#x2F;core&#x2F;devices&#x2F;webos.js:7</code></a>
+                                </p>
+                        
+                        
+                        
+                            </div>
+                        
+                            <div class="extended-detail">
+                        
+                                <div class="description">
+                                    
+                                </div>
+                        
+                        
+                        
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="methods-detail">
+                        <h2>Methods</h2>
+                
+                            <a name="method_addWebOsLib" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>addWebOsLib</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                                    <span class="returns-inline">
+                                        <span class="type">Boolean</span>
+                                    </span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_core_devices_webos.js.html#l24"><code>src&#x2F;core&#x2F;devices&#x2F;webos.js:24</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>WebOs native api's are required to use webos.js file.
+                            This method provides necessary libraries.</p>
+                            
+                                    </div>
+                            
+                            
+                                        <div class="returns">
+                                            <h4>Returns:</h4>
+                            
+                                            <div class="returns-description">
+                                                        <span class="type">Boolean</span>:
+                                                    <p>true</p>
+                            
+                                            </div>
+                                        </div>
+                            
+                                </div>
+                            </div>
+                            <a name="method_createVideoElement" class="anchor-link"></a>
+                            <div class="method item">
+                                <h3 class="name"><code>createVideoElement</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                                    <span class="returns-inline">
+                                        <span class="type">Boolean</span>
+                                    </span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>
+                                            Defined in
+                                    <a href="../files/src_core_devices_webos.js.html#l42"><code>src&#x2F;core&#x2F;devices&#x2F;webos.js:42</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        <p>Abstract Player createVideoElement function.</p>
+                            
+                                    </div>
+                            
+                            
+                                        <div class="returns">
+                                            <h4>Returns:</h4>
+                            
+                                            <div class="returns-description">
+                                                        <span class="type">Boolean</span>:
+                                                    <p>true</p>
+                            
+                                            </div>
+                                        </div>
+                            
+                                </div>
+                            </div>
+                            <a name="method_initEvents" class="anchor-link"></a>
+                            <div class="method item inherited">
+                                <h3 class="name"><code>initEvents</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                                    <span class="returns-inline">
+                                        <span class="type">Object</span>
+                                    </span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>Inherited from
+                                            <a href="../classes/Device.html#method_initEvents" class="type">Device</a>:
+                                    <a href="../files/src_core_device.js.html#l50"><code>src&#x2F;core&#x2F;device.js:50</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        Events are based on class. So it have to be constructed.
+                                    </div>
+                            
+                            
+                                        <div class="returns">
+                                            <h4>Returns:</h4>
+                            
+                                            <div class="returns-description">
+                                                        <span class="type">Object</span>:
+                                                    It returns Events class
+                                            </div>
+                                        </div>
+                            
+                                </div>
+                            </div>
+                            <a name="method_initPlayerClass" class="anchor-link"></a>
+                            <div class="method item inherited">
+                                <h3 class="name"><code>initPlayerClass</code>
+                            
+                                    <span class="paren">()</span>
+                            
+                                    <span class="returns-inline">
+                                        <span class="type">Object</span>
+                                    </span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>Inherited from
+                                            <a href="../classes/Device.html#method_initPlayerClass" class="type">Device</a>:
+                                    <a href="../files/src_core_device.js.html#l63"><code>src&#x2F;core&#x2F;device.js:63</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        This function stands for initializing Player class
+                            It uses currentDevice and config info (extended during device extending)
+                            It pass Events to Player class to use same initialized class
+                                    </div>
+                            
+                            
+                                        <div class="returns">
+                                            <h4>Returns:</h4>
+                            
+                                            <div class="returns-description">
+                                                        <span class="type">Object</span>:
+                                                    It returns Events class
+                                            </div>
+                                        </div>
+                            
+                                </div>
+                            </div>
+                            <a name="method_setCurrentDevice" class="anchor-link"></a>
+                            <div class="method item inherited">
+                                <h3 class="name"><code>setCurrentDevice</code>
+                            
+                                    <div class="args">
+                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                            <li class="arg">
+                                                    <code class="optional">[platforms]</code>
+                                            </li>
+                                        </ul><span class="paren">)</span>
+                                    </div>
+                            
+                                    <span class="returns-inline">
+                                        <span class="type">Object</span>
+                                    </span>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                </h3>
+                            
+                                <div class="meta">
+                                            <p>Inherited from
+                                            <a href="../classes/Device.html#method_setCurrentDevice" class="type">Device</a>:
+                                    <a href="../files/src_core_device.js.html#l28"><code>src&#x2F;core&#x2F;device.js:28</code></a>
+                                    </p>
+                            
+                            
+                            
+                                </div>
+                            
+                                <div class="extended-detail">
+                            
+                                    <div class="description">
+                                        Sets currentDevice which needs to identicate which platform we are running on it
+                            Uses browser User Agent to identicate device. Platforms list have to be updated. (PR Welcomed)
+                            This function have to be worked before all operations.
+                            Because other classes and objects are includes device specific blocks
+                                    </div>
+                            
+                                        <div class="params">
+                                            <h4>Parameters:</h4>
+                            
+                                            <ul class="params-list">
+                                                <li class="param">
+                                                        <code class="param-name optional">[platforms]</code>
+                                                        <span class="type">Array</span>
+                                                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                            
+                            
+                                                    <div class="param-description">
+                                                        Platforms list to compare userAgent.
+                                                    </div>
+                            
+                                                </li>
+                                            </ul>
+                                        </div>
+                            
+                                        <div class="returns">
+                                            <h4>Returns:</h4>
+                            
+                                            <div class="returns-description">
+                                                        <span class="type">Object</span>:
+                                                    It returns currentDevice and sets it to Device class
+                                            </div>
+                                        </div>
+                            
+                                </div>
+                            </div>
+                
+                        <div class="no-visible-items-message">
+                            <p>There are no methods that match your current filter settings. You can change your filter settings in the index section on this page. <a href="#index" class="index-jump-link">index</a></p>
+                        </div>
+                
+                    </div>
+                
+                
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/vendor/jquery.min.js"></script>
+<script src="../assets/js/jquery-offscreen-trigger.js"></script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

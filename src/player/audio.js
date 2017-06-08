@@ -11,11 +11,15 @@ class Audio {
   constructor() {
     Logger.addLog('Audio', 'create', 'Audio class initialized');
   }
+
   /**
    * Changes audio tracks with given order. It enables given index and disables other audio elements
    * Based on HTML5 video element audioTracks
    *
    * @param {Number} order - Language order to change
+   * @method changeAudioWithOrder
+   * @for Audio
+   * @return {Boolean}
    */
   changeAudioWithOrder(order) {
     const _this = this;
@@ -29,6 +33,7 @@ class Audio {
           audioTracks[i].enabled = false;
         }
       }
+      return true;
     }
   }
 
@@ -36,6 +41,11 @@ class Audio {
    * It returns current audio order. It checks which audioTrack is enabled
    * Usefull for UI to understand which language is available
    * TODO It must return object. If video metadata is correct it returns language unicode and name
+   *
+   * @method getCurrentAudioWithOrder
+   * @for Audio
+   * @return {Number} order - It returns current audio index
+   *
    */
   getCurrentAudioWithOrder() {
     const _this = this;

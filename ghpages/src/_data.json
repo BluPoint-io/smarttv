@@ -1,0 +1,78 @@
+{
+  "index": {
+    "styles": {
+      "headerClass": "header-over large"
+    },
+    "title": "Homepage | BluPoint SmartTV Framework",
+    "sections": {
+      "slider": {
+        "sloganText": "Smart. Robust. Clean.",
+        "subSloganText": "Complete SmartTV framework with unique features"
+      },
+      "features": {
+        "title": "Unique Features",
+        "subTitle": "What make us different? Here some cool, unique features of BluPoint SmartTV Framework",
+        "data": [
+          {
+            "icon": "fa fa-github",
+            "title": "Open Source",
+            "description": "Yes it's completely an open source project. We started to develop and will grow with your commits."
+          },
+          {
+            "icon": "fa fa-code",
+            "title": "Native Javascript",
+            "description": "No, we are not joking. There is no external libraries such as jQuery. <br><b>Just EcmaScript 6</b>"
+          },
+          {
+            "icon": "pe-7s-box2",
+            "title": "Modularity",
+            "description": "As we discussed to write this framework in ES6. We tried to use its all features like classes, modules etc. As result we prepared readable, clean code"
+          },
+          {
+            "icon": "pe-7s-browser",
+            "title": "Cross Platform",
+            "description": "It supports most of SmartTV manufacturers. We are supporting old Opera (Presto Engine) too."
+          },
+          {
+            "icon": "fa fa-lock",
+            "title": "DRM-Ready",
+            "description": "DRM's are indispensable part of VOD content providers. Our framework includes its own DRM implementations for SmartTV's with their own DRM Engine"
+          },
+          {
+            "icon": "fa fa-music",
+            "title": "Multi Audio",
+            "description": "You don't need to confuse with audio change for your digital content. We care that!"
+          },
+          {
+            "icon": "pe-7s-diamond",
+            "title": "VMAP & VAST ADS Supported",
+            "description": "Fully integrated VMAP parsing with IAB's Vmap standard. Vast render and seamless integration"
+          },
+          {
+            "icon": "fa fa-magic",
+            "title": "Tons of features",
+            "description": "We are offering a lot of features like Subtitle, Event, Storage etc. You can find them in documentation."
+          }
+        ]
+      },
+      "highlight": {
+        "title": "How to initialize",
+        "subTitle": "Our main focus is speed, ease of use and newest technology. Before reading documentation we wanted to show how to initalize BluPoint SmartTV Framework in your project. "
+      },
+      "promo": {
+        "title": "Got a minute? Give it a try",
+        "subTitle": "While we are working to release first stable version lets give it a try and contribute for growing of BluPoint SmartTV Framework"
+      }
+    }
+  },
+  "documentation": {
+    "activeSlug": "documentation",
+    "title": "Documentation Page | BluPoint SmartTV Framework",
+    "styles": {
+      "headerClass": "background-2"
+    }
+  },
+  "installation/manual": {
+    "activeSlug": "install/manually"
+  }
+}

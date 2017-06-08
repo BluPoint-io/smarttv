@@ -1,0 +1,11 @@
+{
+  "drm-contents": {
+    "activeSlug": "player/drm-content"
+  },
+  "drm-free": {
+    "activeSlug": "player/drm-free"
+  },
+  "live-streams": {
+    "activeSlug": "player/live-streams"
+  }
+}

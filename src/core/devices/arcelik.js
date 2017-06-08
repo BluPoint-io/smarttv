@@ -22,6 +22,9 @@ class DeviceArcelik extends Device {
    * Abstract Player createVideoElement function.
    *
    * @abstract
+   * @for Device_Arcelik
+   * @method createVideoElement
+   * @return {Boolean} true
    */
   createVideoElement() {
     if (this.videoElement) {
@@ -40,7 +43,7 @@ class DeviceArcelik extends Device {
     this.registerVideoEvents();
     Logger.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
     this.initAudioClass();
-    return null;
+    return true;
   }
 
 }

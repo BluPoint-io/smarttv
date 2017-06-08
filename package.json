@@ -1,6 +1,6 @@
 {
   "name": "blupoint-smarttv",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha.2",
   "description": "SmartTV Framework",
   "main": "dist/blupoint-smarttv.min.js",
   "author": {
@@ -17,7 +17,7 @@
     "eslint:fix": "eslint src .js --fix",
     "eslint:test": "eslint -c test/.eslintrc test --ext .js",
     "prepublish": "npm run build",
-    "doc": "yuidoc src/"
+    "doc": "yuidoc src/ -o ghpages/src/generated -t ghpages/yuidoctheme"
   },
   "devDependencies": {
     "babel-core": "6.17.0",

@@ -23,6 +23,9 @@ class DeviceVestel extends Device {
    * Abstract Player createVideoElement function.
    *
    * @abstract
+   * @for Device_Vestel
+   * @method createVideoElement
+   * @return {Boolean} true
    */
   createVideoElement() {
     if (this.videoElement) {

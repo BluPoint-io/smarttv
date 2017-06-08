@@ -7,3 +7,9 @@ test
 circle.yml
 karma.conf.js
 webpack.config.js
+ghpages
+lg
+folder
+docs
+dist/.idea
+

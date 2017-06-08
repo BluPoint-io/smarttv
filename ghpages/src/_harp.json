@@ -1,0 +1,199 @@
+{
+  "globals": {
+    "title": "",
+    "styles": {
+      "headerClass": "background-2"
+    },
+    "_project": {
+      "githubUrl": "https://github.com/dogantv/smarttv"
+    },
+    "footer": {
+      "copyright": "All rights reserved. 2017 © Doğan TV Holding"
+    },
+    "menu": [
+      {
+        "url": "/",
+        "title": "Homepage",
+        "hasSubs": false
+      },
+      {
+        "url": "/documentation",
+        "title": "Documentation"
+      }
+    ],
+    "docs_menu": [
+      {
+        "slug": "",
+        "url": "",
+        "title": "Installation",
+        "hasSubs": true,
+        "subs": [
+          {
+            "slug": "install/manually",
+            "url": "/installation/manual",
+            "title": "Install Manually"
+          },
+          {
+            "slug": "install/npm-yarn",
+            "url": "/installation/npm-yarn",
+            "title": "Install with NPM & Yarn"
+          },
+          {
+            "slug": "install/bower",
+            "url": "/installation/bower",
+            "title": "Install with Bower"
+          }
+        ]
+      },
+      {
+        "slug": "",
+        "url": "",
+        "title": "Getting Started",
+        "hasSubs": true,
+        "subs": [
+          {
+            "slug": "usage/include",
+            "url": "/usage/include",
+            "title": "Usage with Include"
+          },
+          {
+            "slug": "usage/taskrunners",
+            "url": "/usage/taskrunners",
+            "title": "Usage with Task Runners"
+          },
+          {
+            "slug": "usage/modulebundlers",
+            "url": "/usage/modulebundlers",
+            "title": "Usage with Module Bundlers"
+          }
+        ]
+      },
+      {
+        "slug": "",
+        "url": "/generated",
+        "title": "Generated Code Documentation"
+      },
+      {
+        "slug": "",
+        "url": "",
+        "title": "Framework",
+        "hasSubs": true,
+        "subs": [
+          {
+            "slug": "framework/device",
+            "url": "/framework/device",
+            "title": "Device Module"
+          },
+          {
+            "slug": "framework/appconfig",
+            "url": "/framework/appconfig",
+            "title": "App Config"
+          },
+          {
+            "slug": "framework/events",
+            "url": "/framework/events",
+            "title": "Events Management"
+          },
+          {
+            "slug": "framework/storage",
+            "url": "/framework/storage",
+            "title": "Storage Usage"
+          },
+          {
+            "slug": "",
+            "url": "",
+            "title": "Helpers & Services",
+            "hasSubs": true,
+            "subs": [
+              {
+                "slug": "helpers_services/analytics",
+                "url": "/framework/helpers_services/analytics",
+                "title": "Analytics"
+              },
+              {
+                "slug": "helpers_services/logger",
+                "url": "/framework/helpers_services/logger",
+                "title": "Logger"
+              },
+              {
+                "slug": "helpers_services/xhr",
+                "url": "/framework/helpers_services/xhr",
+                "title": "XHR Requests"
+              }
+            ]
+          },
+          {
+            "slug": "",
+            "url": "",
+            "title": "Player",
+            "hasSubs": true,
+            "subs": [
+              {
+                "slug": "",
+                "url": "",
+                "title": "Playing Streams",
+                "hasSubs": true,
+                "subs": [
+                  {
+                    "slug": "player/drm-free",
+                    "url": "/player/streams/drm-free",
+                    "title": "Playing DRM-Free Streams"
+                  },
+                  {
+                    "slug": "player/live-streams",
+                    "url": "/player/streams/live-streams",
+                    "title": "Playing Live Streams"
+                  },
+                  {
+                    "slug": "player/drm-content",
+                    "url": "/player/streams/drm-contents",
+                    "title": "Playing DRM Streams"
+                  }
+                ]
+              },
+              {
+                "slug": "player/events",
+                "url": "/player/events",
+                "title": "Player Events"
+              },
+              {
+                "slug": "player/controls",
+                "url": "/player/controls",
+                "title": "Player Controls & Info"
+              },
+              {
+                "slug": "player/multi-audio",
+                "url": "/player/multi-audio",
+                "title": "Playing Multi Audio Streams"
+              },
+              {
+                "slug": "player/subtitle",
+                "url": "/player/subtitle",
+                "title": "Adding Subtitle"
+              },
+              {
+                "slug": "",
+                "url": "",
+                "title": "ADS Management",
+                "hasSubs": true,
+                "subs": [
+                  {
+                    "slug": "player/playing-vast",
+                    "url": "/player/ads/playing-vast",
+                    "title": "Reading & Playing Vast Ads"
+                  },
+                  {
+                    "slug": "player/reading-vmap",
+                    "url": "/player/ads/reading-vmap",
+                    "title": "Reading & Playing VMAP Ads"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+
+}

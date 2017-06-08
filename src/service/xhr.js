@@ -1,4 +1,8 @@
-/** Class representing Xhr */
+/**
+ * Class representing Xhr
+ * @class Xhr
+ * @constructor
+ * */
 class Xhr {
 
   /**
@@ -6,6 +10,8 @@ class Xhr {
    * @param {String} url
    * @param {Function} successHandler
    * @param {Function} errorHandler
+   * @for Xhr
+   * @method getJSON
    */
   public getJSON(url, successHandler, errorHandler) {
     let xhr = typeof XMLHttpRequest != 'undefined'
@@ -35,6 +41,8 @@ class Xhr {
    * @param {Object} data
    * @param {Function} successHandler
    * @param {Function} errorHandler
+   * @for Xhr
+   * @method sendJSON
    */
   public sendJSON(url, data, successHandler, errorHandler){
     let xhr = typeof XMLHttpRequest != 'undefined'

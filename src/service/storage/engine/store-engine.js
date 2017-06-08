@@ -8,10 +8,13 @@ const isFunction = util.isFunction;
 const isObject = util.isObject;
 
 /**
+ * It reads and create related stores
  *
- * @param storages
- * @param plugins
- * @return {*}
+ * @param {Array} storages
+ * @param {Array} plugins
+ * @for Storage
+ * @method createStore
+ * @return {*} store
  */
 function createStore(storages, plugins) {
   const _privateStoreProps = {
@@ -131,6 +134,12 @@ function createStore(storages, plugins) {
   return store;
 }
 
+/**
+ * @for Storage
+ * @private
+ * @protected
+ * @type {{version: string, enabled: boolean, addStorage: ((storage?)), addPlugin: ((plugin?)), get: ((key, optionalDefaultValue?)=>*), set: ((key?, value?)=>*), remove: ((key)), each: ((callback)), clearAll: (()), hasNamespace: ((namespace)=>boolean), namespace: ((namespace?)), createStore: ((storages?, plugins?)=>*)}}
+ */
 const storeAPI = {
   version: '2.0.3',
   enabled: false,
