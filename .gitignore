@@ -6,3 +6,5 @@ lib
 lg
 folder
 .idea
+.sonar
+Gruntfile.js

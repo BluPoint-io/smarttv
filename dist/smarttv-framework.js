@@ -2,11 +2,11 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define("blupoint-smarttv", [], factory);
+		define("smarttv-framework", [], factory);
 	else if(typeof exports === 'object')
-		exports["blupoint-smarttv"] = factory();
+		exports["smarttv-framework"] = factory();
 	else
-		root["blupoint-smarttv"] = factory();
+		root["smarttv-framework"] = factory();
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -451,6 +451,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Most of Tv manufacturers runs its own video player and its position fixed to (0,0) cooridnates
 	   * Its important to consider your design
 	   *
+	   * @method createVideoElement
+	   * @for Player
+	   * @return null
 	   */
 	
 	
@@ -474,6 +477,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Sets this.playerInfo with initial values. This values usefull for later usages
 	     * For example Vast, device specific, DRM Type etc we are using this object
 	     *
+	     * @for Player
+	     * @method setPlayerInfo
 	     * @return {Object} this.playerInfo
 	     */
 	
@@ -506,6 +511,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Its recommended to call this function if you are consider to close video
 	     * TODO We have to check DRM inited if yes we have to detach DRM before removing
 	     *
+	     * @for Player
+	     * @method deleteVideoElement
 	     * @return {Boolean}
 	     */
 	
@@ -529,6 +536,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @param {String} src - Source url for video content
 	     * @param {String} customData - Custom Data
+	     *
+	     * @for Player
+	     * @method addVideoSource
+	     *
 	     */
 	
 	  }, {
@@ -585,6 +596,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @param {String} type - Type of ads source 'VMAP' or just 'VAST'
 	     * @param url - Url of ads source VMAP or VAST Url
+	     *
+	     * @for Player
+	     * @method initAds
 	     * @return {*}
 	     */
 	
@@ -624,6 +638,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * If ads type is VMAP and detected in initAds method it will call automatically this function
 	     *
 	     * @param {Object} vmapObject - Vmap object its response of VMAP XML
+	     *
+	     * @for Player
+	     * @method prepareVastFromVmap
 	     */
 	
 	  }, {
@@ -661,6 +678,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @param {String} vastUrl - URL address for Vast
 	     * @param {Object} options - It stands for this.config.vastOptions
+	     * @for Player
+	     * @method readVastFile
 	     * @return {{}}
 	     */
 	
@@ -853,6 +872,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * This function is triggered with timeUpdate event of video player.
 	     * It compares with Vast time with current time
+	     *
+	     * @for Player
+	     * @method checkAdsStatus
 	     */
 	
 	  }, {
@@ -873,6 +895,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * After completing ads it starts old src url with initial seeking with time
 	     *
 	     * @param time - current time of video player
+	     * @for Player
+	     * @method initVastAd
 	     */
 	
 	  }, {
@@ -914,6 +938,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * This text can be edited via config
 	     *
 	     * @return {boolean}
+	     *
+	     * @for Player
+	     * @method addAdsCaption
 	     */
 	
 	  }, {
@@ -931,6 +958,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Unloads DRM client. !IMPORTANT! Some devices may be crash if you are not unloaded drm client
+	     *
+	     * @for Player
+	     * @method unloadDrmClient
 	     */
 	
 	  }, {
@@ -939,7 +969,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      console.log('Unload Geldi');
 	      var _this = this;
 	      if (this.currentDevice.brandName === 'webos' && _this._WebOS.isDrmClientLoaded) {
-	        var request = webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
+	        webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
 	          method: 'unload',
 	          parameters: { clientId: _this._WebOS.clientId },
 	          onSuccess: function onSuccess(result) {
@@ -957,6 +987,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Initialize WebOs DRM
 	     * TODO This can be move to webos device with abstract
+	     *
+	     * @for Player
+	     * @method setupWebOSDrm
 	     */
 	
 	  }, {
@@ -969,7 +1002,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      _this._WebOS.clientId = '';
 	      _this._WebOS.isDrmClientLoaded = '';
 	
-	      var request = webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
+	      webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
 	        method: 'load',
 	        parameters: {
 	          drmType: _this.playerInfo.drmType,
@@ -990,6 +1023,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * WebOs Drm trigger
+	     *
+	     * @for Player
+	     * @method sendWebOSDrm
 	     */
 	
 	  }, {
@@ -999,7 +1035,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      var _this = this;
 	
-	      var request = webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
+	      webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
 	        method: 'sendDrmMessage',
 	        parameters: {
 	          clientId: this._WebOS.clientId,
@@ -1032,6 +1068,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Constructor for Audio class
+	     *
+	     * @for Player
+	     * @method initAudioClass
 	     */
 	
 	  }, {
@@ -1045,6 +1084,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Play trigger for videoElement
+	     *
+	     * @for Player
+	     * @method play
 	     */
 	
 	  }, {
@@ -1055,6 +1097,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Pause trigger for videoElement
+	     *
+	     * @for Player
+	     * @method pause
 	     */
 	
 	  }, {
@@ -1065,6 +1110,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Play/Pause toggle trigger for videoElement
+	     *
+	     * @for Player
+	     * @method togglePlay
 	     */
 	
 	  }, {
@@ -1079,6 +1127,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Trigger specific events for all videoElement trigger
+	     * @for Player
+	     * @method registerVideoEvents
 	     */
 	
 	  }, {
@@ -1174,6 +1224,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Drm initiator for OIPF Devices such as Vestel and Arcelik
+	     *
+	     * @for Player
+	     * @method createOIPFDrmAgent
 	     */
 	
 	  }, {
@@ -1213,6 +1266,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Seek with given value adding
 	     *
 	     * @param {Number} value
+	     * @for Player
+	     * @method seekWithTimeAdd
 	     */
 	
 	  }, {
@@ -1226,6 +1281,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * TODO Check device performances if needed use pause method first
 	     *
 	     * @param value
+	     *
+	     * @for Player
+	     * @method seekToTime
 	     */
 	
 	  }, {
@@ -1236,6 +1294,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Sets currentTime to 0 and plays automatically
+	     *
+	     * @for Player
+	     * @method restart
 	     */
 	
 	  }, {
@@ -1286,11 +1347,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    _logger2.default.addLog('Audio', 'create', 'Audio class initialized');
 	  }
+	
 	  /**
 	   * Changes audio tracks with given order. It enables given index and disables other audio elements
 	   * Based on HTML5 video element audioTracks
 	   *
 	   * @param {Number} order - Language order to change
+	   * @method changeAudioWithOrder
+	   * @for Audio
+	   * @return {Boolean}
 	   */
 	
 	
@@ -1308,6 +1373,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            audioTracks[i].enabled = false;
 	          }
 	        }
+	        return true;
 	      }
 	    }
 	
@@ -1315,6 +1381,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * It returns current audio order. It checks which audioTrack is enabled
 	     * Usefull for UI to understand which language is available
 	     * TODO It must return object. If video metadata is correct it returns language unicode and name
+	     *
+	     * @method getCurrentAudioWithOrder
+	     * @for Audio
+	     * @return {Number} order - It returns current audio index
+	     *
 	     */
 	
 	  }, {
@@ -1646,6 +1717,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {String} name The name of the target method.
 	 * @return {Function} The aliased method
 	 * @api private
+	 * @for Events
+	 * @method alias
 	 */
 	var alias = function alias(name) {
 	  // eslint-disable-line arrow-body-style
@@ -1657,6 +1730,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 *
 	 * @param listener
+	 *
+	 * @for Events
+	 * @method isValidListener
 	 * @return {*}
 	 */
 	var isValidListener = function isValidListener(listener) {
@@ -1676,6 +1752,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @param {Function[]} listeners Array of listeners to search through.
 	 * @param {Function} listener Method to look for.
+	 *
+	 * @for Events
+	 * @method indexOfListener
 	 * @return {Number} Index of the specified listener, -1 if not found
 	 * @api private
 	 */
@@ -1695,6 +1774,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  /**
 	   *
 	   * @param loggerClass
+	   * @class Events
+	   * @constructor
 	   */
 	  function Events(loggerClass) {
 	    _classCallCheck(this, Events);
@@ -1718,6 +1799,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Each property in the object response is an array of listener functions.
 	   *
 	   * @param {String|RegExp} evt Name of the event to return the listeners from.
+	   *
+	   * @for Events
+	   * @method getListeners
 	   * @return {Function[]|Object} All listener functions for the event.
 	   */
 	
@@ -1749,6 +1833,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Takes a list of listener objects and flattens it into a list of listener functions.
 	     *
 	     * @param {Object[]} listeners Raw listener objects.
+	     *
+	     * @for Events
+	     * @method flattenListeners
 	     * @return {Function[]} Just the listener functions.
 	     */
 	
@@ -1773,6 +1860,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * This is mainly for internal use but others may find it useful.
 	     *
 	     * @param {String|RegExp} evt Name of the event to return the listeners from.
+	     * @for Events
+	     * @method getListenersAsObject
 	     * @return {Object} All listener functions for an event in an object.
 	     */
 	
@@ -1801,6 +1890,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {String|RegExp} evt Name of the event to attach the listener to.
 	     * @param {Function} listener Method to be called when the event is emitted.
 	     * If the function returns true then it will be removed after calling.
+	     * @for Events
+	     * @method addListener
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -1835,6 +1926,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {String|RegExp} evt Name of the event to attach the listener to.
 	     * @param {Function} listener Method to be called when the event is emitted.
 	     * If the function returns true then it will be removed after calling.
+	     * @for Events
+	     * @method addOnceListener
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -1855,6 +1948,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * You need to tell it what event names should be matched by a regex.
 	     *
 	     * @param {String} evt Name of the event to create.
+	     * @for Events
+	     * @method defineEvent
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -1869,6 +1964,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Uses defineEvent to define multiple events.
 	     *
 	     * @param {String[]} evts An array of event names to define.
+	     * @for Events
+	     * @method defineEvents
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -1888,6 +1985,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @param {String|RegExp} evt Name of the event to remove the listener from.
 	     * @param {Function} listener Method to remove from the event.
+	     * @for Events
+	     * @method removeListener
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -1922,6 +2021,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next.
 	     * An object if you wish to add to multiple events at once.
 	     * @param {Function[]} [listeners] An optional array of listener functions to add.
+	     * @for Events
+	     * @method addListeners
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -1942,6 +2043,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next.
 	     * An object if you wish to remove from multiple events at once.
 	     * @param {Function[]} [listeners] An optional array of listener functions to remove.
+	     * @for Events
+	     * @method removeListeners
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -1964,6 +2067,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {Boolean} remove True if you want to remove listeners, false if you want to add.
 	     * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next.
 	     * @param {Function[]} [listeners] An optional array of listener functions to add/remove.
+	     * @for Events
+	     * @method manipulateListeners
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -2010,6 +2115,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * You can also pass a regex to remove all events that match it.
 	     *
 	     * @param {String|RegExp} [evt] Optional name of the event to remove all listeners for.
+	     * @for Events
+	     * @method removeEvent
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -2051,6 +2158,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
 	     * @param {Array} [args] Optional array of arguments to be passed to each listener.
+	     * @for Events
+	     * @method triggerEvent
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -2096,6 +2205,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
 	     * @param {...*} Optional additional arguments to be passed to each listener.
+	     * @for Events
+	     * @method emit
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -2112,6 +2223,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * after execution. This value defaults to true.
 	     *
 	     * @param {*} value The new value to check for when executing listeners.
+	     * @for Events
+	     * @method setOnceReturnValue
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -2127,6 +2240,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * the listeners return value matches this one then it should be removed
 	     * automatically. It will return true by default.
 	     *
+	     * @for Events
+	     * @method _getOnceReturnValue
 	     * @return {*|Boolean} The current value to check for or the default, true.
 	     * @api private
 	     */
@@ -2146,6 +2261,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Fetches the events object and creates one if required.
 	     *
+	     * @for Events
+	     * @method _getEvents
 	     * @return {Object} The events storage object.
 	     * @api private
 	     */
@@ -2230,8 +2347,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var plugins = [__webpack_require__(16), __webpack_require__(17)];
 	/**
-	 * @exports Storage
-	 * @export Storage
+	 * Initializes Storage Class
+	 * This class have private methods
+	 * @class Storage
+	 * @constructor Storage
+	 *
+	 * @param {Array} storages
+	 * @param {Array} plugins
 	 */
 	exports.default = _storeEngine2.default.createStore(storages, plugins);
 	module.exports = exports['default'];
@@ -2261,10 +2383,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	var isObject = _util2.default.isObject;
 	
 	/**
+	 * It reads and create related stores
 	 *
-	 * @param storages
-	 * @param plugins
-	 * @return {*}
+	 * @param {Array} storages
+	 * @param {Array} plugins
+	 * @for Storage
+	 * @method createStore
+	 * @return {*} store
 	 */
 	function _createStore(storages, plugins) {
 	  var _privateStoreProps = {
@@ -2388,6 +2513,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return store;
 	}
 	
+	/**
+	 * @for Storage
+	 * @private
+	 * @protected
+	 * @type {{version: string, enabled: boolean, addStorage: ((storage?)), addPlugin: ((plugin?)), get: ((key, optionalDefaultValue?)=>*), set: ((key?, value?)=>*), remove: ((key)), each: ((callback)), clearAll: (()), hasNamespace: ((namespace)=>boolean), namespace: ((namespace?)), createStore: ((storages?, plugins?)=>*)}}
+	 */
 	var storeAPI = {
 	  version: '2.0.3',
 	  enabled: false,
@@ -2577,10 +2708,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	/**
+	 * @for Storage
+	 * @method isList
+	 * @private
+	 * @param val
+	 * @return {boolean}
+	 */
 	function isList(val) {
 	  return val !== null && typeof val !== 'function' && typeof val.length === 'number';
 	}
 	
+	/**
+	 * @for Storage
+	 * @private
+	 * @method pluck
+	 * @param obj
+	 * @param fn
+	 * @return {*}
+	 */
 	function pluck(obj, fn) {
 	  if (isList(obj)) {
 	    for (var i = 0; i < obj.length; i += 1) {
@@ -2599,6 +2745,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}
 	
+	/**
+	 * @for Storage
+	 * @private
+	 * @method each
+	 * @param obj
+	 * @param fn
+	 */
 	function each(obj, fn) {
 	  pluck(obj, function (key, val) {
 	    fn(key, val);
@@ -2606,15 +2759,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	}
 	
+	/**
+	 * @for Storage
+	 * @private
+	 * @method slice
+	 * @param arr
+	 * @param index
+	 * @return {*}
+	 */
 	function slice(arr, index) {
 	  return Array.prototype.slice.call(arr, index || 0);
 	}
 	
+	/**
+	 * @for Storage
+	 * @private
+	 * @method makeAssign
+	 * @return {*}
+	 */
 	function makeAssign() {
 	  return Object.assign;
 	}
 	var assign = makeAssign();
 	
+	/**
+	 * @for Storage
+	 * @private
+	 * @method makeCreate
+	 * @return {*}
+	 */
 	function makeCreate() {
 	  var returnValue = void 0;
 	  if (Object.create) {
@@ -2635,6 +2808,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return returnValue;
 	}
 	
+	/**
+	 * @for Storage
+	 * @private
+	 * @method makeTrim
+	 * @return {*}
+	 */
 	function makeTrim() {
 	  var returnValue = void 0;
 	  if (String.prototype.trim) {
@@ -2653,6 +2832,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	var trim = makeTrim();
 	var Global = typeof window !== 'undefined' ? window : global;
 	
+	/**
+	 * @for Storage
+	 * @private
+	 * @method bind
+	 * @param obj
+	 * @param fn
+	 * @return {Function}
+	 */
 	function bind(obj, fn) {
 	  return function () {
 	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
@@ -2663,6 +2850,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	}
 	
+	/**
+	 * @for Storage
+	 * @private
+	 * @method map
+	 * @param obj
+	 * @param fn
+	 * @return {*}
+	 */
 	function map(obj, fn) {
 	  var res = isList(obj) ? [] : {};
 	  pluck(obj, function (v, k) {
@@ -2672,10 +2867,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return res;
 	}
 	
+	/**
+	 * @for Storage
+	 * @private
+	 * @method isFunction
+	 * @param val
+	 * @return {*|boolean}
+	 */
 	function isFunction(val) {
 	  return val && {}.toString.call(val) === '[object Function]';
 	}
 	
+	/**
+	 * @for Storage
+	 * @private
+	 * @method isObject
+	 * @param val
+	 * @return {*|boolean}
+	 */
 	function isObject(val) {
 	  return val && {}.toString.call(val) === '[object Object]';
 	}
@@ -3201,6 +3410,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Abstract Player createVideoElement function.
 	   *
 	   * @abstract
+	   * @for Device_Arcelik
+	   * @method createVideoElement
+	   * @return {Boolean} true
 	   */
 	
 	
@@ -3223,7 +3435,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.registerVideoEvents();
 	      _logger2.default.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
 	      this.initAudioClass();
-	      return null;
+	      return true;
 	    }
 	  }]);
 	
@@ -3496,6 +3708,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Abstract Player createVideoElement function.
 	   *
 	   * @abstract
+	   * @for Device_Vestel
+	   * @method createVideoElement
+	   * @return {Boolean} true
 	   */
 	
 	
@@ -3581,6 +3796,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Abstract Player createVideoElement function.
 	   *
 	   * @abstract
+	   * @for Device_Web
+	   * @method createVideoElement
+	   * @return {Boolean} true
 	   */
 	
 	
@@ -3664,6 +3882,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return _this;
 	  }
 	
+	  /**
+	   * WebOs native api's are required to use webos.js file.
+	   * This method provides necessary libraries.
+	   *
+	   * @for Device_WebOs
+	   * @method addWebOsLib
+	   * @return {Boolean} true
+	   */
+	
+	
 	  _createClass(DeviceWebOs, [{
 	    key: 'addWebOSLib',
 	    value: function addWebOSLib() {
@@ -3673,12 +3901,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	          document.body.appendChild(this.webOSLibrary);*/
 	      this.WebOsLibrary = WebOsLibrary;
 	      _logger2.default.addLog('Device_WebOs', 'info', 'WebOs Library loaded successfully', this.WebOsLibrary);
+	      return true;
 	    }
 	
 	    /**
 	     * Abstract Player createVideoElement function.
 	     *
 	     * @abstract
+	     * @for Device_WebOs
+	     * @method createVideoElement
+	     * @return {Boolean} true
 	     */
 	
 	  }, {
@@ -3911,7 +4143,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var soundFile = params.soundFile || "";
 	      var soundDurationMs = params.soundDurationMs || "";
 	      if (webOS.platform.legacy || webOS.platform.open) {
-	        var response = params.response || { banner: true };
+	        // var response = params.response || {banner: true};
 	        var id = PalmSystem.addBannerMessage(message, JSON.stringify(toastParams), icon, soundClass, soundFile, soundDurationMs);
 	        callback && callback(id);
 	      } else {
@@ -3993,7 +4225,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	// pmloglib.js
 	(function () {
-	  var levelNone = -1;
+	  // var levelNone = -1;
 	  var levelEmergency = 0;
 	  var levelAlert = 1;
 	  var levelCritical = 2;
@@ -4106,7 +4338,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } catch (e) {
 	        parsedMsg = { errorCode: -1, errorText: msg };
 	      }
-	      if ((parsedMsg.errorCode || parsedMsg.returnValue == false) && self.onFailure) {
+	      if ((parsedMsg.errorCode || parsedMsg.returnValue === false) && self.onFailure) {
 	        self.onFailure(parsedMsg);
 	        if (self.resubscribe && self.subscribe) {
 	          self.delayID = setTimeout(function () {
@@ -4226,4 +4458,4 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ])
 });
 ;
-//# sourceMappingURL=blupoint-smarttv.js.map
+//# sourceMappingURL=smarttv-framework.js.map
