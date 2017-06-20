@@ -2755,10 +2755,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
-	var _config = __webpack_require__(8);
-	
-	var _config2 = _interopRequireDefault(_config);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2787,7 +2783,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _logger2.default.addLog('Device_Arcelik', 'info', 'Arcelik Device Initialized');
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
-	    console.log('CONFIG GELDI', _config2.default);
 	    return _this;
 	  }
 	
