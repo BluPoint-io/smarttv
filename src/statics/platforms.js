@@ -63,9 +63,17 @@ const platforms = [
     modelYear: '2015',
     displayName: 'Samsung SmartTV Tizen | 2015'
   },
-  { agentInde: 'VESTEL', brandNam: 'vestel', modelYea: 'undefined', displayNam: 'Vestel SmartTV'
+  {
+    agentIndex: 'VESTEL',
+    brandName: 'vestel',
+    modelYear: 'undefined',
+    displayName: 'Vestel SmartTV'
   },
-  { agentInde: 'VSTVB', brandNam: 'vestel', modelYea: 'undefined', displayNam: 'Vestel SmartTV'
+  {
+    agentIndex: 'VSTVB',
+    brandName: 'vestel',
+    modelYear: 'undefined',
+    displayName: 'Vestel SmartTV'
   },
   {
     agentIndex: 'LG NetCast.TV-2011',
@@ -139,24 +147,24 @@ const platforms = [
     modelYear: '2013',
     displayName: 'Viera SmartTV | 2013'
   },
-/*  {
-    'agentIndex': '537.41',
-    'brandName': 'webos',
-    'modelYear': '1.x',
-    'displayName': 'LG WebOS SmartTV | 1.x'
-  },
-  {
-    'agentIndex': '538.2',
-    'brandName': 'webos',
-    'modelYear': '2.x',
-    'displayName': 'LG WebOS SmartTV | 2.x'
-  },
-  {
-    'agentIndex': '537.36',
-    'brandName': 'webos',
-    'modelYear': '3.x',
-    'displayName': 'LG WebOS SmartTV | 3.x'
-  },*/
+  /*  {
+   'agentIndex': '537.41',
+   'brandName': 'webos',
+   'modelYear': '1.x',
+   'displayName': 'LG WebOS SmartTV | 1.x'
+   },
+   {
+   'agentIndex': '538.2',
+   'brandName': 'webos',
+   'modelYear': '2.x',
+   'displayName': 'LG WebOS SmartTV | 2.x'
+   },
+   {
+   'agentIndex': '537.36',
+   'brandName': 'webos',
+   'modelYear': '3.x',
+   'displayName': 'LG WebOS SmartTV | 3.x'
+   },*/
   {
     agentIndex: 'Web0S',
     brandName: 'webos',
