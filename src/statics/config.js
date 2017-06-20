@@ -5,7 +5,7 @@
 const Config = {
   width: '1920px',
   height: '1080px',
-  deneme2: 'deneme2',
+  debug: true,
   videoPlayerId: 'dtv-video',
   vastOptions: {
     media_type : 'video/mp4',
@@ -13,7 +13,6 @@ const Config = {
     media_bitrate_max : 1200,
     ad_caption: 'Advertisement'
   },
-
   DRM: {
     playReady: {
       mimeType: 'application/vnd.ms-playready.initiator+xml',

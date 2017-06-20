@@ -2,7 +2,7 @@
   "name": "smarttv-framework",
   "version": "0.1.1",
   "description": "SmartTV Framework",
-  "main": "dist/smarttv-framework.min.js",
+  "main": "dist/smarttv-framework.js",
   "author": {
     "name": "Serdar AGLAMIS",
     "email": "serdaraglamis@gmail.com"

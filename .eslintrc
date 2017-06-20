@@ -33,5 +33,6 @@
     "no-mixed-operators": 0,
     "no-useless-escape": 0,
     "global-require": 0,
+    "no-new-object": 0
   }
 }
