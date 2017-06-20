@@ -6,7 +6,7 @@ const projectRoot = path.resolve(__dirname, '/');
 
 const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 
-const libraryName = 'blupoint-smarttv';
+const libraryName = 'smarttv-framework';
 
 const plugins = [];
 let outputFile;

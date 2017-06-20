@@ -68,7 +68,20 @@ function slice(arr, index) {
  * @return {*}
  */
 function makeAssign() {
-  return Object.assign;
+  let returnValue;
+  if (Object.assign) {
+    returnValue = Object.assign;
+  } else {
+    return function shimAssign(obj, props1, props2, etc) {
+      for (let i = 1; i < arguments.length; i += 1) {
+        each(Object(arguments[i]), function(val, key) { //eslint-disable-line
+          obj[key] = val;
+        });
+      }
+      returnValue = obj;
+    };
+  }
+  return returnValue;
 }
 const assign = makeAssign();
 
@@ -88,7 +101,6 @@ function makeCreate() {
   } else {
     function F() { // eslint-disable-line no-inner-declarations
     }
-
     returnValue = function create(obj, assignProps1, assignProps2, etc) {
       const assignArgsList = slice(arguments, 1); // eslint-disable-line prefer-rest-params
       F.prototype = obj;
@@ -120,6 +132,7 @@ function makeTrim() {
 
 
 const create = makeCreate();
+window.create = makeCreate();
 const trim = makeTrim();
 const Global = (typeof window !== 'undefined' ? window : global);
 

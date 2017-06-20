@@ -2,11 +2,11 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define("blupoint-smarttv", [], factory);
+		define("smarttv-framework", [], factory);
 	else if(typeof exports === 'object')
-		exports["blupoint-smarttv"] = factory();
+		exports["smarttv-framework"] = factory();
 	else
-		root["blupoint-smarttv"] = factory();
+		root["smarttv-framework"] = factory();
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -59,17 +59,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.Storage = exports.Device = undefined;
+	exports.Device = undefined;
 	
 	var _device = __webpack_require__(1);
 	
 	var _device2 = _interopRequireDefault(_device);
 	
-	var _storage = __webpack_require__(9);
-	
-	var _storage2 = _interopRequireDefault(_storage);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	// import Storage from './service/storage';
 	
 	if (typeof Object.assign !== 'function') {
 	  Object.assign = function (target, varArgs) {
@@ -100,10 +98,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var device = new _device2.default();
 	var currentDeviceName = device.currentDevice.brandName;
-	var currentDevice = __webpack_require__(18)("./" + currentDeviceName);
+	var currentDevice = __webpack_require__(9)("./" + currentDeviceName);
 	
-	exports.Device = currentDevice;
-	exports.Storage = _storage2.default;
+	exports.Device = currentDevice; // eslint-disable-line
 
 /***/ },
 /* 1 */
@@ -451,6 +448,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Most of Tv manufacturers runs its own video player and its position fixed to (0,0) cooridnates
 	   * Its important to consider your design
 	   *
+	   * @method createVideoElement
+	   * @for Player
+	   * @return null
 	   */
 	
 	
@@ -474,6 +474,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Sets this.playerInfo with initial values. This values usefull for later usages
 	     * For example Vast, device specific, DRM Type etc we are using this object
 	     *
+	     * @for Player
+	     * @method setPlayerInfo
 	     * @return {Object} this.playerInfo
 	     */
 	
@@ -506,6 +508,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Its recommended to call this function if you are consider to close video
 	     * TODO We have to check DRM inited if yes we have to detach DRM before removing
 	     *
+	     * @for Player
+	     * @method deleteVideoElement
 	     * @return {Boolean}
 	     */
 	
@@ -529,6 +533,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @param {String} src - Source url for video content
 	     * @param {String} customData - Custom Data
+	     *
+	     * @for Player
+	     * @method addVideoSource
+	     *
 	     */
 	
 	  }, {
@@ -585,6 +593,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @param {String} type - Type of ads source 'VMAP' or just 'VAST'
 	     * @param url - Url of ads source VMAP or VAST Url
+	     *
+	     * @for Player
+	     * @method initAds
 	     * @return {*}
 	     */
 	
@@ -624,6 +635,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * If ads type is VMAP and detected in initAds method it will call automatically this function
 	     *
 	     * @param {Object} vmapObject - Vmap object its response of VMAP XML
+	     *
+	     * @for Player
+	     * @method prepareVastFromVmap
 	     */
 	
 	  }, {
@@ -661,6 +675,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @param {String} vastUrl - URL address for Vast
 	     * @param {Object} options - It stands for this.config.vastOptions
+	     * @for Player
+	     * @method readVastFile
 	     * @return {{}}
 	     */
 	
@@ -853,6 +869,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * This function is triggered with timeUpdate event of video player.
 	     * It compares with Vast time with current time
+	     *
+	     * @for Player
+	     * @method checkAdsStatus
 	     */
 	
 	  }, {
@@ -873,6 +892,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * After completing ads it starts old src url with initial seeking with time
 	     *
 	     * @param time - current time of video player
+	     * @for Player
+	     * @method initVastAd
 	     */
 	
 	  }, {
@@ -914,6 +935,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * This text can be edited via config
 	     *
 	     * @return {boolean}
+	     *
+	     * @for Player
+	     * @method addAdsCaption
 	     */
 	
 	  }, {
@@ -931,6 +955,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Unloads DRM client. !IMPORTANT! Some devices may be crash if you are not unloaded drm client
+	     *
+	     * @for Player
+	     * @method unloadDrmClient
 	     */
 	
 	  }, {
@@ -939,7 +966,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      console.log('Unload Geldi');
 	      var _this = this;
 	      if (this.currentDevice.brandName === 'webos' && _this._WebOS.isDrmClientLoaded) {
-	        var request = webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
+	        webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
 	          method: 'unload',
 	          parameters: { clientId: _this._WebOS.clientId },
 	          onSuccess: function onSuccess(result) {
@@ -957,6 +984,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Initialize WebOs DRM
 	     * TODO This can be move to webos device with abstract
+	     *
+	     * @for Player
+	     * @method setupWebOSDrm
 	     */
 	
 	  }, {
@@ -969,7 +999,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      _this._WebOS.clientId = '';
 	      _this._WebOS.isDrmClientLoaded = '';
 	
-	      var request = webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
+	      webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
 	        method: 'load',
 	        parameters: {
 	          drmType: _this.playerInfo.drmType,
@@ -990,6 +1020,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * WebOs Drm trigger
+	     *
+	     * @for Player
+	     * @method sendWebOSDrm
 	     */
 	
 	  }, {
@@ -999,7 +1032,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      var _this = this;
 	
-	      var request = webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
+	      webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
 	        method: 'sendDrmMessage',
 	        parameters: {
 	          clientId: this._WebOS.clientId,
@@ -1032,6 +1065,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Constructor for Audio class
+	     *
+	     * @for Player
+	     * @method initAudioClass
 	     */
 	
 	  }, {
@@ -1045,6 +1081,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Play trigger for videoElement
+	     *
+	     * @for Player
+	     * @method play
 	     */
 	
 	  }, {
@@ -1055,6 +1094,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Pause trigger for videoElement
+	     *
+	     * @for Player
+	     * @method pause
 	     */
 	
 	  }, {
@@ -1065,6 +1107,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Play/Pause toggle trigger for videoElement
+	     *
+	     * @for Player
+	     * @method togglePlay
 	     */
 	
 	  }, {
@@ -1079,6 +1124,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Trigger specific events for all videoElement trigger
+	     * @for Player
+	     * @method registerVideoEvents
 	     */
 	
 	  }, {
@@ -1174,6 +1221,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Drm initiator for OIPF Devices such as Vestel and Arcelik
+	     *
+	     * @for Player
+	     * @method createOIPFDrmAgent
 	     */
 	
 	  }, {
@@ -1213,6 +1263,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Seek with given value adding
 	     *
 	     * @param {Number} value
+	     * @for Player
+	     * @method seekWithTimeAdd
 	     */
 	
 	  }, {
@@ -1226,6 +1278,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * TODO Check device performances if needed use pause method first
 	     *
 	     * @param value
+	     *
+	     * @for Player
+	     * @method seekToTime
 	     */
 	
 	  }, {
@@ -1236,6 +1291,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    /**
 	     * Sets currentTime to 0 and plays automatically
+	     *
+	     * @for Player
+	     * @method restart
 	     */
 	
 	  }, {
@@ -1286,11 +1344,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    _logger2.default.addLog('Audio', 'create', 'Audio class initialized');
 	  }
+	
 	  /**
 	   * Changes audio tracks with given order. It enables given index and disables other audio elements
 	   * Based on HTML5 video element audioTracks
 	   *
 	   * @param {Number} order - Language order to change
+	   * @method changeAudioWithOrder
+	   * @for Audio
+	   * @return {Boolean}
 	   */
 	
 	
@@ -1308,6 +1370,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            audioTracks[i].enabled = false;
 	          }
 	        }
+	        return true;
 	      }
 	    }
 	
@@ -1315,6 +1378,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * It returns current audio order. It checks which audioTrack is enabled
 	     * Usefull for UI to understand which language is available
 	     * TODO It must return object. If video metadata is correct it returns language unicode and name
+	     *
+	     * @method getCurrentAudioWithOrder
+	     * @for Audio
+	     * @return {Number} order - It returns current audio index
+	     *
 	     */
 	
 	  }, {
@@ -1646,6 +1714,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {String} name The name of the target method.
 	 * @return {Function} The aliased method
 	 * @api private
+	 * @for Events
+	 * @method alias
 	 */
 	var alias = function alias(name) {
 	  // eslint-disable-line arrow-body-style
@@ -1657,6 +1727,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 *
 	 * @param listener
+	 *
+	 * @for Events
+	 * @method isValidListener
 	 * @return {*}
 	 */
 	var isValidListener = function isValidListener(listener) {
@@ -1676,6 +1749,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @param {Function[]} listeners Array of listeners to search through.
 	 * @param {Function} listener Method to look for.
+	 *
+	 * @for Events
+	 * @method indexOfListener
 	 * @return {Number} Index of the specified listener, -1 if not found
 	 * @api private
 	 */
@@ -1695,6 +1771,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  /**
 	   *
 	   * @param loggerClass
+	   * @class Events
+	   * @constructor
 	   */
 	  function Events(loggerClass) {
 	    _classCallCheck(this, Events);
@@ -1718,6 +1796,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Each property in the object response is an array of listener functions.
 	   *
 	   * @param {String|RegExp} evt Name of the event to return the listeners from.
+	   *
+	   * @for Events
+	   * @method getListeners
 	   * @return {Function[]|Object} All listener functions for the event.
 	   */
 	
@@ -1749,6 +1830,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Takes a list of listener objects and flattens it into a list of listener functions.
 	     *
 	     * @param {Object[]} listeners Raw listener objects.
+	     *
+	     * @for Events
+	     * @method flattenListeners
 	     * @return {Function[]} Just the listener functions.
 	     */
 	
@@ -1773,6 +1857,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * This is mainly for internal use but others may find it useful.
 	     *
 	     * @param {String|RegExp} evt Name of the event to return the listeners from.
+	     * @for Events
+	     * @method getListenersAsObject
 	     * @return {Object} All listener functions for an event in an object.
 	     */
 	
@@ -1801,6 +1887,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {String|RegExp} evt Name of the event to attach the listener to.
 	     * @param {Function} listener Method to be called when the event is emitted.
 	     * If the function returns true then it will be removed after calling.
+	     * @for Events
+	     * @method addListener
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -1835,6 +1923,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {String|RegExp} evt Name of the event to attach the listener to.
 	     * @param {Function} listener Method to be called when the event is emitted.
 	     * If the function returns true then it will be removed after calling.
+	     * @for Events
+	     * @method addOnceListener
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -1855,6 +1945,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * You need to tell it what event names should be matched by a regex.
 	     *
 	     * @param {String} evt Name of the event to create.
+	     * @for Events
+	     * @method defineEvent
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -1869,6 +1961,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Uses defineEvent to define multiple events.
 	     *
 	     * @param {String[]} evts An array of event names to define.
+	     * @for Events
+	     * @method defineEvents
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -1888,6 +1982,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @param {String|RegExp} evt Name of the event to remove the listener from.
 	     * @param {Function} listener Method to remove from the event.
+	     * @for Events
+	     * @method removeListener
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -1922,6 +2018,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next.
 	     * An object if you wish to add to multiple events at once.
 	     * @param {Function[]} [listeners] An optional array of listener functions to add.
+	     * @for Events
+	     * @method addListeners
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -1942,6 +2040,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next.
 	     * An object if you wish to remove from multiple events at once.
 	     * @param {Function[]} [listeners] An optional array of listener functions to remove.
+	     * @for Events
+	     * @method removeListeners
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -1964,6 +2064,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param {Boolean} remove True if you want to remove listeners, false if you want to add.
 	     * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next.
 	     * @param {Function[]} [listeners] An optional array of listener functions to add/remove.
+	     * @for Events
+	     * @method manipulateListeners
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -2010,6 +2112,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * You can also pass a regex to remove all events that match it.
 	     *
 	     * @param {String|RegExp} [evt] Optional name of the event to remove all listeners for.
+	     * @for Events
+	     * @method removeEvent
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -2051,6 +2155,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
 	     * @param {Array} [args] Optional array of arguments to be passed to each listener.
+	     * @for Events
+	     * @method triggerEvent
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -2096,6 +2202,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
 	     * @param {...*} Optional additional arguments to be passed to each listener.
+	     * @for Events
+	     * @method emit
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -2112,6 +2220,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * after execution. This value defaults to true.
 	     *
 	     * @param {*} value The new value to check for when executing listeners.
+	     * @for Events
+	     * @method setOnceReturnValue
 	     * @return {Object} Current instance of EventEmitter for chaining.
 	     */
 	
@@ -2127,6 +2237,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * the listeners return value matches this one then it should be removed
 	     * automatically. It will return true by default.
 	     *
+	     * @for Events
+	     * @method _getOnceReturnValue
 	     * @return {*|Boolean} The current value to check for or the default, true.
 	     * @api private
 	     */
@@ -2146,6 +2258,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Fetches the events object and creates one if required.
 	     *
+	     * @for Events
+	     * @method _getEvents
 	     * @return {Object} The events storage object.
 	     * @api private
 	     */
@@ -2179,7 +2293,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Config = {
 	  width: '1920px',
 	  height: '1080px',
-	  deneme2: 'deneme2',
+	  debug: true,
 	  videoPlayerId: 'dtv-video',
 	  vastOptions: {
 	    media_type: 'video/mp4',
@@ -2187,7 +2301,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    media_bitrate_max: 1200,
 	    ad_caption: 'Advertisement'
 	  },
-	
 	  DRM: {
 	    playReady: {
 	      mimeType: 'application/vnd.ms-playready.initiator+xml',
@@ -2204,933 +2317,23 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _storeEngine = __webpack_require__(10);
-	
-	var _storeEngine2 = _interopRequireDefault(_storeEngine);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	/**
-	 * Initialize Storage adapters for Storage
-	 *
-	 * @type {[*]} - Require storages
-	 */
-	var storages = [__webpack_require__(12), __webpack_require__(13), __webpack_require__(14), __webpack_require__(15)];
-	
-	/**
-	 * Initialize Plugin adapters for Storage
-	 *
-	 * @type {[*]} - Require plugins
-	 */
-	var plugins = [__webpack_require__(16), __webpack_require__(17)];
-	/**
-	 * @exports Storage
-	 * @export Storage
-	 */
-	exports.default = _storeEngine2.default.createStore(storages, plugins);
-	module.exports = exports['default'];
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _util = __webpack_require__(11);
-	
-	var _util2 = _interopRequireDefault(_util);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var slice = _util2.default.slice;
-	var pluck = _util2.default.pluck;
-	var each = _util2.default.each;
-	var create = _util2.default.create;
-	var isList = _util2.default.isList;
-	var isFunction = _util2.default.isFunction;
-	var isObject = _util2.default.isObject;
-	
-	/**
-	 *
-	 * @param storages
-	 * @param plugins
-	 * @return {*}
-	 */
-	function _createStore(storages, plugins) {
-	  var _privateStoreProps = {
-	    _seenPlugins: [],
-	    _namespacePrefix: '',
-	    _namespaceRegexp: null,
-	    _legalNamespace: /^[a-zA-Z0-9_\-]+$/, // eslint-disable-line no-useless-escape
-	
-	    /**
-	     *
-	     * @return {*}
-	     * @private
-	     */
-	    _storage: function _storage() {
-	      if (!this.enabled) {
-	        throw new Error('store.js: No supported storage has been added! ' + 'Add one (e.g store.addStorage(require("store/storages/cookieStorage")) ' + 'or use a build with more built-in storages (e.g ' + 'https://github.com/marcuswestin/store.js/tree/master/dist/store.legacy.min.js)');
-	      }
-	      return this._storage.resolved;
-	    },
-	
-	
-	    /**
-	     *
-	     * @param storage
-	     * @return {boolean}
-	     * @private
-	     */
-	    _testStorage: function _testStorage(storage) {
-	      try {
-	        var testStr = '__storejs__test__';
-	        storage.write(testStr, testStr);
-	        var ok = storage.read(testStr) === testStr;
-	        storage.remove(testStr);
-	        return ok;
-	      } catch (e) {
-	        return false;
-	      }
-	    },
-	
-	
-	    /**
-	     *
-	     * @param pluginFnProp
-	     * @param propName
-	     * @private
-	     */
-	    _assignPluginFnProp: function _assignPluginFnProp(pluginFnProp, propName) {
-	      var oldFn = this[propName];
-	      this[propName] = function pluginFn() {
-	        var args = slice(arguments, 0); // eslint-disable-line prefer-rest-params
-	        var self = this;
-	
-	        // superFn calls the old function which was overwritten by
-	        // this mixin.
-	        function superFn() {
-	          if (!oldFn) {
-	            return;
-	          }
-	          each(arguments, function (arg, i) {
-	            // eslint-disable-line prefer-rest-params
-	            args[i] = arg;
-	          });
-	          return oldFn.apply(self, args);
-	        }
-	
-	        // Give mixing function access to superFn by prefixing all mixin function
-	        // arguments with superFn.
-	        var newFnArgs = [superFn].concat(args);
-	
-	        return pluginFnProp.apply(self, newFnArgs);
-	      };
-	    },
-	
-	
-	    /**
-	     *
-	     * @param obj
-	     * @private
-	     */
-	    _serialize: function _serialize(obj) {
-	      return JSON.stringify(obj);
-	    },
-	
-	
-	    /**
-	     *
-	     * @param strVal
-	     * @param defaultVal
-	     * @return {*}
-	     * @private
-	     */
-	    _deserialize: function _deserialize(strVal, defaultVal) {
-	      if (!strVal) {
-	        return defaultVal;
-	      }
-	      // It is possible that a raw string value has been previously stored
-	      // in a storage without using store.js, meaning it will be a raw
-	      // string value instead of a JSON serialized string. By defaulting
-	      // to the raw string value in case of a JSON parse error, we allow
-	      // for past stored values to be forwards-compatible with store.js
-	      var val = '';
-	      try {
-	        val = JSON.parse(strVal);
-	      } catch (e) {
-	        val = strVal;
-	      }
-	
-	      return val !== undefined ? val : defaultVal;
-	    }
-	  };
-	
-	  var store = create(_privateStoreProps, storeAPI); // eslint-disable-line no-use-before-define
-	  each(storages, function (storage) {
-	    // eslint-disable-line arrow-parens
-	    store.addStorage(storage);
-	  });
-	  each(plugins, function (plugin) {
-	    // eslint-disable-line arrow-parens
-	    store.addPlugin(plugin);
-	  });
-	  return store;
-	}
-	
-	var storeAPI = {
-	  version: '2.0.3',
-	  enabled: false,
-	
-	  /**
-	   * addStorage adds another storage to this store.
-	   * The store will use the first storage it receives that is enabled,
-	   * call addStorage in the order of preferred storage.
-	   * @param storage
-	   */
-	  addStorage: function addStorage(storage) {
-	    if (this.enabled) {
-	      return;
-	    }
-	    if (this._testStorage(storage)) {
-	      this._storage.resolved = storage;
-	      this.enabled = true;
-	    }
-	  },
-	
-	
-	  // addPlugin will add a plugin to this store.
-	  /**
-	   *
-	   * @param plugin
-	   */
-	  addPlugin: function addPlugin(plugin) {
-	    var self = this;
-	
-	    // If the plugin is an array, then add all plugins in the array.
-	    // This allows for a plugin to depend on other plugins.
-	    if (isList(plugin)) {
-	      each(plugin, function (plugin) {
-	        // eslint-disable-line arrow-parens
-	        self.addPlugin(plugin);
-	      });
-	      return;
-	    }
-	
-	    // Keep track of all plugins we've seen so far, so that we
-	    // don't add any of them twice.
-	    var seenPlugin = pluck(this._seenPlugins, function (seenPlugin) {
-	      return plugin === seenPlugin;
-	    });
-	    if (seenPlugin) {
-	      return;
-	    }
-	    this._seenPlugins.push(plugin);
-	
-	    // Check that the plugin is properly formed
-	    if (!isFunction(plugin)) {
-	      throw new Error('Plugins must be function values that return objects');
-	    }
-	
-	    var pluginProperties = plugin.call(this);
-	    if (!isObject(pluginProperties)) {
-	      throw new Error('Plugins must return an object of function properties');
-	    }
-	
-	    // Add the plugin function properties to this store instance.
-	    each(pluginProperties, function (pluginFnProp, propName) {
-	      if (!isFunction(pluginFnProp)) {
-	        throw new Error('Bad plugin property: ' + propName + ' from plugin ' + plugin.name + '. Plugins should only return functions.');
-	      }
-	      self._assignPluginFnProp(pluginFnProp, propName);
-	    });
-	  },
-	
-	
-	  // get returns the value of the given key. If that value
-	  // is undefined, it returns optionalDefaultValue instead.
-	  /**
-	   *
-	   * @param key
-	   * @param optionalDefaultValue
-	   * @return {*}
-	   */
-	  get: function get(key, optionalDefaultValue) {
-	    var data = this._storage().read(this._namespacePrefix + key);
-	    return this._deserialize(data, optionalDefaultValue);
-	  },
-	
-	
-	  // set will store the given value at key and returns value.
-	  // Calling set with value === undefined is equivalent to calling remove.
-	  /**
-	   *
-	   * @param key
-	   * @param value
-	   * @return {*}
-	   */
-	  set: function set(key, value) {
-	    if (value === undefined) {
-	      return this.remove(key);
-	    }
-	    this._storage().write(this._namespacePrefix + key, this._serialize(value));
-	    return value;
-	  },
-	
-	
-	  // remove deletes the key and value stored at the given key.
-	  /**
-	   *
-	   * @param key
-	   */
-	  remove: function remove(key) {
-	    this._storage().remove(this._namespacePrefix + key);
-	  },
-	
-	
-	  // each will call the given callback once for each key-value pair
-	  // in this store.
-	  each: function each(callback) {
-	    var self = this;
-	    this._storage().each(function (val, namespacedKey) {
-	      callback(self._deserialize(val), namespacedKey.replace(self._namespaceRegexp, ''));
-	    });
-	  },
-	
-	
-	  // clearAll will remove all the stored key-value pairs in this store.
-	  /**
-	   *
-	   */
-	  clearAll: function clearAll() {
-	    this._storage().clearAll();
-	  },
-	
-	
-	  // additional functionality that can't live in plugins
-	  // ---------------------------------------------------
-	
-	  // hasNamespace returns true if this store instance has the given namespace.
-	  /**
-	   *
-	   * @param namespace
-	   * @return {boolean}
-	   */
-	  hasNamespace: function hasNamespace(namespace) {
-	    return this._namespacePrefix === '__storejs_' + namespace + '_';
-	  },
-	
-	
-	  // namespace clones the current store and assigns it the given namespace
-	  /**
-	   *
-	   * @param namespace
-	   */
-	  namespace: function namespace(_namespace) {
-	    if (!this._legalNamespace.test(_namespace)) {
-	      throw new Error('store.js namespaces can only have alhpanumerics + underscores and dashes');
-	    }
-	    // create a prefix that is very unlikely to collide with un-namespaced keys
-	    var namespacePrefix = '__storejs_' + _namespace + '_';
-	    return create(this, {
-	      _namespacePrefix: namespacePrefix,
-	      _namespaceRegexp: namespacePrefix ? new RegExp('^' + namespacePrefix) : null
-	    });
-	  },
-	
-	
-	  // createStore creates a store.js instance with the first
-	  // functioning storage in the list of storage candidates,
-	  // and applies the the given mixins to the instance.
-	  /**
-	   *
-	   * @param storages
-	   * @param plugins
-	   * @return {*}
-	   */
-	  createStore: function createStore(storages, plugins) {
-	    return _createStore(storages, plugins);
-	  }
-	};
-	
-	exports.default = {
-	  createStore: _createStore
-	};
-	module.exports = exports['default'];
-
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	function isList(val) {
-	  return val !== null && typeof val !== 'function' && typeof val.length === 'number';
-	}
-	
-	function pluck(obj, fn) {
-	  if (isList(obj)) {
-	    for (var i = 0; i < obj.length; i += 1) {
-	      if (fn(obj[i], i)) {
-	        return obj[i];
-	      }
-	    }
-	  } else {
-	    for (var key in obj) {
-	      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-	        if (fn(obj[key], key)) {
-	          return obj[key];
-	        }
-	      }
-	    }
-	  }
-	}
-	
-	function each(obj, fn) {
-	  pluck(obj, function (key, val) {
-	    fn(key, val);
-	    return false;
-	  });
-	}
-	
-	function slice(arr, index) {
-	  return Array.prototype.slice.call(arr, index || 0);
-	}
-	
-	function makeAssign() {
-	  return Object.assign;
-	}
-	var assign = makeAssign();
-	
-	function makeCreate() {
-	  var returnValue = void 0;
-	  if (Object.create) {
-	    returnValue = function create(obj, assignProps1, assignProps2, etc) {
-	      var assignArgsList = slice(arguments, 1); // eslint-disable-line prefer-rest-params
-	      return assign.apply(this, [Object.create(obj)].concat(assignArgsList));
-	    };
-	  } else {
-	    var F = function F() {// eslint-disable-line no-inner-declarations
-	    };
-	
-	    returnValue = function create(obj, assignProps1, assignProps2, etc) {
-	      var assignArgsList = slice(arguments, 1); // eslint-disable-line prefer-rest-params
-	      F.prototype = obj;
-	      return assign.apply(this, [new F()].concat(assignArgsList));
-	    };
-	  }
-	  return returnValue;
-	}
-	
-	function makeTrim() {
-	  var returnValue = void 0;
-	  if (String.prototype.trim) {
-	    returnValue = function trim(str) {
-	      return String.prototype.trim.call(str);
-	    };
-	  } else {
-	    returnValue = function trim(str) {
-	      return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
-	    };
-	  }
-	  return returnValue;
-	}
-	
-	var create = makeCreate();
-	var trim = makeTrim();
-	var Global = typeof window !== 'undefined' ? window : global;
-	
-	function bind(obj, fn) {
-	  return function () {
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
-	
-	    return fn.apply(obj, Array.prototype.slice.call(args, 0));
-	  };
-	}
-	
-	function map(obj, fn) {
-	  var res = isList(obj) ? [] : {};
-	  pluck(obj, function (v, k) {
-	    res[k] = fn(v, k);
-	    return false;
-	  });
-	  return res;
-	}
-	
-	function isFunction(val) {
-	  return val && {}.toString.call(val) === '[object Function]';
-	}
-	
-	function isObject(val) {
-	  return val && {}.toString.call(val) === '[object Object]';
-	}
-	
-	exports.default = {
-	  assign: assign,
-	  create: create,
-	  trim: trim,
-	  bind: bind,
-	  slice: slice,
-	  each: each,
-	  map: map,
-	  pluck: pluck,
-	  isList: isList,
-	  isFunction: isFunction,
-	  isObject: isObject,
-	  Global: Global
-	};
-	module.exports = exports['default'];
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _util = __webpack_require__(11);
-	
-	var _util2 = _interopRequireDefault(_util);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var Global = _util2.default.Global;
-	
-	/**
-	 *
-	 * @return {Storage}
-	 */
-	function localStorage() {
-	  return Global.localStorage;
-	}
-	
-	/**
-	 *
-	 * @param key
-	 */
-	function read(key) {
-	  return localStorage().getItem(key);
-	}
-	
-	/**
-	 *
-	 * @param key
-	 * @param data
-	 */
-	function write(key, data) {
-	  return localStorage().setItem(key, data);
-	}
-	
-	/**
-	 *
-	 * @param fn
-	 */
-	function each(fn) {
-	  for (var i = localStorage().length - 1; i >= 0; i -= 1) {
-	    var key = localStorage().key(i);
-	    fn(read(key), key);
-	  }
-	}
-	
-	/**
-	 *
-	 * @param key
-	 */
-	function remove(key) {
-	  return localStorage().removeItem(key);
-	}
-	
-	/**
-	 *
-	 */
-	function clearAll() {
-	  return localStorage().clear();
-	}
-	
-	/**
-	 *
-	 */
-	exports.default = {
-	  name: 'localStorage',
-	  read: read,
-	  write: write,
-	  each: each,
-	  remove: remove,
-	  clearAll: clearAll
-	};
-	module.exports = exports['default'];
-
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _util = __webpack_require__(11);
-	
-	var _util2 = _interopRequireDefault(_util);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var Global = _util2.default.Global;
-	/**
-	 *
-	 * @return {Storage}
-	 */
-	function sessionStorage() {
-	  return Global.sessionStorage;
-	}
-	
-	/**
-	 *
-	 * @param key
-	 */
-	function read(key) {
-	  return sessionStorage().getItem(key);
-	}
-	
-	/**
-	 *
-	 * @param key
-	 * @param data
-	 */
-	function write(key, data) {
-	  return sessionStorage().setItem(key, data);
-	}
-	
-	/**
-	 *
-	 * @param fn
-	 */
-	function each(fn) {
-	  for (var i = sessionStorage().length - 1; i >= 0; i -= 1) {
-	    var key = sessionStorage().key(i);
-	    fn(read(key), key);
-	  }
-	}
-	
-	/**
-	 *
-	 * @param key
-	 */
-	function remove(key) {
-	  return sessionStorage().removeItem(key);
-	}
-	
-	/**
-	 *
-	 */
-	function clearAll() {
-	  return sessionStorage().clear();
-	}
-	
-	exports.default = {
-	  name: 'sessionStorage',
-	  read: read,
-	  write: write,
-	  each: each,
-	  remove: remove,
-	  clearAll: clearAll
-	};
-	module.exports = exports['default'];
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _util = __webpack_require__(11);
-	
-	var _util2 = _interopRequireDefault(_util);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var Global = _util2.default.Global; // cookieStorage is useful Safari private browser mode, where localStorage
-	// doesn't work but cookies do. This implementation is adopted from
-	// https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage
-	
-	var trim = _util2.default.trim;
-	var doc = Global.document;
-	
-	/**
-	 *
-	 * @param key
-	 * @return {boolean}
-	 * @private
-	 */
-	function _has(key) {
-	  return new RegExp('(?:^|;\\s*)' + escape(key).replace(/[\-\.\+\*]/g, '\\$&') + '\\s*\\=').test(doc.cookie); // eslint-disable-line no-useless-escape
-	}
-	
-	/**
-	 *
-	 * @param key
-	 * @return {null}
-	 */
-	function read(key) {
-	  if (!key || !_has(key)) {
-	    return null;
-	  }
-	  var regexpStr = '(?:^|.*;\\s*)' + escape(key).replace(/[\-\.\+\*]/g, '\\$&') + '\\s*\\=\\s*((?:[^;](?!;))*[^;]?).*'; // eslint-disable-line no-useless-escape
-	  return unescape(doc.cookie.replace(new RegExp(regexpStr), '$1'));
-	}
-	
-	/**
-	 *
-	 * @param callback
-	 */
-	function each(callback) {
-	  var cookies = doc.cookie.split(/; ?/g);
-	  for (var i = cookies.length - 1; i >= 0; i -= 1) {
-	    if (!trim(cookies[i])) {
-	      continue;
-	    }
-	    var kvp = cookies[i].split('=');
-	    var key = unescape(kvp[0]);
-	    var val = unescape(kvp[1]);
-	    callback(val, key);
-	  }
-	}
-	
-	/**
-	 *
-	 * @param key
-	 * @param data
-	 */
-	function write(key, data) {
-	  if (!key) {
-	    return;
-	  }
-	  doc.cookie = escape(key) + '=' + escape(data) + '; expires=Tue, 19 Jan 2038 03:14:07 GMT; path=/';
-	}
-	
-	/**
-	 *
-	 * @param key
-	 */
-	function remove(key) {
-	  if (!key || !_has(key)) {
-	    return;
-	  }
-	  doc.cookie = escape(key) + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-	}
-	
-	/**
-	 *
-	 */
-	function clearAll() {
-	  each(function (_, key) {
-	    remove(key);
-	  });
-	}
-	
-	exports.default = {
-	  name: 'cookieStorage',
-	  read: read,
-	  write: write,
-	  each: each,
-	  remove: remove,
-	  clearAll: clearAll
-	};
-	module.exports = exports['default'];
-
-/***/ },
-/* 15 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	// memoryStorage is a useful last fallback to ensure that the store
-	// is functions (meaning store.get(), store.set(), etc will all function).
-	// However, stored values will not persist when the browser navigates to
-	// a new page or reloads the current page.
-	
-	var memoryStorage = {};
-	
-	/**
-	 *
-	 * @param key
-	 * @return {*}
-	 */
-	function read(key) {
-	  return memoryStorage[key];
-	}
-	
-	/**
-	 *
-	 * @param key
-	 * @param data
-	 */
-	function write(key, data) {
-	  memoryStorage[key] = data;
-	}
-	
-	/**
-	 *
-	 * @param callback
-	 */
-	function each(callback) {
-	  for (var key in memoryStorage) {
-	    if (Object.prototype.hasOwnProperty.call(memoryStorage, key)) {
-	      callback(memoryStorage[key], key);
-	    }
-	  }
-	}
-	
-	/**
-	 *
-	 * @param key
-	 */
-	function remove(key) {
-	  delete memoryStorage[key];
-	}
-	
-	/**
-	 *
-	 * @param key
-	 */
-	function clearAll(key) {
-	  memoryStorage = {};
-	}
-	
-	exports.default = {
-	  name: 'memoryStorage',
-	  read: read,
-	  write: write,
-	  each: each,
-	  remove: remove,
-	  clearAll: clearAll
-	};
-	module.exports = exports['default'];
-
-/***/ },
-/* 16 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	function defaultsPlugin() {
-	  var defaultValues = {};
-	
-	  /**
-	   *
-	   * @param _
-	   * @param values
-	   */
-	  function defaults(_, values) {
-	    defaultValues = values;
-	  }
-	
-	  /**
-	   *
-	   * @param superFn
-	   * @param key
-	   * @return {*}
-	   */
-	  function get(superFn, key) {
-	    var val = superFn();
-	    return val !== undefined ? val : defaultValues[key];
-	  }
-	
-	  return {
-	    defaults: defaults,
-	    get: get
-	  };
-	}
-	
-	exports.default = defaultsPlugin;
-	module.exports = exports["default"];
-
-/***/ },
-/* 17 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	function updatePlugin() {
-	  /**
-	   *
-	   * @param _
-	   * @param key
-	   * @param optDefaultVal
-	   * @param updateFn
-	   */
-	  function update(_, key, optDefaultVal, updateFn) {
-	    if (arguments.length === 3) {
-	      updateFn = optDefaultVal;
-	      optDefaultVal = undefined;
-	    }
-	    var val = this.get(key, optDefaultVal);
-	    var retVal = updateFn(val);
-	    this.set(key, retVal !== undefined ? retVal : val);
-	  }
-	
-	  return {
-	    update: update
-	  };
-	}
-	
-	exports.default = updatePlugin;
-	module.exports = exports["default"];
-
-/***/ },
-/* 18 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var map = {
-		"./arcelik": 19,
-		"./arcelik.js": 19,
-		"./lg": 20,
-		"./lg.js": 20,
-		"./philips": 21,
-		"./philips.js": 21,
-		"./samsung": 22,
-		"./samsung.js": 22,
-		"./tizen": 23,
-		"./tizen.js": 23,
-		"./vestel": 24,
-		"./vestel.js": 24,
-		"./web": 25,
-		"./web.js": 25,
-		"./webos": 26,
-		"./webos.js": 26
+		"./arcelik": 10,
+		"./arcelik.js": 10,
+		"./lg": 11,
+		"./lg.js": 11,
+		"./philips": 12,
+		"./philips.js": 12,
+		"./samsung": 13,
+		"./samsung.js": 13,
+		"./tizen": 14,
+		"./tizen.js": 14,
+		"./vestel": 15,
+		"./vestel.js": 15,
+		"./web": 16,
+		"./web.js": 16,
+		"./webos": 17,
+		"./webos.js": 17
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -3143,11 +2346,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 18;
+	webpackContext.id = 9;
 
 
 /***/ },
-/* 19 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3201,6 +2404,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Abstract Player createVideoElement function.
 	   *
 	   * @abstract
+	   * @for Device_Arcelik
+	   * @method createVideoElement
+	   * @return {Boolean} true
 	   */
 	
 	
@@ -3223,7 +2429,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.registerVideoEvents();
 	      _logger2.default.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
 	      this.initAudioClass();
-	      return null;
+	      return true;
 	    }
 	  }]);
 	
@@ -3234,7 +2440,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 20 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3285,7 +2491,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 21 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3336,7 +2542,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 22 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3387,7 +2593,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 23 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3442,7 +2648,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 24 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3496,6 +2702,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Abstract Player createVideoElement function.
 	   *
 	   * @abstract
+	   * @for Device_Vestel
+	   * @method createVideoElement
+	   * @return {Boolean} true
 	   */
 	
 	
@@ -3527,7 +2736,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 25 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3581,6 +2790,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Abstract Player createVideoElement function.
 	   *
 	   * @abstract
+	   * @for Device_Web
+	   * @method createVideoElement
+	   * @return {Boolean} true
 	   */
 	
 	
@@ -3611,7 +2823,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 26 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3638,7 +2850,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var WebOsLibrary = __webpack_require__(27);
+	var WebOsLibrary = __webpack_require__(18);
 	
 	var DeviceWebOs = function (_Device) {
 	  _inherits(DeviceWebOs, _Device);
@@ -3664,6 +2876,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return _this;
 	  }
 	
+	  /**
+	   * WebOs native api's are required to use webos.js file.
+	   * This method provides necessary libraries.
+	   *
+	   * @for Device_WebOs
+	   * @method addWebOsLib
+	   * @return {Boolean} true
+	   */
+	
+	
 	  _createClass(DeviceWebOs, [{
 	    key: 'addWebOSLib',
 	    value: function addWebOSLib() {
@@ -3673,12 +2895,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	          document.body.appendChild(this.webOSLibrary);*/
 	      this.WebOsLibrary = WebOsLibrary;
 	      _logger2.default.addLog('Device_WebOs', 'info', 'WebOs Library loaded successfully', this.WebOsLibrary);
+	      return true;
 	    }
 	
 	    /**
 	     * Abstract Player createVideoElement function.
 	     *
 	     * @abstract
+	     * @for Device_WebOs
+	     * @method createVideoElement
+	     * @return {Boolean} true
 	     */
 	
 	  }, {
@@ -3710,7 +2936,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 27 */
+/* 18 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -3911,7 +3137,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var soundFile = params.soundFile || "";
 	      var soundDurationMs = params.soundDurationMs || "";
 	      if (webOS.platform.legacy || webOS.platform.open) {
-	        var response = params.response || { banner: true };
+	        // var response = params.response || {banner: true};
 	        var id = PalmSystem.addBannerMessage(message, JSON.stringify(toastParams), icon, soundClass, soundFile, soundDurationMs);
 	        callback && callback(id);
 	      } else {
@@ -3993,7 +3219,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	// pmloglib.js
 	(function () {
-	  var levelNone = -1;
+	  // var levelNone = -1;
 	  var levelEmergency = 0;
 	  var levelAlert = 1;
 	  var levelCritical = 2;
@@ -4106,7 +3332,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } catch (e) {
 	        parsedMsg = { errorCode: -1, errorText: msg };
 	      }
-	      if ((parsedMsg.errorCode || parsedMsg.returnValue == false) && self.onFailure) {
+	      if ((parsedMsg.errorCode || parsedMsg.returnValue === false) && self.onFailure) {
 	        self.onFailure(parsedMsg);
 	        if (self.resubscribe && self.subscribe) {
 	          self.delayID = setTimeout(function () {
@@ -4226,4 +3452,4 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ])
 });
 ;
-//# sourceMappingURL=blupoint-smarttv.js.map
+//# sourceMappingURL=smarttv-framework.js.map

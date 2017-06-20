@@ -1,5 +1,5 @@
 import CoreDevice from './core/device';
-import Storage from './service/storage';
+// import Storage from './service/storage';
 
 if (typeof Object.assign !== 'function') {
   Object.assign = function(target, varArgs) { // .length of function is 2
@@ -25,9 +25,8 @@ if (typeof Object.assign !== 'function') {
   };
 }
 
-
 const device = new CoreDevice();
 const currentDeviceName = device.currentDevice.brandName;
 const currentDevice = require(`./core/devices/${currentDeviceName}`);
 
-export { currentDevice as Device, Storage };
+export { currentDevice as Device }; // eslint-disable-line

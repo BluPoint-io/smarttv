@@ -1,5 +1,5 @@
 {
-  "name": "blupoint-smarttv",
+  "name": "smarttv-framework",
   "description": "SmartTV Framework",
   "main": "dist/blupoint-smarttv.min.js",
   "authors": [
@@ -37,6 +37,8 @@
     "lg",
     "folder",
     "docs",
-    "dist/.idea"
+    "dist/.idea",
+    ".sonar",
+    "Gruntfile.js"
   ]
 }

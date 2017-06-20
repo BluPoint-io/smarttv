@@ -12,4 +12,6 @@ lg
 folder
 docs
 dist/.idea
+.sonar
+Gruntfile.js
 
