@@ -1,6 +1,6 @@
 {
   "name": "smarttv-framework",
-  "version": "0.1.2",
+  "version": "0.1.7",
   "description": "SmartTV Framework",
   "main": "dist/smarttv-framework.js",
   "author": {
@@ -9,14 +9,14 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "webpack --mode=build",
+    "build": "webpack --mode=dev",
     "dev": "webpack --progress --colors --watch --mode=dev",
     "test": "karma start karma.conf.js --single-run",
     "cover": "open coverage/lcov-report/index.html",
     "eslint": "eslint src --ext .js",
     "eslint:fix": "eslint src .js --fix",
     "eslint:test": "eslint -c test/.eslintrc test --ext .js",
-    "prepublish": "npm run build",
+//    "prepublish": "npm run build",
     "doc": "yuidoc src/ -o ghpages/src/generated -t ghpages/yuidoctheme"
   },
   "devDependencies": {
@@ -53,5 +53,8 @@
     "webpack-merge": "^0.14.1",
     "yargs": "6.0.0",
     "yuidocjs": "^0.10.2"
+  },
+  "dependencies": {
+    "smarttv-device-recognizer": "0.1.0-alpha.6"
   }
 }

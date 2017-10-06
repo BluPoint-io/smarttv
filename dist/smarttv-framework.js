@@ -100,6 +100,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var currentDeviceName = device.currentDevice.brandName;
 	var currentDevice = __webpack_require__(9)("./" + currentDeviceName);
 	
+	window.DOGANTV = currentDevice;
+	
 	exports.Device = currentDevice; // eslint-disable-line
 
 /***/ },
@@ -114,9 +116,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _platforms = __webpack_require__(2);
+	var _smarttvDeviceRecognizer = __webpack_require__(2);
 	
-	var _platforms2 = _interopRequireDefault(_platforms);
+	var _smarttvDeviceRecognizer2 = _interopRequireDefault(_smarttvDeviceRecognizer);
 	
 	var _player = __webpack_require__(3);
 	
@@ -149,51 +151,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _classCallCheck(this, Device);
 	
 	    this.userAgent = navigator.userAgent;
-	    this.currentDevice = {
-	      agentIndex: 'browserDefault',
-	      brandName: 'web',
-	      modelYear: '2016',
-	      displayName: 'Apple Macbook Pro 17'
-	    };
-	    this.setCurrentDevice(_platforms2.default);
+	    this.currentDevice = _smarttvDeviceRecognizer2.default.setCurrentDevice();
 	    this.Player = 'Player is ready to attach';
 	    this.Events = 'Events mechanism ready to start';
 	    this.Config = _config2.default;
 	  }
 	
 	  /**
-	   * Sets currentDevice which needs to identicate which platform we are running on it
-	   * Uses browser User Agent to identicate device. Platforms list have to be updated. (PR Welcomed)
-	   * This function have to be worked before all operations.
-	   * Because other classes and objects are includes device specific blocks
+	   * Events are based on class. So it have to be constructed.
 	   *
-	   * @method setCurrentDevice
+	   * @method initEvents
 	   * @for Device
-	   * @param {Array} [platforms] Platforms list to compare userAgent.
-	   * @return {Object} It returns currentDevice and sets it to Device class
+	   * @return {Object} It returns Events class
 	   */
 	
+	
 	  _createClass(Device, [{
-	    key: 'setCurrentDevice',
-	    value: function setCurrentDevice(platforms) {
-	      for (var platform = 0; platform < platforms.length; platform += 1) {
-	        if (this.userAgent.indexOf(platforms[platform].agentIndex) >= 0) {
-	          this.currentDevice = platforms[platform];
-	          break;
-	        }
-	      }
-	      return this.currentDevice;
-	    }
-	
-	    /**
-	     * Events are based on class. So it have to be constructed.
-	     *
-	     * @method initEvents
-	     * @for Device
-	     * @return {Object} It returns Events class
-	     */
-	
-	  }, {
 	    key: 'initEvents',
 	    value: function initEvents() {
 	      _logger2.default.addLog('Device', 'progress', 'Events Class Initialization Started');
@@ -228,167 +201,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	/**
-	 *
-	 * @type {[*]}
-	 */
-	var platforms = [{
-	  agentIndex: 'Maple 5',
-	  brandName: 'samsung',
-	  modelYear: '2010',
-	  displayName: 'Samsung SmartTV Orsay | 2010'
-	}, {
-	  agentIndex: 'Maple 6',
-	  brandName: 'samsung',
-	  modelYear: '2011',
-	  displayName: 'Samsung SmartTV Orsay | 2011'
-	}, {
-	  agentIndex: 'SmartTV; Maple2012',
-	  brandName: 'samsung',
-	  modelYear: '2012',
-	  displayName: 'Samsung SmartTV Orsay | 2012'
-	}, {
-	  agentIndex: 'SmartTV+2013; Maple2012',
-	  brandName: 'samsung',
-	  modelYear: '2013',
-	  displayName: 'Samsung SmartTV Orsay | 2013'
-	}, {
-	  agentIndex: 'SmartTV+2014; Maple2012',
-	  brandName: 'samsung',
-	  modelYear: '2014',
-	  displayName: 'Samsung SmartTV Orsay | 2014'
-	}, {
-	  agentIndex: 'SmartTV+2015; Maple2012',
-	  brandName: 'samsung',
-	  modelYear: '2015',
-	  displayName: 'Samsung SmartTV Orsay | 2015'
-	}, {
-	  agentIndex: 'Maple',
-	  brandName: 'samsung',
-	  modelYear: 'undefined',
-	  displayName: 'Samsung SmartTV Orsay'
-	}, {
-	  agentIndex: 'Tizen 2.3',
-	  brandName: 'tizen',
-	  modelYear: '2015',
-	  displayName: 'Samsung SmartTV Tizen | 2015'
-	}, {
-	  agentIndex: 'Tizen 2.4.0',
-	  brandName: 'tizen',
-	  modelYear: '2016',
-	  displayName: 'Samsung SmartTV Tizen | 2016'
-	}, {
-	  agentIndex: 'Tizen',
-	  brandName: 'tizen',
-	  modelYear: '2015',
-	  displayName: 'Samsung SmartTV Tizen | 2015'
-	}, { agentInde: 'VESTEL', brandNam: 'vestel', modelYea: 'undefined', displayNam: 'Vestel SmartTV'
-	}, { agentInde: 'VSTVB', brandNam: 'vestel', modelYea: 'undefined', displayNam: 'Vestel SmartTV'
-	}, {
-	  agentIndex: 'LG NetCast.TV-2011',
-	  brandName: 'lg',
-	  modelYear: '2011',
-	  displayNme: 'LG SmartTV NetCast | 2011'
-	}, {
-	  agentIndex: 'LG NetCast.TV-2012',
-	  brandName: 'lg',
-	  modelYear: '2012',
-	  displayName: 'LG SmartTV NetCast | 2012'
-	}, {
-	  agentIndex: 'LG NetCast.TV',
-	  brandName: 'lg',
-	  modelYear: '2013',
-	  displayName: 'LG SmartTV NetCast | 2013'
-	}, {
-	  agentIndex: 'LG SimpleSmart.TV-2016',
-	  brandName: 'lg',
-	  modelYear: '2016',
-	  displayName: 'LG SmartTV NetCast | 2016'
-	}, {
-	  agentIndex: 'NETTV\/3',
-	  brandName: 'philips',
-	  modelYear: '2011',
-	  displayName: 'Philips SmartTV | 2011'
-	}, {
-	  agentIndex: 'NETTV\/4\.0',
-	  brandName: 'philips',
-	  modelYear: '2012',
-	  displayName: 'Philips SmartTV | 2012'
-	}, {
-	  agentIndex: 'NETTV\/',
-	  brandName: 'philips',
-	  modelYear: '2013',
-	  displayName: 'Philips SmartTV | 2013'
-	}, {
-	  agentIndex: 'DuneHD\/',
-	  brandName: 'philips',
-	  modelYear: 'undefined',
-	  displayName: 'Philips SmartTV'
-	}, {
-	  agentIndex: 'Viera\/1\.',
-	  brandName: 'viera',
-	  modelYear: '2012',
-	  displayName: 'Viera SmartTV | 2012'
-	}, {
-	  agentIndex: 'SmartTvA\/',
-	  brandName: 'alliance',
-	  modelYear: 'generic',
-	  displayName: 'Alliance SmartTV | Generic'
-	}, {
-	  agentIndex: 'ToshibaTP\/',
-	  brandName: 'alliance',
-	  modelYear: 'toshiba',
-	  displayName: 'Alliance SmartTV | Toshiba'
-	}, {
-	  agentIndex: 'Viera\/3\.',
-	  brandName: 'viera',
-	  modelYear: '2013',
-	  displayName: 'Viera SmartTV | 2013'
-	},
-	/*  {
-	    'agentIndex': '537.41',
-	    'brandName': 'webos',
-	    'modelYear': '1.x',
-	    'displayName': 'LG WebOS SmartTV | 1.x'
-	  },
-	  {
-	    'agentIndex': '538.2',
-	    'brandName': 'webos',
-	    'modelYear': '2.x',
-	    'displayName': 'LG WebOS SmartTV | 2.x'
-	  },
-	  {
-	    'agentIndex': '537.36',
-	    'brandName': 'webos',
-	    'modelYear': '3.x',
-	    'displayName': 'LG WebOS SmartTV | 3.x'
-	  },*/
-	{
-	  agentIndex: 'Web0S',
-	  brandName: 'webos',
-	  modelYear: 'undefined',
-	  displayName: 'LG WebOS SmartTV'
-	}, {
-	  agentIndex: 'Arcelik',
-	  brandName: 'arcelik',
-	  modelYear: 'undefined',
-	  displayName: 'Arçelik Group Smart TV'
-	}, {
-	  agentIndex: 'Hisense',
-	  brandName: 'hisense',
-	  modelYear: 'undefined',
-	  displayName: 'Hisense SmartTV'
-	}];
-	
-	exports.default = platforms;
-	module.exports = exports['default'];
+	!function(e,a){ true?module.exports=a():"function"==typeof define&&define.amd?define("smarttv-device-recognizer",[],a):"object"==typeof exports?exports["smarttv-device-recognizer"]=a():e["smarttv-device-recognizer"]=a()}(this,function(){return function(e){function a(r){if(n[r])return n[r].exports;var t=n[r]={exports:{},id:r,loaded:!1};return e[r].call(t.exports,t,t.exports,a),t.loaded=!0,t.exports}var n={};return a.m=e,a.c=n,a.p="",a(0)}([function(e,a,n){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}function t(e,a){if(!(e instanceof a))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(a,"__esModule",{value:!0});var d=function(){function e(e,a){for(var n=0;n<a.length;n++){var r=a[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(a,n,r){return n&&e(a.prototype,n),r&&e(a,r),a}}(),m=n(1),i=r(m),s=function(){function e(){t(this,e)}return d(e,null,[{key:"setCurrentDevice",value:function(){for(var e=navigator.userAgent,a={agentIndex:"browserDefault",brandName:"web",modelYear:"2017",displayName:"Default Browser"},n=0;n<i["default"].length;n+=1)if(e.indexOf(i["default"][n].agentIndex)>=0){a=i["default"][n];break}return a}}]),e}();a["default"]=s,e.exports=a["default"]},function(e,a){"use strict";Object.defineProperty(a,"__esModule",{value:!0});var n=[{agentIndex:"Maple 5",brandName:"samsung",modelYear:"2010",displayName:"Samsung SmartTV Orsay | 2010"},{agentIndex:"Maple 6",brandName:"samsung",modelYear:"2011",displayName:"Samsung SmartTV Orsay | 2011"},{agentIndex:"SmartTV; Maple2012",brandName:"samsung",modelYear:"2012",displayName:"Samsung SmartTV Orsay | 2012"},{agentIndex:"SmartTV+2013; Maple2012",brandName:"samsung",modelYear:"2013",displayName:"Samsung SmartTV Orsay | 2013"},{agentIndex:"SmartTV+2014; Maple2012",brandName:"samsung",modelYear:"2014",displayName:"Samsung SmartTV Orsay | 2014"},{agentIndex:"SmartTV+2015; Maple2012",brandName:"samsung",modelYear:"2015",displayName:"Samsung SmartTV Orsay | 2015"},{agentIndex:"Maple",brandName:"samsung",modelYear:"undefined",displayName:"Samsung SmartTV Orsay"},{agentIndex:"Tizen 2.3",brandName:"tizen",modelYear:"2015",displayName:"Samsung SmartTV Tizen | 2015"},{agentIndex:"Tizen 2.4.0",brandName:"tizen",modelYear:"2016",displayName:"Samsung SmartTV Tizen | 2016"},{agentIndex:"Tizen",brandName:"tizen",modelYear:"2015",displayName:"Samsung SmartTV Tizen | 2015"},{agentIndex:"VESTEL",brandName:"vestel",modelYear:"undefined",displayName:"Vestel SmartTV"},{agentIndex:"VSTVB",brandName:"vestel",modelYear:"undefined",displayName:"Vestel SmartTV"},{agentIndex:"LG NetCast.TV-2011",brandName:"lg",modelYear:"2011",displayNme:"LG SmartTV NetCast | 2011"},{agentIndex:"LG NetCast.TV-2012",brandName:"lg",modelYear:"2012",displayName:"LG SmartTV NetCast | 2012"},{agentIndex:"LG NetCast.TV",brandName:"lg",modelYear:"2013",displayName:"LG SmartTV NetCast | 2013"},{agentIndex:"LG SimpleSmart.TV-2016",brandName:"lg",modelYear:"2016",displayName:"LG SmartTV NetCast | 2016"},{agentIndex:"NETTV/3",brandName:"philips",modelYear:"2011",displayName:"Philips SmartTV | 2011"},{agentIndex:"NETTV/4.0",brandName:"philips",modelYear:"2012",displayName:"Philips SmartTV | 2012"},{agentIndex:"NETTV/",brandName:"philips",modelYear:"2013",displayName:"Philips SmartTV | 2013"},{agentIndex:"DuneHD/",brandName:"philips",modelYear:"undefined",displayName:"Philips SmartTV"},{agentIndex:"Viera/1.",brandName:"viera",modelYear:"2012",displayName:"Viera SmartTV | 2012"},{agentIndex:"Viera/3.",brandName:"viera",modelYear:"2013",displayName:"Viera SmartTV | 2013"},{agentIndex:"Web0S",brandName:"webos",modelYear:"undefined",displayName:"LG WebOS SmartTV"},{agentIndex:"Arcelik",brandName:"arcelik",modelYear:"undefined",displayName:"Arçelik Group Smart TV"},{agentIndex:"Hisense",brandName:"hisense",modelYear:"undefined",displayName:"Hisense SmartTV"}];a["default"]=n,e.exports=a["default"]}])});
+	//# sourceMappingURL=smarttv-device-recognizer.min.js.map
 
 /***/ },
 /* 3 */
@@ -2291,8 +2107,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @type {{width: string, height: string, deneme2: string, videoPlayerId: string, vastOptions: {media_type: string, media_bitrate_min: number, media_bitrate_max: number, ad_caption: string}, DRM: {playReady: {mimeType: string, DRMSystemID: string, licenserUrl: string}}}}
 	 */
 	var Config = {
-	  width: '1920px',
-	  height: '1080px',
+	  width: '100%',
+	  height: '100%',
 	  debug: true,
 	  videoPlayerId: 'dtv-video',
 	  vastOptions: {
