@@ -3,8 +3,8 @@
  * @type {{width: string, height: string, deneme2: string, videoPlayerId: string, vastOptions: {media_type: string, media_bitrate_min: number, media_bitrate_max: number, ad_caption: string}, DRM: {playReady: {mimeType: string, DRMSystemID: string, licenserUrl: string}}}}
  */
 const Config = {
-  width: '1920px',
-  height: '1080px',
+  width: '100%',
+  height: '100%',
   debug: true,
   videoPlayerId: 'dtv-video',
   vastOptions: {
