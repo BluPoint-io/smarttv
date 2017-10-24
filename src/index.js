@@ -1,4 +1,5 @@
 import CoreDevice from './core/device';
+
 // import Storage from './service/storage';
 
 if (typeof Object.assign !== 'function') {

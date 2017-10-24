@@ -3,6 +3,8 @@ import Player from '../player/player';
 import Logger from '../service/logger';
 import Events from '../service/events';
 import Config from '../statics/config';
+import Network from '../service/network/network';
+
 
 class Device {
   /**
@@ -16,6 +18,7 @@ class Device {
     this.currentDevice = Recognizer.setCurrentDevice();
     this.Player = 'Player is ready to attach';
     this.Events = 'Events mechanism ready to start';
+    this.Network = 'Network is not initialized yet';
     this.Config = Config;
   }
 
@@ -45,6 +48,11 @@ class Device {
     Logger.addLog('Device', 'progress', 'Player Class Initialization Started');
     this.Player = new Player(this.currentDevice, this.Events, this.Config);
     return this.Player;
+  }
+
+
+  initNetworkClass() {
+    this.Network = new Network();
   }
 
 }

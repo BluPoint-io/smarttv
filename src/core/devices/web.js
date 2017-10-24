@@ -13,6 +13,7 @@ class DeviceWeb extends Device {
     super();
     this.initEvents();
     this.initPlayerClass();
+    this.initNetworkClass();
     Logger.addLog('Device_Arcelik', 'info', 'Arcelik Device Initialized');
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
