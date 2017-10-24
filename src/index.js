@@ -25,6 +25,11 @@ if (typeof Object.assign !== 'function') {
   };
 }
 
+Math.trunc = Math.trunc || function(x) {
+    const n = x - x%1;
+    return n===0 && (x<0 || (x===0 && (1/x !== 1/0))) ? -0 : n;
+  };
+
 const device = new CoreDevice();
 const currentDeviceName = device.currentDevice.brandName;
 const currentDevice = require(`./core/devices/${currentDeviceName}`);

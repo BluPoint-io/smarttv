@@ -689,7 +689,7 @@ class Player {
     };
 
     this.videoElement.ondurationchange = () => {
-      _this.Events.triggerEvent('player_onDurationChange', [_this.videoElement.duration]);
+      _this.Events.triggerEvent('player_onDurationChange', [Math.trunc(_this.videoElement.duration)]);
       _this.playerInfo.duration = _this.videoElement.duration;
     };
 
@@ -747,7 +747,7 @@ class Player {
     };
 
     this.videoElement.ontimeupdate = () => {
-      _this.Events.triggerEvent('player_onTimeUpdate', [_this.videoElement.currentTime]);
+      _this.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(_this.videoElement.currentTime)]);
       if (_this.playerInfo.adsEnabled) {
         _this.checkAdsStatus();
       }

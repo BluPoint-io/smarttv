@@ -96,6 +96,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	}
 	
+	Math.trunc = Math.trunc || function (x) {
+	  var n = x - x % 1;
+	  return n === 0 && (x < 0 || x === 0 && 1 / x !== 1 / 0) ? -0 : n;
+	};
+	
 	var device = new _device2.default();
 	var currentDeviceName = device.currentDevice.brandName;
 	var currentDevice = __webpack_require__(9)("./" + currentDeviceName);
@@ -960,7 +965,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 	
 	      this.videoElement.ondurationchange = function () {
-	        _this.Events.triggerEvent('player_onDurationChange', [_this.videoElement.duration]);
+	        _this.Events.triggerEvent('player_onDurationChange', [Math.trunc(_this.videoElement.duration)]);
 	        _this.playerInfo.duration = _this.videoElement.duration;
 	      };
 	
@@ -1018,7 +1023,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 	
 	      this.videoElement.ontimeupdate = function () {
-	        _this.Events.triggerEvent('player_onTimeUpdate', [_this.videoElement.currentTime]);
+	        _this.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(_this.videoElement.currentTime)]);
 	        if (_this.playerInfo.adsEnabled) {
 	          _this.checkAdsStatus();
 	        }
