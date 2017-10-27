@@ -14,6 +14,7 @@ class DeviceVestel extends Device {
     super();
     this.initEvents();
     this.initPlayerClass();
+    this.initNetworkClass();
     Logger.addLog('Device_Vestel', 'info', 'Vestel Device Initialized');
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
