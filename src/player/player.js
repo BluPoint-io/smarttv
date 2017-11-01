@@ -647,6 +647,17 @@ class Player {
   }
 
   /**
+   * Stop trigger for videoElement
+   * it removes video element from dom
+   *
+   * @for Player
+   * @method stop
+   */
+  stop() {
+    this.videoElement.remove();
+  }
+
+  /**
    * Pause trigger for videoElement
    *
    * @for Player

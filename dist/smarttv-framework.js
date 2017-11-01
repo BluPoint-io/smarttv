@@ -65,6 +65,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _device2 = _interopRequireDefault(_device);
 	
+	var _smarttvUiController = __webpack_require__(37);
+	
+	var _smarttvUiController2 = _interopRequireDefault(_smarttvUiController);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	// import Storage from './service/storage';
@@ -103,7 +107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var device = new _device2.default();
 	var currentDeviceName = device.currentDevice.brandName;
-	var currentDevice = __webpack_require__(37)("./" + currentDeviceName);
+	var currentDevice = __webpack_require__(38)("./" + currentDeviceName);
 	
 	window.DOGANTV = currentDevice;
 	
@@ -921,6 +925,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'play',
 	    value: function play() {
 	      this.videoElement.play();
+	    }
+	
+	    /**
+	     * Stop trigger for videoElement
+	     * it removes video element from dom
+	     *
+	     * @for Player
+	     * @method stop
+	     */
+	
+	  }, {
+	    key: 'stop',
+	    value: function stop() {
+	      this.videoElement.remove();
 	    }
 	
 	    /**
@@ -3933,23 +3951,370 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
+	(function webpackUniversalModuleDefinition(root, factory) {
+		if(true)
+			module.exports = factory();
+		else if(typeof define === 'function' && define.amd)
+			define("smarttv-ui-controller", [], factory);
+		else if(typeof exports === 'object')
+			exports["smarttv-ui-controller"] = factory();
+		else
+			root["smarttv-ui-controller"] = factory();
+	})(this, function() {
+	return /******/ (function(modules) { // webpackBootstrap
+	/******/ 	// The module cache
+	/******/ 	var installedModules = {};
+	/******/
+	/******/ 	// The require function
+	/******/ 	function __webpack_require__(moduleId) {
+	/******/
+	/******/ 		// Check if module is in cache
+	/******/ 		if(installedModules[moduleId])
+	/******/ 			return installedModules[moduleId].exports;
+	/******/
+	/******/ 		// Create a new module (and put it into the cache)
+	/******/ 		var module = installedModules[moduleId] = {
+	/******/ 			exports: {},
+	/******/ 			id: moduleId,
+	/******/ 			loaded: false
+	/******/ 		};
+	/******/
+	/******/ 		// Execute the module function
+	/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+	/******/
+	/******/ 		// Flag the module as loaded
+	/******/ 		module.loaded = true;
+	/******/
+	/******/ 		// Return the exports of the module
+	/******/ 		return module.exports;
+	/******/ 	}
+	/******/
+	/******/
+	/******/ 	// expose the modules object (__webpack_modules__)
+	/******/ 	__webpack_require__.m = modules;
+	/******/
+	/******/ 	// expose the module cache
+	/******/ 	__webpack_require__.c = installedModules;
+	/******/
+	/******/ 	// __webpack_public_path__
+	/******/ 	__webpack_require__.p = "";
+	/******/
+	/******/ 	// Load entry module and return exports
+	/******/ 	return __webpack_require__(0);
+	/******/ })
+	/************************************************************************/
+	/******/ ([
+	/* 0 */
+	/***/ function(module, exports, __webpack_require__) {
+	
+		'use strict';
+		
+		Object.defineProperty(exports, "__esModule", {
+		  value: true
+		});
+		
+		var _main = __webpack_require__(1);
+		
+		var _main2 = _interopRequireDefault(_main);
+		
+		function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+		
+		if (typeof Object.assign !== 'function') {
+		  Object.assign = function (target, varArgs) {
+		    // .length of function is 2
+		    if (target == null) {
+		      // TypeError if undefined or null
+		      throw new TypeError('Cannot convert undefined or null to object');
+		    }
+		
+		    var to = Object(target);
+		
+		    for (var index = 1; index < arguments.length; index += 1) {
+		      var nextSource = arguments[index]; // eslint-disable-line prefer-rest-params
+		      if (nextSource != null) {
+		        // Skip over if undefined or null
+		        for (var nextKey in nextSource) {
+		          // Avoid bugs when hasOwnProperty is shadowed
+		          if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+		            to[nextKey] = nextSource[nextKey];
+		          }
+		        }
+		      }
+		    }
+		    return to;
+		  };
+		}
+		
+		window.DOGANTV = 'a';
+		
+		var a = 'b';
+		window.UIController = _main2.default;
+		exports.default = _main2.default;
+		module.exports = exports['default'];
+	
+	/***/ },
+	/* 1 */
+	/***/ function(module, exports, __webpack_require__) {
+	
+		'use strict';
+		
+		Object.defineProperty(exports, "__esModule", {
+		  value: true
+		});
+		
+		var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+		
+		var _keycode = __webpack_require__(2);
+		
+		var _keycode2 = _interopRequireDefault(_keycode);
+		
+		function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+		
+		function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+		
+		var UIController = function () {
+		  function UIController() {
+		    _classCallCheck(this, UIController);
+		
+		    this.listenersList = [];
+		    this.controlEnabled = false;
+		    this.initKeyListener();
+		    this.currentElement = null;
+		    this.focusObject = {};
+		  }
+		
+		  _createClass(UIController, [{
+		    key: 'initKeyListener',
+		    value: function initKeyListener() {
+		      _keycode2.default.addListener(document, 'keydown', this.handleKeyDown.bind(this), false);
+		      this.listenersList.push('keydown');
+		    }
+		  }, {
+		    key: 'handleKeyDown',
+		    value: function handleKeyDown(e) {
+		      if (this.currentElement !== null && this.controlEnabled) {
+		        e.preventDefault();
+		        switch (e.keyCode) {
+		          case 37:
+		            this.triggerLeft();
+		            break;
+		          case 40:
+		            this.triggerBottom();
+		            break;
+		          case 39:
+		            this.triggerRight();
+		            break;
+		          case 13:
+		            this.triggerClick();
+		            break;
+		        }
+		      }
+		    }
+		  }, {
+		    key: 'triggerBottom',
+		    value: function triggerBottom() {
+		      var nextElement = this.focusObject.parentElement;
+		      var index = 1;
+		      do {
+		        nextElement = nextElement.parentElement;
+		        index++;
+		      } while (nextElement.nextElementSibling === null && index < 20);
+		      if (nextElement.nextElementSibling !== null) {
+		        nextElement.parentElement.style.transform = 'translateY(-' + nextElement.nextElementSibling.offsetTop + 'px)';
+		        this.clearAllFocus();
+		        nextElement.nextElementSibling.querySelector('.focusable-item').classList.add('focus');
+		        this.initFocus('.focus');
+		      }
+		    }
+		  }, {
+		    key: 'triggerRight',
+		    value: function triggerRight() {
+		      var parentNodes = Array.prototype.slice.call(this.focusObject.parentElement.children);
+		      var nextIndex = parentNodes.indexOf(this.focusObject.nextElement);
+		      var secureIndex = Math.round(this.focusObject.parentElement.offsetWidth / this.currentElement.offsetWidth);
+		
+		      if (this.focusObject.nextElement) {
+		        this.clearAllFocus();
+		        this.focusObject.nextElement.classList.add('focus');
+		        if (!(parentNodes.length - nextIndex < secureIndex)) {
+		          this.focusObject.parentElement.style.transform = 'translateX(-' + this.focusObject.nextElement.offsetLeft + 'px)';
+		        }
+		      } else {
+		        var verticals = document.querySelectorAll('page-layout[direction=horizontal] page-layout[direction=vertical]');
+		        if (verticals.length > 1) {
+		          var focusIndex = false;
+		          verticals.forEach(function (item, index) {
+		            if (item.querySelector('.focus') !== null) {
+		              focusIndex = index;
+		            }
+		          });
+		          if (focusIndex !== false && focusIndex < verticals.length - 1) {
+		            this.clearAllFocus();
+		            verticals[focusIndex + 1].querySelector('.focusable-item').classList.add('focus');
+		          }
+		        } else {
+		          var firstElement = this.focusObject.parentElement.querySelector('.focusable-item');
+		          firstElement.classList.add('focus');
+		          this.focusObject.parentElement.style.transform = 'translateX(-' + firstElement.offsetLeft + 'px)';
+		        }
+		      }
+		      this.initFocus('.focus');
+		    }
+		  }, {
+		    key: 'triggerLeft',
+		    value: function triggerLeft() {
+		      var secureIndex = Math.round(this.focusObject.parentElement.offsetWidth / this.currentElement.offsetWidth);
+		
+		      if (this.focusObject.previousElement) {
+		        this.focusObject.previousElement.classList.add('focus');
+		        this.focusObject.parentElement.style.transform = 'translateX(-' + this.focusObject.previousElement.offsetLeft + 'px)';
+		      } else {
+		        var verticals = document.querySelectorAll('page-layout[direction=horizontal] page-layout[direction=vertical]');
+		        if (verticals.length > 1) {
+		          var focusIndex = false;
+		          verticals.forEach(function (item, index) {
+		            if (item.querySelector('.focus') !== null) {
+		              focusIndex = index;
+		            }
+		          });
+		          if (focusIndex !== false && focusIndex > 0) {
+		            this.clearAllFocus();
+		            var array = verticals[focusIndex - 1];
+		            verticals[focusIndex - 1].querySelector('.focusable-item').classList.add('focus');
+		          }
+		        } else {
+		          this.clearAllFocus();
+		          var itemsArray = this.focusObject.parentElement.querySelectorAll('.focusable-item');
+		          var lastElement = itemsArray[itemsArray.length - 1];
+		          lastElement.classList.add('focus');
+		          this.focusObject.parentElement.style.transform = 'translateX(-' + itemsArray[itemsArray.length - secureIndex].offsetLeft + 'px)';
+		        }
+		      }
+		      this.initFocus('.focus');
+		    }
+		  }, {
+		    key: 'triggerClick',
+		    value: function triggerClick() {
+		      this.currentElement.click();
+		    }
+		  }, {
+		    key: 'findNextSection',
+		    value: function findNextSection() {
+		      console.log('I AM TRYING TO FIND IT');
+		      var x = YAHOOOOOOO.focusObject.parentElement.parentElement;
+		      do {
+		        x = x.parentElement;
+		      } while (x.nextElementSibling === null);
+		      return x.nextElementSibling;
+		    }
+		  }, {
+		    key: 'initFocus',
+		    value: function initFocus() {
+		      var target = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '.focusable-item';
+		
+		      var iterator = 1;
+		      do {
+		        this.currentElement = document.querySelector(target);
+		        iterator++;
+		      } while (this.currentElement === null || this.currentElement.nextElementSibling === null);
+		      this.currentElement ? this.controlEnabled = true : this.controlEnabled = false;
+		
+		      this.setFocusObject();
+		    }
+		  }, {
+		    key: 'setFocusObject',
+		    value: function setFocusObject() {
+		      this.focusObject = {
+		        nextElement: this.currentElement.nextElementSibling,
+		        previousElement: this.currentElement.previousElementSibling,
+		        parentElement: this.currentElement.parentElement
+		      };
+		      this.addFocus();
+		    }
+		  }, {
+		    key: 'addFocus',
+		    value: function addFocus() {
+		      this.clearAllFocus();
+		      this.currentElement.classList.add('focus');
+		    }
+		  }, {
+		    key: 'clearAllFocus',
+		    value: function clearAllFocus() {
+		      document.querySelectorAll('.focus').forEach(function (item) {
+		        item.classList.remove('focus');
+		      });
+		      return true;
+		    }
+		  }]);
+		
+		  return UIController;
+		}();
+		
+		exports.default = UIController;
+		module.exports = exports['default'];
+	
+	/***/ },
+	/* 2 */
+	/***/ function(module, exports) {
+	
+		"use strict";
+		
+		Object.defineProperty(exports, "__esModule", {
+		  value: true
+		});
+		
+		var Keycode = {
+		  Listeners: {},
+		  addListener: function addListener(element, event, handler, capture) {
+		    element.addEventListener(event, handler, capture);
+		    Keycode.Listeners[event] = {
+		      element: element,
+		      event: event,
+		      handler: handler,
+		      capture: capture
+		    };
+		    return true;
+		  },
+		
+		  removeListener: function removeListener(id) {
+		    if (id in Keycode.Listeners) {
+		      var h = Keycode.Listeners[id];
+		      h.element.removeEventListener(h.event, h.handler, h.capture);
+		      delete Keycode.Listeners[id];
+		    }
+		  }
+		};
+		
+		exports.default = Keycode;
+		module.exports = exports["default"];
+	
+	/***/ }
+	/******/ ])
+	});
+	;
+	//# sourceMappingURL=smarttv-ui-controller.js.map
+
+/***/ },
+/* 38 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var map = {
-		"./arcelik": 38,
-		"./arcelik.js": 38,
-		"./lg": 39,
-		"./lg.js": 39,
-		"./philips": 40,
-		"./philips.js": 40,
-		"./samsung": 41,
-		"./samsung.js": 41,
-		"./tizen": 42,
-		"./tizen.js": 42,
-		"./vestel": 43,
-		"./vestel.js": 43,
-		"./web": 44,
-		"./web.js": 44,
-		"./webos": 45,
-		"./webos.js": 45
+		"./arcelik": 39,
+		"./arcelik.js": 39,
+		"./lg": 40,
+		"./lg.js": 40,
+		"./philips": 41,
+		"./philips.js": 41,
+		"./samsung": 42,
+		"./samsung.js": 42,
+		"./tizen": 43,
+		"./tizen.js": 43,
+		"./vestel": 44,
+		"./vestel.js": 44,
+		"./web": 45,
+		"./web.js": 45,
+		"./webos": 46,
+		"./webos.js": 46
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -3962,11 +4327,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 37;
+	webpackContext.id = 38;
 
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4056,7 +4421,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4107,7 +4472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4158,7 +4523,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4209,7 +4574,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4264,7 +4629,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4353,7 +4718,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4441,7 +4806,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4468,7 +4833,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var WebOsLibrary = __webpack_require__(46);
+	var WebOsLibrary = __webpack_require__(47);
 	
 	var DeviceWebOs = function (_Device) {
 	  _inherits(DeviceWebOs, _Device);
@@ -4554,7 +4919,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports) {
 
 	"use strict";
