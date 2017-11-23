@@ -110,6 +110,7 @@ class Player {
    *
    */
   addVideoSource(src, customData) {
+    this.Events.removeAllListeners();
     this.playerInfo.customData = customData;
     this.playerInfo.src = src;
     const _this = this;
@@ -654,7 +655,9 @@ class Player {
    * @method stop
    */
   stop() {
-    this.videoElement.remove();
+    // this.videoElement.remove();
+    this.Events.removeAllListeners();
+    this.addVideoSource('');
   }
 
   /**
