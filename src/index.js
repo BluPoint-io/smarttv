@@ -35,6 +35,8 @@ const device = new CoreDevice();
 const currentDeviceName = device.currentDevice.brandName;
 const currentDevice = require(`./core/devices/${currentDeviceName}`);
 
-window.DOGANTV = currentDevice;
+window.___SMARTTV_FRAMEWORK = {
+  Device: currentDevice
+};
 
 export { currentDevice as Device }; // eslint-disable-line
