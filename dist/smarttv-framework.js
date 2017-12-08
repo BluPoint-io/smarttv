@@ -375,6 +375,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'addVideoSource',
 	    value: function addVideoSource(src, customData) {
+	      this.autoLoop = false;
 	      this.Events.removeAllListeners();
 	      this.playerInfo.customData = customData;
 	      this.playerInfo.src = src;
@@ -973,6 +974,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
+	     * Play trigger for a video element with endless autoloop
+	     * you can use this feature to enable silent background videos
+	     *
+	     * @for Player
+	     * @method playWithLoop
+	     */
+	
+	  }, {
+	    key: 'playWithLoop',
+	    value: function playWithLoop() {
+	      if (this.videoElement) {
+	        this.autoLoop = true;
+	        this.play();
+	      }
+	    }
+	
+	    /**
 	     * Trigger specific events for all videoElement trigger
 	     * @for Player
 	     * @method registerVideoEvents
@@ -981,6 +999,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'registerVideoEvents',
 	    value: function registerVideoEvents() {
+	      var _this2 = this;
+	
 	      var _this = this;
 	
 	      this.videoElement.oncanplay = function () {
@@ -1001,6 +1021,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.videoElement.onended = function () {
 	        _this.playerInfo.currentState = 'Finished';
 	        _this.Events.triggerEvent('player_onEnded', ['Video Finished']);
+	        if (_this2.autoLoop) {
+	          _this2.playWithLoop();
+	        }
 	      };
 	
 	      this.videoElement.onloadeddata = function () {
@@ -2609,7 +2632,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/*!
 	 * Determine if an object is a Buffer
 	 *
-	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+	 * @author   Feross Aboukhadijeh <https://feross.org>
 	 * @license  MIT
 	 */
 	

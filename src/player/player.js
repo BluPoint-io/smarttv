@@ -110,6 +110,7 @@ class Player {
    *
    */
   addVideoSource(src, customData) {
+    this.autoLoop = false;
     this.Events.removeAllListeners();
     this.playerInfo.customData = customData;
     this.playerInfo.src = src;
@@ -685,6 +686,22 @@ class Player {
   }
 
   /**
+   * Play trigger for a video element with endless autoloop
+   * you can use this feature to enable silent background videos
+   *
+   * @for Player
+   * @method playWithLoop
+   */
+  playWithLoop() {
+    if (this.videoElement) {
+      this.autoLoop = true;
+      this.play();
+    }
+  }
+
+
+
+  /**
    * Trigger specific events for all videoElement trigger
    * @for Player
    * @method registerVideoEvents
@@ -710,6 +727,9 @@ class Player {
     this.videoElement.onended = () => {
       _this.playerInfo.currentState = 'Finished';
       _this.Events.triggerEvent('player_onEnded', ['Video Finished']);
+      if(this.autoLoop) {
+        this.playWithLoop();
+      }
     };
 
     this.videoElement.onloadeddata = () => {
