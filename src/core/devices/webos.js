@@ -1,6 +1,6 @@
 import Device from '../device';
 import Logger from '../../service/logger';
-const WebOsLibrary = require('../../helpers/WebOS.js');
+// const WebOsLibrary = require('../../helpers/WebOS.js');
 
 class DeviceWebOs extends Device {
 
@@ -15,6 +15,8 @@ class DeviceWebOs extends Device {
     super();
     this.initEvents();
     this.initPlayerClass();
+    this.initNetworkClass();
+    this.initKeyListener();
     Logger.addLog('Device_WebOS', 'info', 'Arcelik Device Initialized');
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
@@ -34,7 +36,7 @@ class DeviceWebOs extends Device {
     this.webOSLibrary.setAttribute('type', 'text/javascript');
     this.webOSLibrary.setAttribute('src', 'lib/webOS.js');
     document.body.appendChild(this.webOSLibrary);*/
-    this.WebOsLibrary = WebOsLibrary;
+    // this.WebOsLibrary = WebOsLibrary;
     Logger.addLog('Device_WebOs', 'info', 'WebOs Library loaded successfully', this.WebOsLibrary);
     return true;
   }
