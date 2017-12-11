@@ -4,6 +4,7 @@ import Logger from '../service/logger';
 import Events from '../service/events';
 import Config from '../statics/config';
 import Network from '../service/network/network';
+import Keyboard from '../service/keyboard/index';
 
 
 class Device {
@@ -53,6 +54,10 @@ class Device {
 
   initNetworkClass() {
     this.Network = new Network();
+  }
+
+  initKeyListener() {
+    this.Keyboard = new Keyboard(this.Events, this.currentDevice);
   }
 
 }
