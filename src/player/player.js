@@ -111,7 +111,7 @@ class Player {
    */
   addVideoSource(src, customData) {
     this.autoLoop = false;
-    this.Events.removeAllListeners();
+    // this.Events.removeAllListeners();
     this.playerInfo.customData = customData;
     this.playerInfo.src = src;
     const _this = this;
