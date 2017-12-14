@@ -1,33 +1,52 @@
-import engine from './storage/engine/store-engine';
 
-/**
- * Initialize Storage adapters for Storage
- *
- * @type {[*]} - Require storages
- */
-const storages = [
-  require('./storage/storages/localStorage'),
-  require('./storage/storages/sessionStorage'),
-  require('./storage/storages/cookieStorage'),
-  require('./storage/storages/memoryStorage')
-];
+export default class Storage {
 
-/**
- * Initialize Plugin adapters for Storage
- *
- * @type {[*]} - Require plugins
- */
-const plugins = [
-  require('./storage/plugins/defaults'),
-  require('./storage/plugins/update')
-];
-/**
- * Initializes Storage Class
- * This class have private methods
- * @class Storage
- * @constructor Storage
- *
- * @param {Array} storages
- * @param {Array} plugins
- */
-export default engine.createStore(storages, plugins);
+  /**
+   * Set value to the storage
+   *
+   * @param {String} name
+   * @param {Object/String/Number} value
+   * @returns {Boolean}
+   */
+  static set(name, value) {
+    if(window.localStorage) {
+      return window.localStorage.setItem(name, JSON.stringify(value));
+    }
+  }
+
+  /**
+   * Get value from the storage
+   *
+   * @param {String} name
+   * @returns {Object/String/Number} Retrurns FALSE
+   */
+  static get(name) {
+    let value;
+
+    if (window.localStorage) {
+      value = window.localStorage.getItem(name);
+      if (typeof value !== 'undefined') {
+        try {
+          return JSON.parse(value);
+        }
+        catch (e) {
+          return value;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Clear all stored data
+   *
+   * @returns {Boolean}
+   */
+  static clear() {
+    if (window.localStorage) {
+      return window.localStorage.clear();
+    }
+
+    return false;
+  }
+}

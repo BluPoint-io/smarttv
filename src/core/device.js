@@ -4,6 +4,7 @@ import Logger from '../service/logger';
 import Events from '../service/events';
 import Config from '../statics/config';
 import Network from '../service/network/network';
+import Storage from '../service/storage';
 import Keyboard from '../service/keyboard/index';
 
 
@@ -21,6 +22,7 @@ class Device {
     this.Events = 'Events mechanism ready to start';
     this.Network = 'Network is not initialized yet';
     this.Config = Config;
+    this.Storage = Storage;
   }
 
   /**
