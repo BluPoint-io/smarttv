@@ -103,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var device = new _device2.default();
 	var currentDeviceName = device.currentDevice.brandName;
-	var currentDevice = __webpack_require__(38)("./" + currentDeviceName);
+	var currentDevice = __webpack_require__(39)("./" + currentDeviceName);
 	
 	window.___SMARTTV_FRAMEWORK = {
 	  Device: currentDevice
@@ -147,7 +147,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _network2 = _interopRequireDefault(_network);
 	
-	var _index = __webpack_require__(37);
+	var _storage = __webpack_require__(37);
+	
+	var _storage2 = _interopRequireDefault(_storage);
+	
+	var _index = __webpack_require__(38);
 	
 	var _index2 = _interopRequireDefault(_index);
 	
@@ -171,6 +175,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.Events = 'Events mechanism ready to start';
 	    this.Network = 'Network is not initialized yet';
 	    this.Config = _config2.default;
+	    this.Storage = _storage2.default;
 	  }
 	
 	  /**
@@ -796,7 +801,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'addVideoSource',
 	    value: function addVideoSource(src, customData) {
 	      this.autoLoop = false;
-	      this.Events.removeAllListeners();
+	      // this.Events.removeAllListeners();
 	      this.playerInfo.customData = customData;
 	      this.playerInfo.src = src;
 	      var _this = this;
@@ -4393,6 +4398,90 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 37 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Storage = function () {
+	  function Storage() {
+	    _classCallCheck(this, Storage);
+	  }
+	
+	  _createClass(Storage, null, [{
+	    key: 'set',
+	
+	
+	    /**
+	     * Set value to the storage
+	     *
+	     * @param {String} name
+	     * @param {Object/String/Number} value
+	     * @returns {Boolean}
+	     */
+	    value: function set(name, value) {
+	      if (window.localStorage) {
+	        return window.localStorage.setItem(name, JSON.stringify(value));
+	      }
+	    }
+	
+	    /**
+	     * Get value from the storage
+	     *
+	     * @param {String} name
+	     * @returns {Object/String/Number} Retrurns FALSE
+	     */
+	
+	  }, {
+	    key: 'get',
+	    value: function get(name) {
+	      var value = void 0;
+	
+	      if (window.localStorage) {
+	        value = window.localStorage.getItem(name);
+	        if (typeof value !== 'undefined') {
+	          try {
+	            return JSON.parse(value);
+	          } catch (e) {
+	            return value;
+	          }
+	        }
+	      }
+	      return false;
+	    }
+	
+	    /**
+	     * Clear all stored data
+	     *
+	     * @returns {Boolean}
+	     */
+	
+	  }, {
+	    key: 'clear',
+	    value: function clear() {
+	      if (window.localStorage) {
+	        return window.localStorage.clear();
+	      }
+	
+	      return false;
+	    }
+	  }]);
+	
+	  return Storage;
+	}();
+	
+	exports.default = Storage;
+	module.exports = exports['default'];
+
+/***/ },
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4458,26 +4547,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./arcelik": 39,
-		"./arcelik.js": 39,
-		"./lg": 40,
-		"./lg.js": 40,
-		"./philips": 41,
-		"./philips.js": 41,
-		"./samsung": 42,
-		"./samsung.js": 42,
-		"./tizen": 43,
-		"./tizen.js": 43,
-		"./vestel": 44,
-		"./vestel.js": 44,
-		"./web": 45,
-		"./web.js": 45,
-		"./webos": 46,
-		"./webos.js": 46
+		"./arcelik": 40,
+		"./arcelik.js": 40,
+		"./lg": 41,
+		"./lg.js": 41,
+		"./philips": 42,
+		"./philips.js": 42,
+		"./samsung": 43,
+		"./samsung.js": 43,
+		"./tizen": 44,
+		"./tizen.js": 44,
+		"./vestel": 45,
+		"./vestel.js": 45,
+		"./web": 46,
+		"./web.js": 46,
+		"./webos": 47,
+		"./webos.js": 47
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -4490,11 +4579,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 38;
+	webpackContext.id = 39;
 
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4586,7 +4675,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4637,7 +4726,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4688,7 +4777,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4739,7 +4828,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4794,7 +4883,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4883,7 +4972,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4972,7 +5061,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
