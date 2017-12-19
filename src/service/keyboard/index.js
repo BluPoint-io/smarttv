@@ -9,6 +9,7 @@ export default class Keyboard {
 
   attachKeyListeners() {
     window.addEventListener('keydown', (e) => {
+      e.preventDefault();
       switch (e.keyCode) {
         case this.keyList.LEFT:
           this.Events.triggerEvent('keyDown', ['LEFT']);

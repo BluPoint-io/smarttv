@@ -4516,6 +4516,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _this = this;
 	
 	      window.addEventListener('keydown', function (e) {
+	        e.preventDefault();
 	        switch (e.keyCode) {
 	          case _this.keyList.LEFT:
 	            _this.Events.triggerEvent('keyDown', ['LEFT']);
