@@ -4533,6 +4533,60 @@ return /******/ (function(modules) { // webpackBootstrap
 	          case _this.keyList.ENTER:
 	            _this.Events.triggerEvent('keyDown', ['ENTER']);
 	            break;
+	          case _this.keyList.RETURN:
+	            _this.Events.triggerEvent('keyDown', ['BACK']);
+	            break;
+	          case _this.keyList.GREEN:
+	            _this.Events.triggerEvent('keyDown', ['GREEN']);
+	            break;
+	          case _this.keyList.YELLOW:
+	            _this.Events.triggerEvent('keyDown', ['YELLOW']);
+	            break;
+	          case _this.keyList.BLUE:
+	            _this.Events.triggerEvent('keyDown', ['BLUE']);
+	            break;
+	          case _this.keyList.RED:
+	            _this.Events.triggerEvent('keyDown', ['RED']);
+	            break;
+	          case _this.keyList.PLAY:
+	            _this.Events.triggerEvent('keyDown', ['PLAY']);
+	            break;
+	          case _this.keyList.PAUSE:
+	            _this.Events.triggerEvent('keyDown', ['PAUSE']);
+	            break;
+	          case _this.keyList.STOP:
+	            _this.Events.triggerEvent('keyDown', ['STOP']);
+	            break;
+	          case _this.keyList.FF:
+	            _this.Events.triggerEvent('keyDown', ['FF']);
+	            break;
+	          case _this.keyList.ONE:
+	            _this.Events.triggerEvent('keyDown', ['ONE']);
+	            break;
+	          case _this.keyList.TWO:
+	            _this.Events.triggerEvent('keyDown', ['TWO']);
+	            break;
+	          case _this.keyList.THREE:
+	            _this.Events.triggerEvent('keyDown', ['THREE']);
+	            break;
+	          case _this.keyList.FOUR:
+	            _this.Events.triggerEvent('keyDown', ['FOUR']);
+	            break;
+	          case _this.keyList.FIVE:
+	            _this.Events.triggerEvent('keyDown', ['FIVE']);
+	            break;
+	          case _this.keyList.SIX:
+	            _this.Events.triggerEvent('keyDown', ['SIX']);
+	            break;
+	          case _this.keyList.SEVEN:
+	            _this.Events.triggerEvent('keyDown', ['SEVEN']);
+	            break;
+	          case _this.keyList.EIGHT:
+	            _this.Events.triggerEvent('keyDown', ['EIGHT']);
+	            break;
+	          case _this.keyList.NINE:
+	            _this.Events.triggerEvent('keyDown', ['NINE']);
+	            break;
 	          default:
 	            _this.Events.triggerEvent('keyDown', [e.keyCode]);
 	            break;
