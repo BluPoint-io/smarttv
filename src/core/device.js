@@ -6,7 +6,7 @@ import Config from '../statics/config';
 import Network from '../service/network/network';
 import Storage from '../service/storage';
 import Keyboard from '../service/keyboard/index';
-
+import GAnalytics from '../service/ganalytics'
 
 class Device {
   /**
@@ -23,6 +23,7 @@ class Device {
     this.Network = 'Network is not initialized yet';
     this.Config = Config;
     this.Storage = Storage;
+    this.GAnalytics = new GAnalytics();
   }
 
   /**

@@ -16,6 +16,8 @@ class DeviceTizen extends Device {
     Logger.addLog('Device_Tizen', 'info', 'Samsung Tizen Initialized');
     // this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config);
+    window['isDebugEnabled'] = this.Config.debug;
+
   }
 }
 

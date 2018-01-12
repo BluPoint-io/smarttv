@@ -13,6 +13,7 @@ class DeviceSamsung extends Device {
   constructor() {
     super();
     Logger.addLog('Device_Samsung', 'info', 'Samsung device is in progress');
+
   }
 }
 

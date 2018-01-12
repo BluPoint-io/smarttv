@@ -12,6 +12,7 @@ class DevicePhilips extends Device {
   constructor() {
     super();
     Logger.addLog('Device_Philips', 'info', 'Philips device is in progress');
+
   }
 }
 

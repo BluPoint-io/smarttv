@@ -18,6 +18,8 @@ class DeviceVestel extends Device {
     Logger.addLog('Device_Vestel', 'info', 'Vestel Device Initialized');
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
+    window['isDebugEnabled'] = this.Config.debug;
+
   }
 
   /**

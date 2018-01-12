@@ -103,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var device = new _device2.default();
 	var currentDeviceName = device.currentDevice.brandName;
-	var currentDevice = __webpack_require__(39)("./" + currentDeviceName);
+	var currentDevice = __webpack_require__(40)("./" + currentDeviceName);
 	
 	window.___SMARTTV_FRAMEWORK = {
 	  Device: currentDevice
@@ -155,6 +155,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _index2 = _interopRequireDefault(_index);
 	
+	var _ganalytics = __webpack_require__(39);
+	
+	var _ganalytics2 = _interopRequireDefault(_ganalytics);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -176,6 +180,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.Network = 'Network is not initialized yet';
 	    this.Config = _config2.default;
 	    this.Storage = _storage2.default;
+	    this.GAnalytics = new _ganalytics2.default();
 	  }
 	
 	  /**
@@ -1749,6 +1754,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @for Logger
 	     */
 	    value: function addLog(from, type, message, variable) {
+	      if (!window['isDebugEnabled']) return false;
 	      switch (type) {
 	        case 'create':
 	          console.log('[' + from + '] %c -> { ' + type + ' } \n\n ' + message + (variable ? ' => ' : ''), 'color: #009b1c;', variable || '');
@@ -4603,25 +4609,88 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 39 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	/**
+	 *
+	 */
+	var GAnalytics = function () {
+	  function GAnalytics() {
+	    _classCallCheck(this, GAnalytics);
+	
+	    this.KEY = 'ga:user';
+	    this.DNT = navigator.doNotTrack || navigator.msDoNotTrack || window.doNotTrack;
+	    this.UID = window.localStorage ? window.localStorage[this.KEY] = window.localStorage[this.KEY] || Math.random() + '.' + Math.random() : '';
+	  }
+	
+	  _createClass(GAnalytics, [{
+	    key: 'setAnalytics',
+	    value: function setAnalytics(ua, opts) {
+	      opts = opts || {};
+	      this.args = Object.assign({ tid: ua, cid: this.UID }, opts);
+	      this.send('pageview');
+	    }
+	  }, {
+	    key: 'send',
+	    value: function send(type, opts) {
+	      if (this.DNT) return;
+	      if (type === 'pageview' && !opts) {
+	        opts = { dl: location.href, dt: document.title };
+	      }
+	      var obj = Object.assign({ t: type }, this.args, opts, { z: Date.now() });
+	      new Image().src = this.encode(obj); // dispatch a GET
+	    }
+	  }, {
+	    key: 'encode',
+	    value: function encode(obj) {
+	      var k,
+	          str = 'https://www.google-analytics.com/collect?v=1';
+	      for (k in obj) {
+	        if (obj[k]) {
+	          str += '&' + k + '=' + encodeURIComponent(obj[k]);
+	        }
+	      }
+	      return str;
+	    }
+	  }]);
+	
+	  return GAnalytics;
+	}();
+	
+	exports.default = GAnalytics;
+	module.exports = exports['default'];
+
+/***/ },
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./arcelik": 40,
-		"./arcelik.js": 40,
-		"./lg": 41,
-		"./lg.js": 41,
-		"./philips": 42,
-		"./philips.js": 42,
-		"./samsung": 43,
-		"./samsung.js": 43,
-		"./tizen": 44,
-		"./tizen.js": 44,
-		"./vestel": 45,
-		"./vestel.js": 45,
-		"./web": 46,
-		"./web.js": 46,
-		"./webos": 47,
-		"./webos.js": 47
+		"./arcelik": 41,
+		"./arcelik.js": 41,
+		"./lg": 42,
+		"./lg.js": 42,
+		"./philips": 43,
+		"./philips.js": 43,
+		"./samsung": 44,
+		"./samsung.js": 44,
+		"./tizen": 45,
+		"./tizen.js": 45,
+		"./vestel": 46,
+		"./vestel.js": 46,
+		"./web": 47,
+		"./web.js": 47,
+		"./webos": 48,
+		"./webos.js": 48
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -4634,11 +4703,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 39;
+	webpackContext.id = 40;
 
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4687,6 +4756,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _logger2.default.addLog('Device_Arcelik', 'info', 'Arcelik Device Initialized');
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
+	    window['isDebugEnabled'] = _this.Config.debug;
 	    return _this;
 	  }
 	
@@ -4730,7 +4800,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4781,7 +4851,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4822,6 +4892,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var _this = _possibleConstructorReturn(this, (DevicePhilips.__proto__ || Object.getPrototypeOf(DevicePhilips)).call(this));
 	
 	    _logger2.default.addLog('Device_Philips', 'info', 'Philips device is in progress');
+	
 	    return _this;
 	  }
 	
@@ -4832,7 +4903,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4873,6 +4944,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var _this = _possibleConstructorReturn(this, (DeviceSamsung.__proto__ || Object.getPrototypeOf(DeviceSamsung)).call(this));
 	
 	    _logger2.default.addLog('Device_Samsung', 'info', 'Samsung device is in progress');
+	
 	    return _this;
 	  }
 	
@@ -4883,7 +4955,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4928,6 +5000,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _logger2.default.addLog('Device_Tizen', 'info', 'Samsung Tizen Initialized');
 	    // this.Player.createVideoElement = this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config);
+	    window['isDebugEnabled'] = _this.Config.debug;
+	
 	    return _this;
 	  }
 	
@@ -4938,7 +5012,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4986,6 +5060,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _logger2.default.addLog('Device_Vestel', 'info', 'Vestel Device Initialized');
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
+	    window['isDebugEnabled'] = _this.Config.debug;
+	
 	    return _this;
 	  }
 	
@@ -5027,7 +5103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5076,6 +5152,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _logger2.default.addLog('Device_Arcelik', 'info', 'Arcelik Device Initialized');
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
+	    window['isDebugEnabled'] = _this.Config.debug;
 	    return _this;
 	  }
 	
@@ -5116,7 +5193,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5167,6 +5244,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _logger2.default.addLog('Device_WebOS', 'info', 'Arcelik Device Initialized');
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
+	    window['isDebugEnabled'] = _this.Config.debug;
+	
 	    _this.addWebOSLib();
 	    return _this;
 	  }
