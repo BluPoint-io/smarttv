@@ -1,26 +1,26 @@
 /**
  *
  */
-class GAnalytics {
-  constructor(config) {
+export default class GAnalytics {
+  constructor() {
     this.KEY = 'ga:user';
     this.DNT = navigator.doNotTrack || navigator.msDoNotTrack || window.doNotTrack;
-    this.UID = (localStorage[this.KEY] = localStorage[this.KEY] || Math.random() + '.' + Math.random());
+    this.UID = (window.localStorage) ? (window.localStorage[this.KEY] = window.localStorage[this.KEY] || Math.random() + '.' + Math.random()) : '';
   }
 
   setAnalytics(ua, opts) {
     opts = opts || {};
-    this.args = Object.assign({ tid:ua, cid:UID }, opts);
+    this.args = Object.assign({ tid:ua, cid:this.UID }, opts);
     this.send('pageview');
   }
 
   send(type, opts) {
-    if (DNT) return;
+    if (this.DNT) return;
     if (type === 'pageview' && !opts) {
       opts = { dl:location.href, dt:document.title };
     }
     var obj = Object.assign({ t:type }, this.args, opts, { z:Date.now() });
-    new Image().src = encode(obj); // dispatch a GET
+    new Image().src = this.encode(obj); // dispatch a GET
   }
 
   encode(obj) {
@@ -33,5 +33,3 @@ class GAnalytics {
     return str;
   }
 }
-
-export default GAnalytics;
