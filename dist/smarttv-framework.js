@@ -5169,7 +5169,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(DeviceWeb, [{
 	    key: 'createVideoElement',
 	    value: function createVideoElement() {
-	      console.log(this.Config);
 	      this.videoElement = document.createElement('video');
 	      this.videoElement.style.position = 'absolute';
 	      this.videoElement.setAttribute('width', this.Config.width);

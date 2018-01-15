@@ -30,7 +30,6 @@ class DeviceWeb extends Device {
    * @return {Boolean} true
    */
   createVideoElement() {
-    console.log(this.Config);
     this.videoElement = document.createElement('video');
     this.videoElement.style.position = 'absolute';
     this.videoElement.setAttribute('width', this.Config.width);
