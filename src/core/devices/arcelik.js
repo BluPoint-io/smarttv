@@ -33,7 +33,6 @@ class DeviceArcelik extends Device {
     if (this.videoElement) {
       this.deleteVideoElement();
     }
-    console.log(this.Config);
     this.videoElement = document.createElement('video');
     this.videoElement.style.position = 'absolute';
     this.videoElement.setAttribute('width', this.Config.width);

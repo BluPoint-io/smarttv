@@ -529,10 +529,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		var map = {
 			"./arcelik": 3,
 			"./arcelik.js": 3,
-			"./web": 4,
-			"./web.js": 4,
-			"./webos": 5,
-			"./webos.js": 5
+			"./tizen": 4,
+			"./tizen.js": 4,
+			"./web": 5,
+			"./web.js": 5,
+			"./webos": 6,
+			"./webos.js": 6
 		};
 		function webpackContext(req) {
 			return __webpack_require__(webpackContextResolve(req));
@@ -606,6 +608,54 @@ return /******/ (function(modules) { // webpackBootstrap
 		  value: true
 		});
 		exports.default = {
+		  LEFT: 37,
+		  RIGHT: 39,
+		  UP: 38,
+		  DOWN: 40,
+		  ENTER: 13,
+		  RETURN: 10009,
+		  ZERO: 48,
+		  ONE: 49,
+		  TWO: 50,
+		  THREE: 51,
+		  FOUR: 52,
+		  FIVE: 53,
+		  SIX: 54,
+		  SEVEN: 55,
+		  EIGHT: 56,
+		  NINE: 57,
+		  RED: 403,
+		  GREEN: 404,
+		  YELLOW: 405,
+		  BLUE: 406,
+		  PLAY: 415,
+		  PAUSE: 19,
+		  STOP: 413,
+		  REC: 416,
+		  FF: 417,
+		  RW: 412,
+		  TOOLS: 470,
+		  PUP: 427,
+		  PDOWN: 428,
+		  CHLIST: -1,
+		  PRECH: -1,
+		  TXTMIX: -1,
+		  FAVCH: -1,
+		  EXIT: 528,
+		  INFO: -1
+		};
+		module.exports = exports["default"];
+	
+	/***/ },
+	/* 5 */
+	/***/ function(module, exports) {
+	
+		"use strict";
+		
+		Object.defineProperty(exports, "__esModule", {
+		  value: true
+		});
+		exports.default = {
 		  RIGHT: 39,
 		  LEFT: 37,
 		  UP: 38,
@@ -639,7 +689,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		module.exports = exports["default"];
 	
 	/***/ },
-	/* 5 */
+	/* 6 */
 	/***/ function(module, exports) {
 	
 		"use strict";
@@ -4826,7 +4876,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.videoElement) {
 	        this.deleteVideoElement();
 	      }
-	      console.log(this.Config);
 	      this.videoElement = document.createElement('video');
 	      this.videoElement.style.position = 'absolute';
 	      this.videoElement.setAttribute('width', this.Config.width);
