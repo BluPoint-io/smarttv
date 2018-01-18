@@ -5063,6 +5063,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	var _device = __webpack_require__(1);
 	
 	var _device2 = _interopRequireDefault(_device);
@@ -5097,12 +5099,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.initEvents();
 	    _this.initPlayerClass();
 	    _logger2.default.addLog('Device_Tizen', 'info', 'Samsung Tizen Initialized');
-	    // this.Player.createVideoElement = this.createVideoElement;
-	    _this.Config = Object.assign(_this.Config, config);
+	    _this.initNetworkClass();
+	    _this.initKeyListener();
+	    _this.Player.createVideoElement = _this.createVideoElement;
+	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
 	    window['isDebugEnabled'] = _this.Config.debug;
 	
 	    return _this;
 	  }
+	
+	  _createClass(DeviceTizen, [{
+	    key: 'createVideoElement',
+	    value: function createVideoElement() {
+	      this.videoElement = document.createElement('video');
+	      this.videoElement.style.position = 'absolute';
+	      this.videoElement.setAttribute('width', this.Config.width);
+	      this.videoElement.setAttribute('height', this.Config.height);
+	      this.videoElement.setAttribute('id', this.Config.videoPlayerId);
+	      this.videoElement.setAttribute('data', '');
+	      this.videoElement.setAttribute('class', 'player');
+	      document.body.appendChild(this.videoElement);
+	      this.setPlayerInfo();
+	      this.registerVideoEvents();
+	      _logger2.default.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
+	      this.initAudioClass();
+	      return null;
+	    }
+	  }]);
 	
 	  return DeviceTizen;
 	}(_device2.default);
