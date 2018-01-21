@@ -529,12 +529,22 @@ return /******/ (function(modules) { // webpackBootstrap
 		var map = {
 			"./arcelik": 3,
 			"./arcelik.js": 3,
-			"./tizen": 4,
-			"./tizen.js": 4,
-			"./web": 5,
-			"./web.js": 5,
-			"./webos": 6,
-			"./webos.js": 6
+			"./lg": 4,
+			"./lg.js": 4,
+			"./philips": 5,
+			"./philips.js": 5,
+			"./seraphic": 6,
+			"./seraphic.js": 6,
+			"./sony": 7,
+			"./sony.js": 7,
+			"./tizen": 8,
+			"./tizen.js": 8,
+			"./vestel": 9,
+			"./vestel.js": 9,
+			"./web": 10,
+			"./web.js": 10,
+			"./webos": 11,
+			"./webos.js": 11
 		};
 		function webpackContext(req) {
 			return __webpack_require__(webpackContextResolve(req));
@@ -613,6 +623,208 @@ return /******/ (function(modules) { // webpackBootstrap
 		  UP: 38,
 		  DOWN: 40,
 		  ENTER: 13,
+		  RETURN: 461,
+		  ZERO: 48,
+		  ONE: 49,
+		  TWO: 50,
+		  THREE: 51,
+		  FOUR: 52,
+		  FIVE: 53,
+		  SIX: 54,
+		  SEVEN: 55,
+		  EIGHT: 56,
+		  NINE: 57,
+		  NUMERIC_ZERO: 96, // keyCode of numeric keys on External USB keyboard
+		  NUMERIC_ONE: 97,
+		  NUMERIC_TWO: 98,
+		  NUMERIC_THREE: 99,
+		  NUMERIC_FOUR: 100,
+		  NUMERIC_FIVE: 101,
+		  NUMERIC_SIX: 102,
+		  NUMERIC_SEVEN: 103,
+		  NUMERIC_EIGHT: 104,
+		  NUMERIC_NINE: 105,
+		  RED: 403,
+		  GREEN: 404,
+		  YELLOW: 405,
+		  BLUE: 406,
+		  PLAY: 415,
+		  PAUSE: 19,
+		  STOP: 413,
+		  REC: 416,
+		  FF: 417,
+		  RW: 412,
+		  TOOLS: -1,
+		  PUP: 33,
+		  PDOWN: 34,
+		  CHLIST: -1,
+		  PRECH: -1,
+		  TXTMIX: -1,
+		  FAVCH: -1,
+		  EXIT: -1,
+		  INFO: 457
+		};
+		module.exports = exports["default"];
+	
+	/***/ },
+	/* 5 */
+	/***/ function(module, exports) {
+	
+		"use strict";
+		
+		Object.defineProperty(exports, "__esModule", {
+		  value: true
+		});
+		exports.default = {
+		  LEFT: VK_LEFT,
+		  RIGHT: VK_RIGHT,
+		  UP: VK_UP,
+		  DOWN: VK_DOWN,
+		  ENTER: VK_ENTER,
+		  RETURN: VK_BACK,
+		  ZERO: VK_0,
+		  ONE: VK_1,
+		  TWO: VK_2,
+		  THREE: VK_3,
+		  FOUR: VK_4,
+		  FIVE: VK_5,
+		  SIX: VK_6,
+		  SEVEN: VK_7,
+		  EIGHT: VK_8,
+		  NINE: VK_9,
+		  RED: VK_RED,
+		  GREEN: VK_GREEN,
+		  YELLOW: VK_YELLOW,
+		  BLUE: VK_BLUE,
+		  PLAY: VK_PLAY,
+		  PAUSE: VK_PAUSE,
+		  STOP: VK_STOP,
+		  REC: -1,
+		  FF: VK_FAST_FWD,
+		  RW: VK_REWIND,
+		  TOOLS: -1,
+		  PUP: VK_PAGE_UP,
+		  PDOWN: VK_PAGE_DOWN,
+		  CHLIST: -1,
+		  PRECH: -1,
+		  TXTMIX: -1,
+		  FAVCH: -1,
+		  EXIT: -1,
+		  INFO: VK_INFO
+		};
+		module.exports = exports["default"];
+	
+	/***/ },
+	/* 6 */
+	/***/ function(module, exports) {
+	
+		"use strict";
+		
+		Object.defineProperty(exports, "__esModule", {
+		  value: true
+		});
+		exports.default = {
+		  LEFT: 37,
+		  RIGHT: 39,
+		  UP: 38,
+		  DOWN: 40,
+		  ENTER: 13,
+		  RETURN: 461,
+		  ZERO: 48,
+		  ONE: 49,
+		  TWO: 50,
+		  THREE: 51,
+		  FOUR: 52,
+		  FIVE: 53,
+		  SIX: 54,
+		  SEVEN: 55,
+		  EIGHT: 56,
+		  NINE: 57,
+		  RED: 403,
+		  GREEN: 404,
+		  YELLOW: 405,
+		  BLUE: 406,
+		  PLAY: 415,
+		  PAUSE: 19,
+		  STOP: 413,
+		  REC: 416,
+		  FF: 417,
+		  RW: 412,
+		  TOOLS: 470,
+		  PUP: 427,
+		  PDOWN: 428,
+		  CHLIST: -1,
+		  PRECH: -1,
+		  TXTMIX: -1,
+		  FAVCH: -1,
+		  EXIT: 528,
+		  INFO: -1
+		};
+		module.exports = exports["default"];
+	
+	/***/ },
+	/* 7 */
+	/***/ function(module, exports) {
+	
+		"use strict";
+		
+		Object.defineProperty(exports, "__esModule", {
+		  value: true
+		});
+		exports.default = {
+		  LEFT: 37,
+		  RIGHT: 39,
+		  UP: 38,
+		  DOWN: 40,
+		  ENTER: 13,
+		  RETURN: 8,
+		  ZERO: 48,
+		  ONE: 49,
+		  TWO: 50,
+		  THREE: 51,
+		  FOUR: 52,
+		  FIVE: 53,
+		  SIX: 54,
+		  SEVEN: 55,
+		  EIGHT: 56,
+		  NINE: 57,
+		  RED: 403,
+		  GREEN: 404,
+		  YELLOW: 502,
+		  BLUE: 406,
+		  PLAY: 415,
+		  PAUSE: 19,
+		  STOP: 413,
+		  REC: -1,
+		  FF: 465,
+		  RW: 412,
+		  TOOLS: -1,
+		  PUP: -1,
+		  PDOWN: -1,
+		  CHLIST: -1,
+		  PRECH: -1,
+		  TXTMIX: -1,
+		  FAVCH: -1,
+		  EXIT: -1,
+		  INFO: 469
+		};
+		module.exports = exports["default"];
+	
+	/***/ },
+	/* 8 */
+	/***/ function(module, exports) {
+	
+		"use strict";
+		
+		Object.defineProperty(exports, "__esModule", {
+		  value: true
+		});
+		exports.default = {
+		  LEFT: 37,
+		  RIGHT: 39,
+		  UP: 38,
+		  DOWN: 40,
+		  ENTER: 13,
 		  RETURN: 10009,
 		  ZERO: 48,
 		  ONE: 49,
@@ -647,7 +859,55 @@ return /******/ (function(modules) { // webpackBootstrap
 		module.exports = exports["default"];
 	
 	/***/ },
-	/* 5 */
+	/* 9 */
+	/***/ function(module, exports) {
+	
+		"use strict";
+		
+		Object.defineProperty(exports, "__esModule", {
+		  value: true
+		});
+		exports.default = {
+		  LEFT: 37,
+		  RIGHT: 39,
+		  UP: 38,
+		  DOWN: 40,
+		  ENTER: 13,
+		  RETURN: 461,
+		  ZERO: 48,
+		  ONE: 49,
+		  TWO: 50,
+		  THREE: 51,
+		  FOUR: 52,
+		  FIVE: 53,
+		  SIX: 54,
+		  SEVEN: 55,
+		  EIGHT: 56,
+		  NINE: 57,
+		  RED: 403,
+		  GREEN: 404,
+		  YELLOW: 405,
+		  BLUE: 406,
+		  PLAY: 415,
+		  PAUSE: 19,
+		  STOP: 413,
+		  REC: 416,
+		  FF: 417,
+		  RW: 412,
+		  TOOLS: 470,
+		  PUP: 427,
+		  PDOWN: 428,
+		  CHLIST: -1,
+		  PRECH: -1,
+		  TXTMIX: -1,
+		  FAVCH: -1,
+		  EXIT: 528,
+		  INFO: -1
+		};
+		module.exports = exports["default"];
+	
+	/***/ },
+	/* 10 */
 	/***/ function(module, exports) {
 	
 		"use strict";
@@ -689,7 +949,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		module.exports = exports["default"];
 	
 	/***/ },
-	/* 6 */
+	/* 11 */
 	/***/ function(module, exports) {
 	
 		"use strict";
