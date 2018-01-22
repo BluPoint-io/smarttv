@@ -1,5 +1,5 @@
 import Audio from './audio';
-// import Subtitle from './subtitle';
+import Subtitle from './subtitle';
 import Logger from '../service/logger';
 import Vast from '../service/vast';
 
@@ -72,7 +72,8 @@ class Player {
       drmOrganizer: null,
       src: null,
       adsEnabled: false,
-      adsType: null
+      adsType: null,
+      subtitleEnabled: false
     };
     return this.playerInfo;
   }
@@ -637,6 +638,24 @@ class Player {
     this.getCurrentAudioWithOrder = this.Audio.getCurrentAudioWithOrder;
     this.denemeSERDAR = this.Audio.getThis;
   }
+
+  /**
+   * Add Subtitle Method
+   *
+   * @for Player
+   * @method initAudioClass
+   */
+  addSubtitle(srt, targetElement) {
+    this.playerInfo.subtitleEnabled = true;
+    this.Subtitle = new Subtitle(srt, this, targetElement)
+  }
+
+  removeSubtitle() {
+    this.playerInfo.subtitleEnabled = false;
+    this.Subtitle = null;
+  }
+
+
 
   /**
    * Play trigger for videoElement

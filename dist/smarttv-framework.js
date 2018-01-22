@@ -103,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var device = new _device2.default();
 	var currentDeviceName = device.currentDevice.brandName;
-	var currentDevice = __webpack_require__(40)("./" + currentDeviceName);
+	var currentDevice = __webpack_require__(41)("./" + currentDeviceName);
 	
 	window.___SMARTTV_FRAMEWORK = {
 	  Device: currentDevice
@@ -135,27 +135,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
-	var _events = __webpack_require__(7);
+	var _events = __webpack_require__(8);
 	
 	var _events2 = _interopRequireDefault(_events);
 	
-	var _config = __webpack_require__(8);
+	var _config = __webpack_require__(9);
 	
 	var _config2 = _interopRequireDefault(_config);
 	
-	var _network = __webpack_require__(9);
+	var _network = __webpack_require__(10);
 	
 	var _network2 = _interopRequireDefault(_network);
 	
-	var _storage = __webpack_require__(37);
+	var _storage = __webpack_require__(38);
 	
 	var _storage2 = _interopRequireDefault(_storage);
 	
-	var _index = __webpack_require__(38);
+	var _index = __webpack_require__(39);
 	
 	var _index2 = _interopRequireDefault(_index);
 	
-	var _ganalytics = __webpack_require__(39);
+	var _ganalytics = __webpack_require__(40);
 	
 	var _ganalytics2 = _interopRequireDefault(_ganalytics);
 	
@@ -1024,18 +1024,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	// import Subtitle from './subtitle';
-	
 	
 	var _audio = __webpack_require__(4);
 	
 	var _audio2 = _interopRequireDefault(_audio);
 	
+	var _subtitle = __webpack_require__(6);
+	
+	var _subtitle2 = _interopRequireDefault(_subtitle);
+	
 	var _logger = __webpack_require__(5);
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
-	var _vast = __webpack_require__(6);
+	var _vast = __webpack_require__(7);
 	
 	var _vast2 = _interopRequireDefault(_vast);
 	
@@ -1121,7 +1123,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        drmOrganizer: null,
 	        src: null,
 	        adsEnabled: false,
-	        adsType: null
+	        adsType: null,
+	        subtitleEnabled: false
 	      };
 	      return this.playerInfo;
 	    }
@@ -1705,6 +1708,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
+	     * Add Subtitle Method
+	     *
+	     * @for Player
+	     * @method initAudioClass
+	     */
+	
+	  }, {
+	    key: 'addSubtitle',
+	    value: function addSubtitle(srt, targetElement) {
+	      this.playerInfo.subtitleEnabled = true;
+	      this.Subtitle = new _subtitle2.default(srt, this, targetElement);
+	    }
+	  }, {
+	    key: 'removeSubtitle',
+	    value: function removeSubtitle() {
+	      this.playerInfo.subtitleEnabled = false;
+	      this.Subtitle = null;
+	    }
+	
+	    /**
 	     * Play trigger for videoElement
 	     *
 	     * @for Player
@@ -2142,6 +2165,171 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _logger = __webpack_require__(5);
+	
+	var _logger2 = _interopRequireDefault(_logger);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Subtitle = function () {
+	  /**
+	   * This class is for Subtitle operations. It works with Player
+	   *
+	   * @class Subtitle
+	   * @constructor
+	   */
+	  function Subtitle(srt, Player, target) {
+	    var _this = this;
+	
+	    _classCallCheck(this, Subtitle);
+	
+	    this.Player = Player;
+	    this.srt = srt;
+	    this.target = document.querySelector(target);
+	    _logger2.default.addLog('Player - Subtitle', 'create', 'Subtitle initialization started', this);
+	    this.setSRT(srt);
+	    this.Player.Events.addListener('player_onTimeUpdate', function () {
+	      return _this.tick();
+	    });
+	    this.Player.Events.addListener('player_onEnded', function () {
+	      return _this.target.innerText = '';
+	    });
+	  }
+	
+	  /**
+	   * Set SRT subtitles
+	   *
+	   * example: https://www.npmjs.com/package/subtitles-parser
+	   * example: https://raw.githubusercontent.com/bazh/subtitles-parser/master/index.js
+	   * license: MIT
+	   *
+	   * @param {String} subtitles
+	   */
+	
+	
+	  _createClass(Subtitle, [{
+	    key: 'setSRT',
+	    value: function setSRT(srt) {
+	      /**
+	       * Time to miliseconds
+	       *
+	       * @param {String} time value
+	       * @return {Number} miliseconds
+	       */
+	      var timeMs = function timeMs(val) {
+	        var regex = /(\d+):(\d{2}):(\d{2}),(\d{3})/;
+	        var parts = regex.exec(val);
+	
+	        if (parts === null) {
+	          return 0;
+	        }
+	
+	        for (var i = 1; i < 5; i++) {
+	          parts[i] = parseInt(parts[i], 10);
+	          if (isNaN(parts[i])) parts[i] = 0;
+	        }
+	
+	        // hours + minutes + seconds + ms
+	        return parts[1] * 3600000 + parts[2] * 60000 + parts[3] * 1000 + parts[4];
+	      };
+	
+	      /**
+	       * From Srt parser
+	       *
+	       * @param {String} data srt data
+	       * @param {Boolean} ms true = use miliseconds
+	       * @return {Object} items [{{String} id,
+	         * 							{String} startTime,
+	         * 							{String} endTime,
+	         * 							{String} text }]
+	       *
+	       */
+	      var fromSrt = function fromSrt(data, ms) {
+	        var useMs = ms ? true : false;
+	
+	        data = data.replace(/\r/g, '');
+	        var regex = /(\d+)\n(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})/g;
+	        data = data.split(regex);
+	        data.shift();
+	
+	        var items = [];
+	        for (var i = 0; i < data.length; i += 4) {
+	          items.push({
+	            id: data[i].trim(), // {String}
+	            startTime: useMs ? timeMs(data[i + 1].trim()) : data[i + 1].trim(), // {String}
+	            endTime: useMs ? timeMs(data[i + 2].trim()) : data[i + 2].trim(), // {String}
+	            text: data[i + 3].trim() // {String}
+	          });
+	        }
+	
+	        return items;
+	      };
+	
+	      // RUN
+	      // this.subs = {};
+	      if (srt) {
+	        // var items = fromSrt(srt, true);
+	        this.subs = fromSrt(srt, true);
+	        this.setCurrentSubtitle();
+	      }
+	    }
+	  }, {
+	    key: 'setCurrentSubtitle',
+	    value: function setCurrentSubtitle() {
+	      for (var i = 0; i < this.subs.length; i++) {
+	        // this.subs[items[i].startTime] = items[i];
+	        if (this.subs[i].startTime > Math.trunc(this.Player.videoElement.currentTime)) {
+	          this.currentSubIndex = i;
+	          this.currentSub = this.subs[i];
+	          break;
+	        }
+	      }
+	    }
+	
+	    /**
+	     * Internal player timer
+	     * @private
+	     */
+	
+	  }, {
+	    key: 'tick',
+	    value: function tick() {
+	      if (this.Player.playerInfo.subtitleEnabled && this.Player.playerInfo.currentState === "Playing") {
+	        if (typeof this.currentSub !== 'undefined') {
+	          if (Math.trunc(this.Player.videoElement.currentTime * 1000) > this.currentSub.startTime && Math.trunc(this.Player.videoElement.currentTime * 1000) < this.currentSub.endTime) {
+	            _logger2.default.addLog('Subtitle TEXT', 'info', this.currentSub.text);
+	            this.target.innerText = this.currentSub.text;
+	          } else if (Math.trunc(this.Player.videoElement.currentTime * 1000) > this.currentSub.endTime) {
+	            this.currentSubIndex += 1;
+	            this.currentSub = this.subs[this.currentSubIndex];
+	            this.target.innerText = '';
+	            _logger2.default.addLog('Subtitle  TEXT', 'info', 'EMPTY SUB');
+	          }
+	        }
+	      }
+	    }
+	  }]);
+	
+	  return Subtitle;
+	}();
+	
+	exports.default = Subtitle;
+	module.exports = exports['default'];
+
+/***/ },
+/* 7 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2357,7 +2545,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2942,7 +3130,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2978,7 +3166,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2989,7 +3177,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _axios = __webpack_require__(10);
+	var _axios = __webpack_require__(11);
 	
 	var _axios2 = _interopRequireDefault(_axios);
 	
@@ -3027,21 +3215,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(11);
+	module.exports = __webpack_require__(12);
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(12);
-	var bind = __webpack_require__(13);
-	var Axios = __webpack_require__(15);
-	var defaults = __webpack_require__(16);
+	var utils = __webpack_require__(13);
+	var bind = __webpack_require__(14);
+	var Axios = __webpack_require__(16);
+	var defaults = __webpack_require__(17);
 	
 	/**
 	 * Create an instance of Axios
@@ -3074,15 +3262,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	// Expose Cancel & CancelToken
-	axios.Cancel = __webpack_require__(34);
-	axios.CancelToken = __webpack_require__(35);
-	axios.isCancel = __webpack_require__(31);
+	axios.Cancel = __webpack_require__(35);
+	axios.CancelToken = __webpack_require__(36);
+	axios.isCancel = __webpack_require__(32);
 	
 	// Expose all/spread
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(36);
+	axios.spread = __webpack_require__(37);
 	
 	module.exports = axios;
 	
@@ -3091,13 +3279,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var bind = __webpack_require__(13);
-	var isBuffer = __webpack_require__(14);
+	var bind = __webpack_require__(14);
+	var isBuffer = __webpack_require__(15);
 	
 	/*global toString:true*/
 	
@@ -3400,7 +3588,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3417,7 +3605,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	/*!
@@ -3444,15 +3632,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var defaults = __webpack_require__(16);
-	var utils = __webpack_require__(12);
-	var InterceptorManager = __webpack_require__(28);
-	var dispatchRequest = __webpack_require__(29);
+	var defaults = __webpack_require__(17);
+	var utils = __webpack_require__(13);
+	var InterceptorManager = __webpack_require__(29);
+	var dispatchRequest = __webpack_require__(30);
 	
 	/**
 	 * Create a new instance of Axios
@@ -3529,13 +3717,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
-	var utils = __webpack_require__(12);
-	var normalizeHeaderName = __webpack_require__(18);
+	var utils = __webpack_require__(13);
+	var normalizeHeaderName = __webpack_require__(19);
 	
 	var DEFAULT_CONTENT_TYPE = {
 	  'Content-Type': 'application/x-www-form-urlencoded'
@@ -3551,10 +3739,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var adapter;
 	  if (typeof XMLHttpRequest !== 'undefined') {
 	    // For browsers use XHR adapter
-	    adapter = __webpack_require__(19);
+	    adapter = __webpack_require__(20);
 	  } else if (typeof process !== 'undefined') {
 	    // For node use HTTP adapter
-	    adapter = __webpack_require__(19);
+	    adapter = __webpack_require__(20);
 	  }
 	  return adapter;
 	}
@@ -3625,10 +3813,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = defaults;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)))
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -3818,12 +4006,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(12);
+	var utils = __webpack_require__(13);
 	
 	module.exports = function normalizeHeaderName(headers, normalizedName) {
 	  utils.forEach(headers, function processHeader(value, name) {
@@ -3836,18 +4024,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
-	var utils = __webpack_require__(12);
-	var settle = __webpack_require__(20);
-	var buildURL = __webpack_require__(23);
-	var parseHeaders = __webpack_require__(24);
-	var isURLSameOrigin = __webpack_require__(25);
-	var createError = __webpack_require__(21);
-	var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(26);
+	var utils = __webpack_require__(13);
+	var settle = __webpack_require__(21);
+	var buildURL = __webpack_require__(24);
+	var parseHeaders = __webpack_require__(25);
+	var isURLSameOrigin = __webpack_require__(26);
+	var createError = __webpack_require__(22);
+	var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(27);
 	
 	module.exports = function xhrAdapter(config) {
 	  return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -3945,7 +4133,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // This is only done if running in a standard browser environment.
 	    // Specifically not if we're in a web worker, or react-native.
 	    if (utils.isStandardBrowserEnv()) {
-	      var cookies = __webpack_require__(27);
+	      var cookies = __webpack_require__(28);
 	
 	      // Add xsrf header
 	      var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -4021,15 +4209,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	};
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)))
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var createError = __webpack_require__(21);
+	var createError = __webpack_require__(22);
 	
 	/**
 	 * Resolve or reject a Promise based on response status.
@@ -4056,12 +4244,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var enhanceError = __webpack_require__(22);
+	var enhanceError = __webpack_require__(23);
 	
 	/**
 	 * Create an Error with the specified message, config, error code, request and response.
@@ -4080,7 +4268,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4107,12 +4295,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(12);
+	var utils = __webpack_require__(13);
 	
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -4181,12 +4369,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(12);
+	var utils = __webpack_require__(13);
 	
 	// Headers whose duplicates are ignored by node
 	// c.f. https://nodejs.org/api/http.html#http_message_headers
@@ -4240,12 +4428,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(12);
+	var utils = __webpack_require__(13);
 	
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -4314,7 +4502,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4356,12 +4544,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(12);
+	var utils = __webpack_require__(13);
 	
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -4415,12 +4603,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(12);
+	var utils = __webpack_require__(13);
 	
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -4473,17 +4661,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(12);
-	var transformData = __webpack_require__(30);
-	var isCancel = __webpack_require__(31);
-	var defaults = __webpack_require__(16);
-	var isAbsoluteURL = __webpack_require__(32);
-	var combineURLs = __webpack_require__(33);
+	var utils = __webpack_require__(13);
+	var transformData = __webpack_require__(31);
+	var isCancel = __webpack_require__(32);
+	var defaults = __webpack_require__(17);
+	var isAbsoluteURL = __webpack_require__(33);
+	var combineURLs = __webpack_require__(34);
 	
 	/**
 	 * Throws a `Cancel` if cancellation has been requested.
@@ -4565,12 +4753,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(12);
+	var utils = __webpack_require__(13);
 	
 	/**
 	 * Transform the data for a request or a response
@@ -4591,7 +4779,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4602,7 +4790,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4622,7 +4810,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4642,7 +4830,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4667,12 +4855,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Cancel = __webpack_require__(34);
+	var Cancel = __webpack_require__(35);
 	
 	/**
 	 * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -4730,7 +4918,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4763,7 +4951,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4847,7 +5035,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4968,7 +5156,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -5031,26 +5219,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./arcelik": 41,
-		"./arcelik.js": 41,
-		"./lg": 42,
-		"./lg.js": 42,
-		"./philips": 43,
-		"./philips.js": 43,
-		"./samsung": 44,
-		"./samsung.js": 44,
-		"./tizen": 45,
-		"./tizen.js": 45,
-		"./vestel": 46,
-		"./vestel.js": 46,
-		"./web": 47,
-		"./web.js": 47,
-		"./webos": 48,
-		"./webos.js": 48
+		"./arcelik": 42,
+		"./arcelik.js": 42,
+		"./lg": 43,
+		"./lg.js": 43,
+		"./philips": 44,
+		"./philips.js": 44,
+		"./samsung": 45,
+		"./samsung.js": 45,
+		"./tizen": 46,
+		"./tizen.js": 46,
+		"./vestel": 47,
+		"./vestel.js": 47,
+		"./web": 48,
+		"./web.js": 48,
+		"./webos": 49,
+		"./webos.js": 49
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -5063,11 +5251,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 40;
+	webpackContext.id = 41;
 
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5159,7 +5347,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5210,7 +5398,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5262,7 +5450,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5314,7 +5502,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5394,7 +5582,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5485,7 +5673,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5574,7 +5762,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
