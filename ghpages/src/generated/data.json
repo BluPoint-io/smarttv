@@ -123,73 +123,6 @@
             "fors": {},
             "namespaces": {}
         },
-        "src\\service\\storage\\engine\\store-engine.js": {
-            "name": "src\\service\\storage\\engine\\store-engine.js",
-            "modules": {},
-            "classes": {},
-            "fors": {
-                "Storage": 1
-            },
-            "namespaces": {}
-        },
-        "src\\service\\storage\\engine\\util.js": {
-            "name": "src\\service\\storage\\engine\\util.js",
-            "modules": {},
-            "classes": {},
-            "fors": {
-                "Storage": 1
-            },
-            "namespaces": {}
-        },
-        "src\\service\\storage\\plugins\\defaults.js": {
-            "name": "src\\service\\storage\\plugins\\defaults.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "src\\service\\storage\\plugins\\update.js": {
-            "name": "src\\service\\storage\\plugins\\update.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "src\\service\\storage\\storages\\cookieStorage.js": {
-            "name": "src\\service\\storage\\storages\\cookieStorage.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "src\\service\\storage\\storages\\localStorage.js": {
-            "name": "src\\service\\storage\\storages\\localStorage.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "src\\service\\storage\\storages\\memoryStorage.js": {
-            "name": "src\\service\\storage\\storages\\memoryStorage.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "src\\service\\storage\\storages\\sessionStorage.js": {
-            "name": "src\\service\\storage\\storages\\sessionStorage.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "src\\service\\analytics.js": {
-            "name": "src\\service\\analytics.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
         "src\\service\\events.js": {
             "name": "src\\service\\events.js",
             "modules": {},
@@ -199,6 +132,13 @@
             "fors": {
                 "Events": 1
             },
+            "namespaces": {}
+        },
+        "src\\service\\ganalytics.js": {
+            "name": "src\\service\\ganalytics.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
             "namespaces": {}
         },
         "src\\service\\logger.js": {
@@ -215,9 +155,7 @@
         "src\\service\\storage.js": {
             "name": "src\\service\\storage.js",
             "modules": {},
-            "classes": {
-                "Storage": 1
-            },
+            "classes": {},
             "fors": {},
             "namespaces": {}
         },
@@ -370,7 +308,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\core\\device.js",
-            "line": 10,
+            "line": 12,
             "description": "Class representing Device",
             "is_constructor": 1
         },
@@ -426,34 +364,9 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src\\player\\subtitle.js",
-            "line": 3,
+            "line": 4,
             "description": "This class is for Subtitle operations. It works with Player",
             "is_constructor": 1
-        },
-        "Storage": {
-            "name": "Storage",
-            "shortname": "Storage",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "file": "src\\service\\storage.js",
-            "line": 24,
-            "description": "Initializes Storage Class\nThis class have private methods",
-            "is_constructor": 1,
-            "params": [
-                {
-                    "name": "storages",
-                    "description": "",
-                    "type": "Array"
-                },
-                {
-                    "name": "plugins",
-                    "description": "",
-                    "type": "Array"
-                }
-            ]
         },
         "Events": {
             "name": "Events",
@@ -503,7 +416,7 @@
     "classitems": [
         {
             "file": "src\\core\\devices\\arcelik.js",
-            "line": 22,
+            "line": 24,
             "description": "Abstract Player createVideoElement function.",
             "abstract": "",
             "itemtype": "method",
@@ -516,7 +429,7 @@
         },
         {
             "file": "src\\core\\devices\\vestel.js",
-            "line": 23,
+            "line": 25,
             "description": "Abstract Player createVideoElement function.",
             "abstract": "",
             "itemtype": "method",
@@ -529,7 +442,7 @@
         },
         {
             "file": "src\\core\\devices\\web.js",
-            "line": 22,
+            "line": 24,
             "description": "Abstract Player createVideoElement function.",
             "abstract": "",
             "itemtype": "method",
@@ -542,7 +455,7 @@
         },
         {
             "file": "src\\core\\devices\\webos.js",
-            "line": 24,
+            "line": 28,
             "description": "WebOs native api's are required to use webos.js file.\nThis method provides necessary libraries.",
             "itemtype": "method",
             "name": "addWebOsLib",
@@ -554,7 +467,7 @@
         },
         {
             "file": "src\\core\\devices\\webos.js",
-            "line": 42,
+            "line": 46,
             "description": "Abstract Player createVideoElement function.",
             "abstract": "",
             "itemtype": "method",
@@ -567,7 +480,7 @@
         },
         {
             "file": "src\\core\\device.js",
-            "line": 25,
+            "line": 29,
             "description": "Events are based on class. So it have to be constructed.",
             "itemtype": "method",
             "name": "initEvents",
@@ -579,7 +492,7 @@
         },
         {
             "file": "src\\core\\device.js",
-            "line": 38,
+            "line": 42,
             "description": "This function stands for initializing Player class\nIt uses currentDevice and config info (extended during device extending)\nIt pass Events to Player class to use same initialized class",
             "itemtype": "method",
             "name": "initPlayerClass",
@@ -645,7 +558,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 80,
+            "line": 81,
             "description": "Removes videoElement from DOM.\nIts recommended to call this function if you are consider to close video\nTODO We have to check DRM inited if yes we have to detach DRM before removing",
             "itemtype": "method",
             "name": "deleteVideoElement",
@@ -657,7 +570,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 96,
+            "line": 97,
             "description": "Adds video source to element.\nIf trying to play DRM video you have to send customData with video source\nIt sets this customData to player info so it can be accessible.\nChecks content address if it includes manifest regex it will start DRM functions automatically\nIt catches DRM providers with currentDevice\nYou can send HLS, Live HLS and Microsoft SS (PlayReady) content\nTODO DRM providers can be included in another function",
             "params": [
                 {
@@ -677,7 +590,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 162,
+            "line": 163,
             "description": "Initialize ads with given source and type. So type is mandatory field to operate",
             "params": [
                 {
@@ -700,7 +613,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 201,
+            "line": 202,
             "description": "If ads type is VMAP and detected in initAds method it will call automatically this function",
             "params": [
                 {
@@ -715,7 +628,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 237,
+            "line": 238,
             "description": "Reads Vast file and seperates its source and options (extensions, type etc)",
             "params": [
                 {
@@ -738,7 +651,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 429,
+            "line": 430,
             "description": "This function is triggered with timeUpdate event of video player.\nIt compares with Vast time with current time",
             "itemtype": "method",
             "name": "checkAdsStatus",
@@ -746,7 +659,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 447,
+            "line": 448,
             "description": "It starts ads in videoPlayer. Pauses current video then starting ads\nAfter completing ads it starts old src url with initial seeking with time",
             "params": [
                 {
@@ -760,7 +673,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 488,
+            "line": 489,
             "description": "Adds ads caption to video player to end user notified about Ads\nThis text can be edited via config",
             "return": {
                 "description": "",
@@ -772,7 +685,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 508,
+            "line": 509,
             "description": "Unloads DRM client. !IMPORTANT! Some devices may be crash if you are not unloaded drm client",
             "itemtype": "method",
             "name": "unloadDrmClient",
@@ -780,7 +693,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 533,
+            "line": 534,
             "description": "Initialize WebOs DRM\nTODO This can be move to webos device with abstract",
             "itemtype": "method",
             "name": "setupWebOSDrm",
@@ -788,7 +701,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 567,
+            "line": 568,
             "description": "WebOs Drm trigger",
             "itemtype": "method",
             "name": "sendWebOSDrm",
@@ -796,7 +709,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 628,
+            "line": 629,
             "description": "Constructor for Audio class",
             "itemtype": "method",
             "name": "initAudioClass",
@@ -804,7 +717,15 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 641,
+            "line": 642,
+            "description": "Add Subtitle Method",
+            "itemtype": "method",
+            "name": "initAudioClass",
+            "class": "Player"
+        },
+        {
+            "file": "src\\player\\player.js",
+            "line": 660,
             "description": "Play trigger for videoElement",
             "itemtype": "method",
             "name": "play",
@@ -812,7 +733,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 651,
+            "line": 670,
             "description": "Stop trigger for videoElement\nit removes video element from dom",
             "itemtype": "method",
             "name": "stop",
@@ -820,7 +741,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 664,
+            "line": 683,
             "description": "Pause trigger for videoElement",
             "itemtype": "method",
             "name": "pause",
@@ -828,7 +749,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 674,
+            "line": 693,
             "description": "Play/Pause toggle trigger for videoElement",
             "itemtype": "method",
             "name": "togglePlay",
@@ -836,7 +757,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 688,
+            "line": 707,
             "description": "Play trigger for a video element with endless autoloop\nyou can use this feature to enable silent background videos",
             "itemtype": "method",
             "name": "playWithLoop",
@@ -844,7 +765,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 704,
+            "line": 723,
             "description": "Trigger specific events for all videoElement trigger",
             "itemtype": "method",
             "name": "registerVideoEvents",
@@ -852,7 +773,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 801,
+            "line": 820,
             "description": "Drm initiator for OIPF Devices such as Vestel and Arcelik",
             "itemtype": "method",
             "name": "createOIPFDrmAgent",
@@ -860,7 +781,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 838,
+            "line": 857,
             "description": "Seek with given value adding",
             "params": [
                 {
@@ -875,7 +796,7 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 849,
+            "line": 868,
             "description": "Seek to given time\nTODO Check device performances if needed use pause method first",
             "params": [
                 {
@@ -889,779 +810,71 @@
         },
         {
             "file": "src\\player\\player.js",
-            "line": 862,
+            "line": 881,
             "description": "Sets currentTime to 0 and plays automatically",
             "itemtype": "method",
             "name": "restart",
             "class": "Player"
         },
         {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 10,
-            "description": "It reads and create related stores",
-            "params": [
-                {
-                    "name": "storages",
-                    "description": "",
-                    "type": "Array"
-                },
-                {
-                    "name": "plugins",
-                    "description": "",
-                    "type": "Array"
-                }
-            ],
-            "itemtype": "method",
-            "name": "createStore",
-            "return": {
-                "description": "store",
-                "type": "*"
-            },
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 26,
-            "return": {
-                "description": "",
-                "type": "*"
-            },
-            "access": "private",
-            "tagname": "",
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 41,
-            "params": [
-                {
-                    "name": "storage",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "Boolean"
-            },
-            "access": "private",
-            "tagname": "",
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 59,
-            "params": [
-                {
-                    "name": "pluginFnProp",
-                    "description": ""
-                },
-                {
-                    "name": "propName",
-                    "description": ""
-                }
-            ],
-            "access": "private",
-            "tagname": "",
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 91,
-            "params": [
-                {
-                    "name": "obj",
-                    "description": ""
-                }
-            ],
-            "access": "private",
-            "tagname": "",
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 100,
-            "params": [
-                {
-                    "name": "strVal",
-                    "description": ""
-                },
-                {
-                    "name": "defaultVal",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "*"
-            },
-            "access": "private",
-            "tagname": "",
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 137,
-            "access": "protected",
-            "tagname": "",
-            "type": "{{version: string, enabled: boolean, addStorage: ((storage?)), addPlugin: ((plugin?)), get: ((key, optionalDefaultValue?)=>*), set: ((key?, value?)=>*), remove: ((key)), each: ((callback)), clearAll: (()), hasNamespace: ((namespace)=>boolean), namespace: ((namespace?)), createStore: ((storages?, plugins?)=>*)}}",
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 148,
-            "description": "addStorage adds another storage to this store.\nThe store will use the first storage it receives that is enabled,\ncall addStorage in the order of preferred storage.",
-            "params": [
-                {
-                    "name": "storage",
-                    "description": ""
-                }
-            ],
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 165,
-            "params": [
-                {
-                    "name": "plugin",
-                    "description": ""
-                }
-            ],
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 210,
-            "params": [
-                {
-                    "name": "key",
-                    "description": ""
-                },
-                {
-                    "name": "optionalDefaultValue",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "*"
-            },
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 223,
-            "params": [
-                {
-                    "name": "key",
-                    "description": ""
-                },
-                {
-                    "name": "value",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "*"
-            },
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 238,
-            "params": [
-                {
-                    "name": "key",
-                    "description": ""
-                }
-            ],
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 256,
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 267,
-            "params": [
-                {
-                    "name": "namespace",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "Boolean"
-            },
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 277,
-            "params": [
-                {
-                    "name": "namespace",
-                    "description": ""
-                }
-            ],
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\store-engine.js",
-            "line": 296,
-            "params": [
-                {
-                    "name": "storages",
-                    "description": ""
-                },
-                {
-                    "name": "plugins",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "*"
-            },
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\util.js",
-            "line": 1,
-            "itemtype": "method",
-            "name": "isList",
-            "access": "private",
-            "tagname": "",
-            "params": [
-                {
-                    "name": "val",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "Boolean"
-            },
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\util.js",
-            "line": 12,
-            "access": "private",
-            "tagname": "",
-            "itemtype": "method",
-            "name": "pluck",
-            "params": [
-                {
-                    "name": "obj",
-                    "description": ""
-                },
-                {
-                    "name": "fn",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "*"
-            },
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\util.js",
-            "line": 38,
-            "access": "private",
-            "tagname": "",
-            "itemtype": "method",
-            "name": "each",
-            "params": [
-                {
-                    "name": "obj",
-                    "description": ""
-                },
-                {
-                    "name": "fn",
-                    "description": ""
-                }
-            ],
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\util.js",
-            "line": 52,
-            "access": "private",
-            "tagname": "",
-            "itemtype": "method",
-            "name": "slice",
-            "params": [
-                {
-                    "name": "arr",
-                    "description": ""
-                },
-                {
-                    "name": "index",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "*"
-            },
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\util.js",
-            "line": 64,
-            "access": "private",
-            "tagname": "",
-            "itemtype": "method",
-            "name": "makeAssign",
-            "return": {
-                "description": "",
-                "type": "*"
-            },
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\util.js",
-            "line": 88,
-            "access": "private",
-            "tagname": "",
-            "itemtype": "method",
-            "name": "makeCreate",
-            "return": {
-                "description": "",
-                "type": "*"
-            },
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\util.js",
-            "line": 113,
-            "access": "private",
-            "tagname": "",
-            "itemtype": "method",
-            "name": "makeTrim",
-            "return": {
-                "description": "",
-                "type": "*"
-            },
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\util.js",
-            "line": 139,
-            "access": "private",
-            "tagname": "",
-            "itemtype": "method",
-            "name": "bind",
-            "params": [
-                {
-                    "name": "obj",
-                    "description": ""
-                },
-                {
-                    "name": "fn",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "Function"
-            },
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\util.js",
-            "line": 153,
-            "access": "private",
-            "tagname": "",
-            "itemtype": "method",
-            "name": "map",
-            "params": [
-                {
-                    "name": "obj",
-                    "description": ""
-                },
-                {
-                    "name": "fn",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "*"
-            },
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\util.js",
-            "line": 170,
-            "access": "private",
-            "tagname": "",
-            "itemtype": "method",
-            "name": "isFunction",
-            "params": [
-                {
-                    "name": "val",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "*|boolean"
-            },
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\engine\\util.js",
-            "line": 181,
-            "access": "private",
-            "tagname": "",
-            "itemtype": "method",
-            "name": "isObject",
-            "params": [
-                {
-                    "name": "val",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "*|boolean"
-            },
-            "class": "Storage"
-        },
-        {
-            "file": "src\\service\\storage\\plugins\\defaults.js",
-            "line": 4,
-            "params": [
-                {
-                    "name": "_",
-                    "description": ""
-                },
-                {
-                    "name": "values",
-                    "description": ""
-                }
-            ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\plugins\\defaults.js",
-            "line": 13,
-            "params": [
-                {
-                    "name": "superFn",
-                    "description": ""
-                },
-                {
-                    "name": "key",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "*"
-            },
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\plugins\\update.js",
-            "line": 2,
-            "params": [
-                {
-                    "name": "_",
-                    "description": ""
-                },
-                {
-                    "name": "key",
-                    "description": ""
-                },
-                {
-                    "name": "optDefaultVal",
-                    "description": ""
-                },
-                {
-                    "name": "updateFn",
-                    "description": ""
-                }
-            ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\cookieStorage.js",
-            "line": 11,
-            "params": [
-                {
-                    "name": "key",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "Boolean"
-            },
-            "access": "private",
-            "tagname": "",
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\cookieStorage.js",
-            "line": 21,
-            "params": [
-                {
-                    "name": "key",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "Null"
-            },
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\cookieStorage.js",
-            "line": 34,
-            "params": [
-                {
-                    "name": "callback",
-                    "description": ""
-                }
-            ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\cookieStorage.js",
-            "line": 51,
-            "params": [
-                {
-                    "name": "key",
-                    "description": ""
-                },
-                {
-                    "name": "data",
-                    "description": ""
-                }
-            ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\cookieStorage.js",
-            "line": 63,
-            "params": [
-                {
-                    "name": "key",
-                    "description": ""
-                }
-            ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\cookieStorage.js",
-            "line": 74,
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\localStorage.js",
-            "line": 4,
-            "return": {
-                "description": "",
-                "type": "Storage"
-            },
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\localStorage.js",
-            "line": 12,
-            "params": [
-                {
-                    "name": "key",
-                    "description": ""
-                }
-            ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\localStorage.js",
+            "file": "src\\player\\subtitle.js",
             "line": 20,
+            "description": "Set SRT subtitles\n\nexample: https://www.npmjs.com/package/subtitles-parser\nexample: https://raw.githubusercontent.com/bazh/subtitles-parser/master/index.js\nlicense: MIT",
             "params": [
                 {
-                    "name": "key",
-                    "description": ""
-                },
-                {
-                    "name": "data",
-                    "description": ""
+                    "name": "subtitles",
+                    "description": "",
+                    "type": "String"
                 }
             ],
-            "class": "Events"
+            "class": "Subtitle"
         },
         {
-            "file": "src\\service\\storage\\storages\\localStorage.js",
-            "line": 29,
+            "file": "src\\player\\subtitle.js",
+            "line": 30,
+            "description": "Time to miliseconds",
             "params": [
                 {
-                    "name": "fn",
-                    "description": ""
-                }
-            ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\localStorage.js",
-            "line": 40,
-            "params": [
-                {
-                    "name": "key",
-                    "description": ""
-                }
-            ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\localStorage.js",
-            "line": 48,
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\localStorage.js",
-            "line": 55,
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\memoryStorage.js",
-            "line": 8,
-            "params": [
-                {
-                    "name": "key",
-                    "description": ""
+                    "name": "time",
+                    "description": "value",
+                    "type": "String"
                 }
             ],
             "return": {
-                "description": "",
-                "type": "*"
+                "description": "miliseconds",
+                "type": "Number"
             },
-            "class": "Events"
+            "class": "Subtitle"
         },
         {
-            "file": "src\\service\\storage\\storages\\memoryStorage.js",
-            "line": 17,
+            "file": "src\\player\\subtitle.js",
+            "line": 53,
+            "description": "From Srt parser",
             "params": [
-                {
-                    "name": "key",
-                    "description": ""
-                },
                 {
                     "name": "data",
-                    "description": ""
-                }
-            ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\memoryStorage.js",
-            "line": 26,
-            "params": [
+                    "description": "srt data",
+                    "type": "String"
+                },
                 {
-                    "name": "callback",
-                    "description": ""
+                    "name": "ms",
+                    "description": "true = use miliseconds",
+                    "type": "Boolean"
                 }
             ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\memoryStorage.js",
-            "line": 38,
-            "params": [
-                {
-                    "name": "key",
-                    "description": ""
-                }
-            ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\memoryStorage.js",
-            "line": 46,
-            "params": [
-                {
-                    "name": "key",
-                    "description": ""
-                }
-            ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\sessionStorage.js",
-            "line": 3,
             "return": {
-                "description": "",
-                "type": "Storage"
+                "description": "items [{{String} id,\n\t\t\t\t\t\t\t{String} startTime,\n\t\t\t\t\t\t\t{String} endTime,\n\t\t\t\t\t\t\t{String} text }]",
+                "type": "Object"
             },
-            "class": "Events"
+            "class": "Subtitle"
         },
         {
-            "file": "src\\service\\storage\\storages\\sessionStorage.js",
-            "line": 11,
-            "params": [
-                {
-                    "name": "key",
-                    "description": ""
-                }
-            ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\sessionStorage.js",
-            "line": 19,
-            "params": [
-                {
-                    "name": "key",
-                    "description": ""
-                },
-                {
-                    "name": "data",
-                    "description": ""
-                }
-            ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\sessionStorage.js",
-            "line": 28,
-            "params": [
-                {
-                    "name": "fn",
-                    "description": ""
-                }
-            ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\sessionStorage.js",
-            "line": 39,
-            "params": [
-                {
-                    "name": "key",
-                    "description": ""
-                }
-            ],
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\storage\\storages\\sessionStorage.js",
-            "line": 47,
-            "class": "Events"
-        },
-        {
-            "file": "src\\service\\analytics.js",
-            "line": 1,
-            "class": "Events"
+            "file": "src\\player\\subtitle.js",
+            "line": 106,
+            "description": "Internal player timer",
+            "access": "private",
+            "tagname": "",
+            "class": "Subtitle"
         },
         {
             "file": "src\\service\\events.js",
@@ -2087,6 +1300,11 @@
             "class": "Events"
         },
         {
+            "file": "src\\service\\ganalytics.js",
+            "line": 1,
+            "class": "Logger"
+        },
+        {
             "file": "src\\service\\logger.js",
             "line": 7,
             "description": "addLog stands for console log it have to show console logs on TV Screen\nTODO Design and create screens for console on real devices\nTODO Implement real device logger system",
@@ -2115,17 +1333,52 @@
         },
         {
             "file": "src\\service\\storage.js",
-            "line": 3,
-            "description": "Initialize Storage adapters for Storage",
-            "type": "{[*]} - Require storages",
-            "class": "Storage"
+            "line": 4,
+            "description": "Set value to the storage",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "description": "",
+                    "type": "Object/String/Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "Xhr"
         },
         {
             "file": "src\\service\\storage.js",
-            "line": 15,
-            "description": "Initialize Plugin adapters for Storage",
-            "type": "{[*]} - Require plugins",
-            "class": "Storage"
+            "line": 17,
+            "description": "Get value from the storage",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Retrurns FALSE",
+                "type": "Object/String/Number"
+            },
+            "class": "Xhr"
+        },
+        {
+            "file": "src\\service\\storage.js",
+            "line": 40,
+            "description": "Clear all stored data",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "Xhr"
         },
         {
             "file": "src\\service\\vast.js",
@@ -2260,19 +1513,19 @@
     "warnings": [
         {
             "message": "unknown tag: abstract",
-            "line": " src\\core\\devices\\arcelik.js:22"
+            "line": " src\\core\\devices\\arcelik.js:24"
         },
         {
             "message": "unknown tag: abstract",
-            "line": " src\\core\\devices\\vestel.js:23"
+            "line": " src\\core\\devices\\vestel.js:25"
         },
         {
             "message": "unknown tag: abstract",
-            "line": " src\\core\\devices\\web.js:22"
+            "line": " src\\core\\devices\\web.js:24"
         },
         {
             "message": "unknown tag: abstract",
-            "line": " src\\core\\devices\\webos.js:42"
+            "line": " src\\core\\devices\\webos.js:46"
         },
         {
             "message": "unknown tag: api",
@@ -2291,184 +1544,48 @@
             "line": " src\\service\\events.js:495"
         },
         {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\engine\\store-engine.js:26"
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\service\\storage.js:4"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\service\\storage.js:17"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src\\service\\storage.js:40"
+        },
+        {
+            "message": "Missing item type\nSet SRT subtitles\n\nexample: https://www.npmjs.com/package/subtitles-parser\nexample: https://raw.githubusercontent.com/bazh/subtitles-parser/master/index.js\nlicense: MIT",
+            "line": " src\\player\\subtitle.js:20"
+        },
+        {
+            "message": "Missing item type\nTime to miliseconds",
+            "line": " src\\player\\subtitle.js:30"
+        },
+        {
+            "message": "Missing item type\nFrom Srt parser",
+            "line": " src\\player\\subtitle.js:53"
+        },
+        {
+            "message": "Missing item type\nInternal player timer",
+            "line": " src\\player\\subtitle.js:106"
         },
         {
             "message": "Missing item type",
-            "line": " src\\service\\storage\\engine\\store-engine.js:41"
+            "line": " src\\service\\ganalytics.js:1"
         },
         {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\engine\\store-engine.js:59"
+            "message": "Missing item type\nSet value to the storage",
+            "line": " src\\service\\storage.js:4"
         },
         {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\engine\\store-engine.js:91"
+            "message": "Missing item type\nGet value from the storage",
+            "line": " src\\service\\storage.js:17"
         },
         {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\engine\\store-engine.js:100"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\engine\\store-engine.js:137"
-        },
-        {
-            "message": "Missing item type\naddStorage adds another storage to this store.\nThe store will use the first storage it receives that is enabled,\ncall addStorage in the order of preferred storage.",
-            "line": " src\\service\\storage\\engine\\store-engine.js:148"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\engine\\store-engine.js:165"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\engine\\store-engine.js:210"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\engine\\store-engine.js:223"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\engine\\store-engine.js:238"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\engine\\store-engine.js:256"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\engine\\store-engine.js:267"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\engine\\store-engine.js:277"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\engine\\store-engine.js:296"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\plugins\\defaults.js:4"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\plugins\\defaults.js:13"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\plugins\\update.js:2"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\cookieStorage.js:11"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\cookieStorage.js:21"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\cookieStorage.js:34"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\cookieStorage.js:51"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\cookieStorage.js:63"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\cookieStorage.js:74"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\localStorage.js:4"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\localStorage.js:12"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\localStorage.js:20"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\localStorage.js:29"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\localStorage.js:40"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\localStorage.js:48"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\localStorage.js:55"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\memoryStorage.js:8"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\memoryStorage.js:17"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\memoryStorage.js:26"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\memoryStorage.js:38"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\memoryStorage.js:46"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\sessionStorage.js:3"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\sessionStorage.js:11"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\sessionStorage.js:19"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\sessionStorage.js:28"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\sessionStorage.js:39"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\storage\\storages\\sessionStorage.js:47"
-        },
-        {
-            "message": "Missing item type",
-            "line": " src\\service\\analytics.js:1"
-        },
-        {
-            "message": "Missing item type\nInitialize Storage adapters for Storage",
-            "line": " src\\service\\storage.js:3"
-        },
-        {
-            "message": "Missing item type\nInitialize Plugin adapters for Storage",
-            "line": " src\\service\\storage.js:15"
+            "message": "Missing item type\nClear all stored data",
+            "line": " src\\service\\storage.js:40"
         },
         {
             "message": "Missing item type\nParses VMAP Ad Source\nTODO Detailed documentation can be written",

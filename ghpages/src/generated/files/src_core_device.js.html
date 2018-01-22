@@ -50,7 +50,6 @@
                             <li><a class="type" href="../classes/Events.html">Events</a></li>
                             <li><a class="type" href="../classes/Logger.html">Logger</a></li>
                             <li><a class="type" href="../classes/Player.html">Player</a></li>
-                            <li><a class="type" href="../classes/Storage.html">Storage</a></li>
                             <li><a class="type" href="../classes/Subtitle.html">Subtitle</a></li>
                             <li><a class="type" href="../classes/Xhr.html">Xhr</a></li>
                         </ul>
@@ -74,7 +73,9 @@
                 import Events from &#x27;../service/events&#x27;;
                 import Config from &#x27;../statics/config&#x27;;
                 import Network from &#x27;../service/network/network&#x27;;
-                
+                import Storage from &#x27;../service/storage&#x27;;
+                import Keyboard from &#x27;../service/keyboard/index&#x27;;
+                import GAnalytics from &#x27;../service/ganalytics&#x27;
                 
                 class Device {
                   /**
@@ -90,6 +91,8 @@
                     this.Events = &#x27;Events mechanism ready to start&#x27;;
                     this.Network = &#x27;Network is not initialized yet&#x27;;
                     this.Config = Config;
+                    this.Storage = Storage;
+                    this.GAnalytics = new GAnalytics();
                   }
                 
                   /**
@@ -123,6 +126,10 @@
                 
                   initNetworkClass() {
                     this.Network = new Network();
+                  }
+                
+                  initKeyListener() {
+                    this.Keyboard = new Keyboard(this.Events, this.currentDevice);
                   }
                 
                 }

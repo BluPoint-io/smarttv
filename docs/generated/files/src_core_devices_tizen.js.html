@@ -50,7 +50,6 @@
                             <li><a class="type" href="../classes/Events.html">Events</a></li>
                             <li><a class="type" href="../classes/Logger.html">Logger</a></li>
                             <li><a class="type" href="../classes/Player.html">Player</a></li>
-                            <li><a class="type" href="../classes/Storage.html">Storage</a></li>
                             <li><a class="type" href="../classes/Subtitle.html">Subtitle</a></li>
                             <li><a class="type" href="../classes/Xhr.html">Xhr</a></li>
                         </ul>
@@ -84,8 +83,28 @@
                     this.initEvents();
                     this.initPlayerClass();
                     Logger.addLog(&#x27;Device_Tizen&#x27;, &#x27;info&#x27;, &#x27;Samsung Tizen Initialized&#x27;);
-                    // this.Player.createVideoElement = this.createVideoElement;
-                    this.Config = Object.assign(this.Config, config);
+                    this.initNetworkClass();
+                    this.initKeyListener();
+                    this.Player.createVideoElement = this.createVideoElement;
+                    this.Config = Object.assign(this.Config, config); // Merges default config with user config
+                    window[&#x27;isDebugEnabled&#x27;] = this.Config.debug;
+                
+                  }
+                
+                  createVideoElement() {
+                    this.videoElement = document.createElement(&#x27;video&#x27;);
+                    this.videoElement.style.position = &#x27;absolute&#x27;;
+                    this.videoElement.setAttribute(&#x27;width&#x27;, this.Config.width);
+                    this.videoElement.setAttribute(&#x27;height&#x27;, this.Config.height);
+                    this.videoElement.setAttribute(&#x27;id&#x27;, this.Config.videoPlayerId);
+                    this.videoElement.setAttribute(&#x27;data&#x27;, &#x27;&#x27;);
+                    this.videoElement.setAttribute(&#x27;class&#x27;, &#x27;player&#x27;);
+                    document.body.appendChild(this.videoElement);
+                    this.setPlayerInfo();
+                    this.registerVideoEvents();
+                    Logger.addLog(&#x27;Player&#x27;, &#x27;info&#x27;, &#x27;Player Element Created and Registered Video Events&#x27;);
+                    this.initAudioClass();
+                    return null;
                   }
                 }
                 

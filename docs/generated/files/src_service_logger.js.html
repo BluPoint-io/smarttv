@@ -50,7 +50,6 @@
                             <li><a class="type" href="../classes/Events.html">Events</a></li>
                             <li><a class="type" href="../classes/Logger.html">Logger</a></li>
                             <li><a class="type" href="../classes/Player.html">Player</a></li>
-                            <li><a class="type" href="../classes/Storage.html">Storage</a></li>
                             <li><a class="type" href="../classes/Subtitle.html">Subtitle</a></li>
                             <li><a class="type" href="../classes/Xhr.html">Xhr</a></li>
                         </ul>
@@ -88,6 +87,7 @@
                    * @for Logger
                    */
                   static addLog(from, type, message, variable) {
+                    if(!window[&#x27;isDebugEnabled&#x27;]) return false;
                     switch (type) {
                       case &#x27;create&#x27;:
                         console.log(&#x60;[${from}] %c -&gt; { ${type} } \n\n ${message}${variable ? &#x27; =&gt; &#x27; : &#x27;&#x27;}&#x60;, &#x27;color: #009b1c;&#x27;, (variable || &#x27;&#x27;));

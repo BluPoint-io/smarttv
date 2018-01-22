@@ -50,7 +50,6 @@
                             <li><a class="type" href="../classes/Events.html">Events</a></li>
                             <li><a class="type" href="../classes/Logger.html">Logger</a></li>
                             <li><a class="type" href="../classes/Player.html">Player</a></li>
-                            <li><a class="type" href="../classes/Storage.html">Storage</a></li>
                             <li><a class="type" href="../classes/Subtitle.html">Subtitle</a></li>
                             <li><a class="type" href="../classes/Xhr.html">Xhr</a></li>
                         </ul>
@@ -69,7 +68,7 @@
                 <div class="file">
                     <pre class="code prettyprint linenums">
                 import Audio from &#x27;./audio&#x27;;
-                // import Subtitle from &#x27;./subtitle&#x27;;
+                import Subtitle from &#x27;./subtitle&#x27;;
                 import Logger from &#x27;../service/logger&#x27;;
                 import Vast from &#x27;../service/vast&#x27;;
                 
@@ -142,7 +141,8 @@
                       drmOrganizer: null,
                       src: null,
                       adsEnabled: false,
-                      adsType: null
+                      adsType: null,
+                      subtitleEnabled: false
                     };
                     return this.playerInfo;
                   }
@@ -181,7 +181,7 @@
                    */
                   addVideoSource(src, customData) {
                     this.autoLoop = false;
-                    this.Events.removeAllListeners();
+                    // this.Events.removeAllListeners();
                     this.playerInfo.customData = customData;
                     this.playerInfo.src = src;
                     const _this = this;
@@ -707,6 +707,24 @@
                     this.getCurrentAudioWithOrder = this.Audio.getCurrentAudioWithOrder;
                     this.denemeSERDAR = this.Audio.getThis;
                   }
+                
+                  /**
+                   * Add Subtitle Method
+                   *
+                   * @for Player
+                   * @method initAudioClass
+                   */
+                  addSubtitle(srt, targetElement) {
+                    this.playerInfo.subtitleEnabled = true;
+                    this.Subtitle = new Subtitle(srt, this, targetElement)
+                  }
+                
+                  removeSubtitle() {
+                    this.playerInfo.subtitleEnabled = false;
+                    this.Subtitle = null;
+                  }
+                
+                
                 
                   /**
                    * Play trigger for videoElement

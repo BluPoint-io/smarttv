@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src\service\storage\storages\cookieStorage.js</title>
+    <title>src\service\ganalytics.js</title>
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
@@ -50,7 +50,6 @@
                             <li><a class="type" href="../classes/Events.html">Events</a></li>
                             <li><a class="type" href="../classes/Logger.html">Logger</a></li>
                             <li><a class="type" href="../classes/Player.html">Player</a></li>
-                            <li><a class="type" href="../classes/Storage.html">Storage</a></li>
                             <li><a class="type" href="../classes/Subtitle.html">Subtitle</a></li>
                             <li><a class="type" href="../classes/Xhr.html">Xhr</a></li>
                         </ul>
@@ -64,100 +63,45 @@
 
         <div id="docs-main" class="apidocs">
             <div class="content container">
-                <h1 class="file-heading">File: src\service\storage\storages\cookieStorage.js</h1>
+                <h1 class="file-heading">File: src\service\ganalytics.js</h1>
                 
                 <div class="file">
                     <pre class="code prettyprint linenums">
-                // cookieStorage is useful Safari private browser mode, where localStorage
-                // doesn&#x27;t work but cookies do. This implementation is adopted from
-                // https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage
-                
-                import util from &#x27;../engine/util&#x27;;
-                
-                const Global = util.Global;
-                const trim = util.trim;
-                const doc = Global.document;
-                
                 /**
                  *
-                 * @param key
-                 * @return {boolean}
-                 * @private
                  */
-                function _has(key) {
-                  return (new RegExp(&#x60;(?:^|;\\s*)${escape(key).replace(/[\-\.\+\*]/g, &#x27;\\$&amp;&#x27;)}\\s*\\=&#x60;)).test(doc.cookie); // eslint-disable-line no-useless-escape
-                }
-                
-                /**
-                 *
-                 * @param key
-                 * @return {null}
-                 */
-                function read(key) {
-                  if (!key || !_has(key)) {
-                    return null;
+                export default class GAnalytics {
+                  constructor() {
+                    this.KEY = &#x27;ga:user&#x27;;
+                    this.DNT = navigator.doNotTrack || navigator.msDoNotTrack || window.doNotTrack;
+                    this.UID = (window.localStorage) ? (window.localStorage[this.KEY] = window.localStorage[this.KEY] || Math.random() + &#x27;.&#x27; + Math.random()) : &#x27;&#x27;;
                   }
-                  const regexpStr = &#x60;(?:^|.*;\\s*)${escape(key).replace(/[\-\.\+\*]/g, &#x27;\\$&amp;&#x27;)}\\s*\\=\\s*((?:[^;](?!;))*[^;]?).*&#x60;; // eslint-disable-line no-useless-escape
-                  return unescape(doc.cookie.replace(new RegExp(regexpStr), &#x27;$1&#x27;));
-                }
                 
-                /**
-                 *
-                 * @param callback
-                 */
-                function each(callback) {
-                  const cookies = doc.cookie.split(/; ?/g);
-                  for (let i = cookies.length - 1; i &gt;= 0; i -= 1) {
-                    if (!trim(cookies[i])) {
-                      continue;
+                  setAnalytics(ua, opts) {
+                    opts = opts || {};
+                    this.args = Object.assign({ tid:ua, cid:this.UID }, opts);
+                    this.send(&#x27;pageview&#x27;);
+                  }
+                
+                  send(type, opts) {
+                    if (this.DNT) return;
+                    if (type === &#x27;pageview&#x27; &amp;&amp; !opts) {
+                      opts = { dl:location.href, dt:document.title };
                     }
-                    const kvp = cookies[i].split(&#x27;=&#x27;);
-                    const key = unescape(kvp[0]);
-                    const val = unescape(kvp[1]);
-                    callback(val, key);
+                    var obj = Object.assign({ t:type }, this.args, opts, { z:Date.now() });
+                    new Image().src = this.encode(obj); // dispatch a GET
+                  }
+                
+                  encode(obj) {
+                    var k, str=&#x27;https://www.google-analytics.com/collect?v=1&#x27;;
+                    for (k in obj) {
+                      if (obj[k]) {
+                        str += (&#x27;&amp;&#x27; + k + &#x27;=&#x27; + encodeURIComponent(obj[k]));
+                      }
+                    }
+                    return str;
                   }
                 }
-                
-                /**
-                 *
-                 * @param key
-                 * @param data
-                 */
-                function write(key, data) {
-                  if (!key) {
-                    return;
-                  }
-                  doc.cookie = &#x60;${escape(key)}=${escape(data)}; expires=Tue, 19 Jan 2038 03:14:07 GMT; path=/&#x60;;
-                }
-                
-                /**
-                 *
-                 * @param key
-                 */
-                function remove(key) {
-                  if (!key || !_has(key)) {
-                    return;
-                  }
-                  doc.cookie = &#x60;${escape(key)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/&#x60;;
-                }
-                
-                /**
-                 *
-                 */
-                function clearAll() {
-                  each((_, key) =&gt; {
-                    remove(key);
-                  });
-                }
-                
-                export default {
-                  name: &#x27;cookieStorage&#x27;,
-                  read,
-                  write,
-                  each,
-                  remove,
-                  clearAll
-                };
                 
                     </pre>
                 </div>

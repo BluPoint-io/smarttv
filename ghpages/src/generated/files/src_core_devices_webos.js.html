@@ -50,7 +50,6 @@
                             <li><a class="type" href="../classes/Events.html">Events</a></li>
                             <li><a class="type" href="../classes/Logger.html">Logger</a></li>
                             <li><a class="type" href="../classes/Player.html">Player</a></li>
-                            <li><a class="type" href="../classes/Storage.html">Storage</a></li>
                             <li><a class="type" href="../classes/Subtitle.html">Subtitle</a></li>
                             <li><a class="type" href="../classes/Xhr.html">Xhr</a></li>
                         </ul>
@@ -70,7 +69,7 @@
                     <pre class="code prettyprint linenums">
                 import Device from &#x27;../device&#x27;;
                 import Logger from &#x27;../../service/logger&#x27;;
-                const WebOsLibrary = require(&#x27;../../helpers/WebOS.js&#x27;);
+                // const WebOsLibrary = require(&#x27;../../helpers/WebOS.js&#x27;);
                 
                 class DeviceWebOs extends Device {
                 
@@ -85,9 +84,13 @@
                     super();
                     this.initEvents();
                     this.initPlayerClass();
+                    this.initNetworkClass();
+                    this.initKeyListener();
                     Logger.addLog(&#x27;Device_WebOS&#x27;, &#x27;info&#x27;, &#x27;Arcelik Device Initialized&#x27;);
                     this.Player.createVideoElement = this.createVideoElement;
                     this.Config = Object.assign(this.Config, config); // Merges default config with user config
+                    window[&#x27;isDebugEnabled&#x27;] = this.Config.debug;
+                
                     this.addWebOSLib();
                   }
                 
@@ -104,7 +107,7 @@
                     this.webOSLibrary.setAttribute(&#x27;type&#x27;, &#x27;text/javascript&#x27;);
                     this.webOSLibrary.setAttribute(&#x27;src&#x27;, &#x27;lib/webOS.js&#x27;);
                     document.body.appendChild(this.webOSLibrary);*/
-                    this.WebOsLibrary = WebOsLibrary;
+                    // this.WebOsLibrary = WebOsLibrary;
                     Logger.addLog(&#x27;Device_WebOs&#x27;, &#x27;info&#x27;, &#x27;WebOs Library loaded successfully&#x27;, this.WebOsLibrary);
                     return true;
                   }

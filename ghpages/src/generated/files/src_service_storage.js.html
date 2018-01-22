@@ -50,7 +50,6 @@
                             <li><a class="type" href="../classes/Events.html">Events</a></li>
                             <li><a class="type" href="../classes/Logger.html">Logger</a></li>
                             <li><a class="type" href="../classes/Player.html">Player</a></li>
-                            <li><a class="type" href="../classes/Storage.html">Storage</a></li>
                             <li><a class="type" href="../classes/Subtitle.html">Subtitle</a></li>
                             <li><a class="type" href="../classes/Xhr.html">Xhr</a></li>
                         </ul>
@@ -68,39 +67,58 @@
                 
                 <div class="file">
                     <pre class="code prettyprint linenums">
-                import engine from &#x27;./storage/engine/store-engine&#x27;;
                 
-                /**
-                 * Initialize Storage adapters for Storage
-                 *
-                 * @type {[*]} - Require storages
-                 */
-                const storages = [
-                  require(&#x27;./storage/storages/localStorage&#x27;),
-                  require(&#x27;./storage/storages/sessionStorage&#x27;),
-                  require(&#x27;./storage/storages/cookieStorage&#x27;),
-                  require(&#x27;./storage/storages/memoryStorage&#x27;)
-                ];
+                export default class Storage {
                 
-                /**
-                 * Initialize Plugin adapters for Storage
-                 *
-                 * @type {[*]} - Require plugins
-                 */
-                const plugins = [
-                  require(&#x27;./storage/plugins/defaults&#x27;),
-                  require(&#x27;./storage/plugins/update&#x27;)
-                ];
-                /**
-                 * Initializes Storage Class
-                 * This class have private methods
-                 * @class Storage
-                 * @constructor Storage
-                 *
-                 * @param {Array} storages
-                 * @param {Array} plugins
-                 */
-                export default engine.createStore(storages, plugins);
+                  /**
+                   * Set value to the storage
+                   *
+                   * @param {String} name
+                   * @param {Object/String/Number} value
+                   * @returns {Boolean}
+                   */
+                  static set(name, value) {
+                    if(window.localStorage) {
+                      return window.localStorage.setItem(name, JSON.stringify(value));
+                    }
+                  }
+                
+                  /**
+                   * Get value from the storage
+                   *
+                   * @param {String} name
+                   * @returns {Object/String/Number} Retrurns FALSE
+                   */
+                  static get(name) {
+                    let value;
+                
+                    if (window.localStorage) {
+                      value = window.localStorage.getItem(name);
+                      if (typeof value !== &#x27;undefined&#x27;) {
+                        try {
+                          return JSON.parse(value);
+                        }
+                        catch (e) {
+                          return value;
+                        }
+                      }
+                    }
+                    return false;
+                  }
+                
+                  /**
+                   * Clear all stored data
+                   *
+                   * @returns {Boolean}
+                   */
+                  static clear() {
+                    if (window.localStorage) {
+                      return window.localStorage.clear();
+                    }
+                
+                    return false;
+                  }
+                }
                 
                     </pre>
                 </div>

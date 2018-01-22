@@ -14,7 +14,6 @@ YUI.add("yuidoc-meta", function(Y) {
         "Events",
         "Logger",
         "Player",
-        "Storage",
         "Subtitle",
         "Xhr"
     ],

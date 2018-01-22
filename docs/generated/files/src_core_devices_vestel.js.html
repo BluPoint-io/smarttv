@@ -50,7 +50,6 @@
                             <li><a class="type" href="../classes/Events.html">Events</a></li>
                             <li><a class="type" href="../classes/Logger.html">Logger</a></li>
                             <li><a class="type" href="../classes/Player.html">Player</a></li>
-                            <li><a class="type" href="../classes/Storage.html">Storage</a></li>
                             <li><a class="type" href="../classes/Subtitle.html">Subtitle</a></li>
                             <li><a class="type" href="../classes/Xhr.html">Xhr</a></li>
                         </ul>
@@ -88,6 +87,8 @@
                     Logger.addLog(&#x27;Device_Vestel&#x27;, &#x27;info&#x27;, &#x27;Vestel Device Initialized&#x27;);
                     this.Player.createVideoElement = this.createVideoElement;
                     this.Config = Object.assign(this.Config, config); // Merges default config with user config
+                    window[&#x27;isDebugEnabled&#x27;] = this.Config.debug;
+                
                   }
                 
                   /**
