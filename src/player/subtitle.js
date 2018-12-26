@@ -1,4 +1,4 @@
-import Logger from "../service/logger";
+import Logger from '../service/logger';
 
 class Subtitle {
   /**
@@ -11,10 +11,10 @@ class Subtitle {
     this.Player = Player;
     this.srt = srt;
     this.target = document.querySelector(target);
-    Logger.addLog('Player - Subtitle', 'create', `Subtitle initialization started`, this);
+    Logger.addLog('Player - Subtitle', 'create', 'Subtitle initialization started', this);
     this.setSRT(srt);
-    this.Player.Events.addListener('player_onTimeUpdate', () => this.tick());
-    this.Player.Events.addListener('player_onEnded', () => this.target.innerText = '');
+    this.Player.Events.addListener('player_onTimeUpdate', function () { this.tick(); });
+    this.Player.Events.addListener('player_onEnded', function () { this.target.innerText = ''; });
   }
 
   /**
@@ -35,7 +35,7 @@ class Subtitle {
      */
     const timeMs = function (val) {
       const regex = /(\d+):(\d{2}):(\d{2}),(\d{3})/;
-      let parts = regex.exec(val);
+      const parts = regex.exec(val);
 
       if (parts === null) {
         return 0;
@@ -56,20 +56,20 @@ class Subtitle {
      * @param {String} data srt data
      * @param {Boolean} ms true = use miliseconds
      * @return {Object} items [{{String} id,
-		     * 							{String} startTime,
-		     * 							{String} endTime,
-		     * 							{String} text }]
+         * {String} startTime,
+         * {String} endTime,
+         * {String} text }]
      *
      */
     const fromSrt = function (data, ms) {
-      let useMs = ms ? true : false;
+      const useMs = !!ms;
 
       data = data.replace(/\r/g, '');
       const regex = /(\d+)\n(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})/g;
       data = data.split(regex);
       data.shift();
 
-      let items = [];
+      const items = [];
       for (let i = 0; i < data.length; i += 4) {
         items.push({
           id: data[i].trim(), // {String}
@@ -108,16 +108,16 @@ class Subtitle {
    * @private
    */
   tick() {
-    if (this.Player.playerInfo.subtitleEnabled && this.Player.playerInfo.currentState === "Playing") {
-      if(typeof this.currentSub !== 'undefined') {
-        if(Math.trunc(this.Player.videoElement.currentTime * 1000) > this.currentSub.startTime && Math.trunc(this.Player.videoElement.currentTime * 1000) < this.currentSub.endTime) {
+    if (this.Player.playerInfo.subtitleEnabled && this.Player.playerInfo.currentState === 'Playing') {
+      if (typeof this.currentSub !== 'undefined') {
+        if (Math.trunc(this.Player.videoElement.currentTime * 1000) > this.currentSub.startTime && Math.trunc(this.Player.videoElement.currentTime * 1000) < this.currentSub.endTime) {
           Logger.addLog('Subtitle TEXT', 'info', this.currentSub.text);
           this.target.innerText = this.currentSub.text;
         } else if (Math.trunc(this.Player.videoElement.currentTime * 1000) > this.currentSub.endTime) {
           this.currentSubIndex += 1;
           this.currentSub = this.subs[this.currentSubIndex];
           this.target.innerText = '';
-          Logger.addLog('Subtitle  TEXT', 'info', 'EMPTY SUB')
+          Logger.addLog('Subtitle  TEXT', 'info', 'EMPTY SUB');
         }
       }
     }

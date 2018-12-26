@@ -9,7 +9,7 @@ class DevicePhilips extends Device {
    * @extends Device
    * @constructor
    */
-  constructor() {
+  constructor(config) {
     super();
     this.initEvents();
     this.initPlayerClass();
@@ -17,7 +17,7 @@ class DevicePhilips extends Device {
     this.initKeyListener();
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
-    window['isDebugEnabled'] = this.Config.debug;
+    window.isDebugEnabled = this.Config.debug;
     Logger.addLog('Device_Philips', 'info', 'Philips device is in progress');
 
   }

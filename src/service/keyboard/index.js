@@ -1,7 +1,8 @@
 import Recognizer from 'smarttv-device-recognizer';
 
 export default class Keyboard {
-  constructor(Events, currentDevice) {this.Events = Events;
+  constructor(Events, currentDevice) {
+    this.Events = Events;
     this.currentDevice = currentDevice;
     this.keyList = Recognizer.getKeyCodes(currentDevice.brandName);
     this.attachKeyListeners();

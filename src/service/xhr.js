@@ -13,9 +13,10 @@ class Xhr {
    * @for Xhr
    * @method getJSON
    */
-  public getJSON(url, successHandler, errorHandler) {
-    let xhr = typeof XMLHttpRequest != 'undefined'
+  getJSON(url, successHandler, errorHandler) {
+    const xhr = typeof XMLHttpRequest != 'undefined'
       ? new XMLHttpRequest()
+      // eslint-disable-next-line no-undef
       : new ActiveXObject('Microsoft.XMLHTTP');
     xhr.open('get', url, true);
     xhr.onreadystatechange = function () {
@@ -33,7 +34,7 @@ class Xhr {
       }
     };
     xhr.send();
-  };
+  }
 
   /**
    * sendJSON of given url source with callbacks
@@ -44,9 +45,10 @@ class Xhr {
    * @for Xhr
    * @method sendJSON
    */
-  public sendJSON(url, data, successHandler, errorHandler){
-    let xhr = typeof XMLHttpRequest != 'undefined'
+  sendJSON(url, data, successHandler, errorHandler) {
+    const xhr = typeof XMLHttpRequest != 'undefined'
       ? new XMLHttpRequest()
+      // eslint-disable-next-line no-undef
       : new ActiveXObject('Microsoft.XMLHTTP');
     xhr.open('post', url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -62,7 +64,7 @@ class Xhr {
       }
     };
     xhr.send(JSON.stringify(data));
-  };
+  }
 
 }
 

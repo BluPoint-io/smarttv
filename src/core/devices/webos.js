@@ -20,7 +20,7 @@ class DeviceWebOs extends Device {
     Logger.addLog('Device_WebOS', 'info', 'Arcelik Device Initialized');
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
-    window['isDebugEnabled'] = this.Config.debug;
+    window.isDebugEnabled = this.Config.debug;
 
     this.addWebOSLib();
   }
@@ -34,10 +34,10 @@ class DeviceWebOs extends Device {
    * @return {Boolean} true
    */
   addWebOSLib() {
-/*    this.webOSLibrary = document.createElement('script');
+    /* this.webOSLibrary = document.createElement('script');
     this.webOSLibrary.setAttribute('type', 'text/javascript');
     this.webOSLibrary.setAttribute('src', 'lib/webOS.js');
-    document.body.appendChild(this.webOSLibrary);*/
+    document.body.appendChild(this.webOSLibrary); */
     // this.WebOsLibrary = WebOsLibrary;
     Logger.addLog('Device_WebOs', 'info', 'WebOs Library loaded successfully', this.WebOsLibrary);
     return true;

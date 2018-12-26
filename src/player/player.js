@@ -182,7 +182,7 @@ class Player {
         _this.Events.on('vmapLoaded', (vmapObject) => {
           _this.prepareVastFromVmap(vmapObject);
         });
-        xhr.onreadystatechange = function() {
+        xhr.onreadystatechange = function () {
           if (xhr.readyState === 4) {
             // Parse VMAP
             Vast.parseVMAP(xhr.responseXML, _this.Events);
@@ -502,7 +502,7 @@ class Player {
     this.captionDiv.innerHTML = this.Config.vastOptions.ad_caption;
     this.wrapperDiv.appendChild(this.captionDiv);
     // Adjust style
-    this.captionDiv.style.left = `${(this.vastElement.offsetWidth / 2) - (document.getElementsByClassName('vastCaption')[0].offsetWidth / 2)}px`;    this.captionDiv.style.visibility = 'hidden';
+    this.captionDiv.style.left = `${(this.vastElement.offsetWidth / 2) - (document.getElementsByClassName('vastCaption')[0].offsetWidth / 2)}px`; this.captionDiv.style.visibility = 'hidden';
     return true;
   }
 
@@ -647,15 +647,13 @@ class Player {
    */
   addSubtitle(srt, targetElement) {
     this.playerInfo.subtitleEnabled = true;
-    this.Subtitle = new Subtitle(srt, this, targetElement)
+    this.Subtitle = new Subtitle(srt, this, targetElement);
   }
 
   removeSubtitle() {
     this.playerInfo.subtitleEnabled = false;
     this.Subtitle = null;
   }
-
-
 
   /**
    * Play trigger for videoElement
@@ -718,8 +716,6 @@ class Player {
     }
   }
 
-
-
   /**
    * Trigger specific events for all videoElement trigger
    * @for Player
@@ -746,7 +742,7 @@ class Player {
     this.videoElement.onended = () => {
       _this.playerInfo.currentState = 'Finished';
       _this.Events.triggerEvent('player_onEnded', ['Video Finished']);
-      if(this.autoLoop) {
+      if (this.autoLoop) {
         this.playWithLoop();
       }
     };
@@ -829,7 +825,7 @@ class Player {
     this.OIPFDrmObject.setAttribute('id', 'oipfDrm');
     this.OIPFDrmObject.style.display = 'none';
     document.head.appendChild(this.OIPFDrmObject);
-    this.OIPFDrmObject.onDRMMessageResult = function(msgId, resultMsg, resultCode) {
+    this.OIPFDrmObject.onDRMMessageResult = function (msgId, resultMsg, resultCode) {
       if (resultCode === 0) {
         Logger.addLog('Player', 'create', `DRM Initialized Successfuly, Result Code = ${resultCode}!`);
       } else {

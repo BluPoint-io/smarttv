@@ -9,7 +9,7 @@ export default class Storage {
    * @returns {Boolean}
    */
   static set(name, value) {
-    if(window.localStorage) {
+    if (window.localStorage) {
       return window.localStorage.setItem(name, JSON.stringify(value));
     }
   }
@@ -28,8 +28,7 @@ export default class Storage {
       if (typeof value !== 'undefined') {
         try {
           return JSON.parse(value);
-        }
-        catch (e) {
+        } catch (e) {
           return value;
         }
       }

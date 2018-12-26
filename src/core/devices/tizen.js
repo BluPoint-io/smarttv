@@ -18,7 +18,7 @@ class DeviceTizen extends Device {
     this.initKeyListener();
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
-    window['isDebugEnabled'] = this.Config.debug;
+    window.isDebugEnabled = this.Config.debug;
 
   }
 

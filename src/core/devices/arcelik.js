@@ -18,7 +18,7 @@ class DeviceArcelik extends Device {
     Logger.addLog('Device_Arcelik', 'info', 'Arcelik Device Initialized');
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
-    window['isDebugEnabled'] = this.Config.debug;
+    window.isDebugEnabled = this.Config.debug;
   }
 
   /**

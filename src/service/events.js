@@ -485,7 +485,7 @@ class Events {
   _getOnceReturnValue() {
     let returnValue;
     if (Object.prototype.hasOwnProperty.call(this, '_onceReturnValue')) {
-      returnValue =  this._onceReturnValue;
+      returnValue = this._onceReturnValue;
     } else {
       returnValue = true;
     }
