@@ -70,6 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// import Storage from './service/storage';
 	
 	if (typeof Object.assign !== 'function') {
+	  // eslint-disable-next-line space-before-function-paren
 	  Object.assign = function (target, varArgs) {
 	    // .length of function is 2
 	    if (target == null) {
@@ -2137,7 +2138,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @for Logger
 	     */
 	    value: function addLog(from, type, message, variable) {
-	      if (!window['isDebugEnabled']) return false;
+	      if (!window.isDebugEnabled) return false;
 	      switch (type) {
 	        case 'create':
 	          console.log('[' + from + '] %c -> { ' + type + ' } \n\n ' + message + (variable ? ' => ' : ''), 'color: #009b1c;', variable || '');
@@ -2191,8 +2192,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @constructor
 	   */
 	  function Subtitle(srt, Player, target) {
-	    var _this = this;
-	
 	    _classCallCheck(this, Subtitle);
 	
 	    this.Player = Player;
@@ -2201,10 +2200,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _logger2.default.addLog('Player - Subtitle', 'create', 'Subtitle initialization started', this);
 	    this.setSRT(srt);
 	    this.Player.Events.addListener('player_onTimeUpdate', function () {
-	      return _this.tick();
+	      this.tick();
 	    });
 	    this.Player.Events.addListener('player_onEnded', function () {
-	      return _this.target.innerText = '';
+	      this.target.innerText = '';
 	    });
 	  }
 	
@@ -2251,13 +2250,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	       * @param {String} data srt data
 	       * @param {Boolean} ms true = use miliseconds
 	       * @return {Object} items [{{String} id,
-	         * 							{String} startTime,
-	         * 							{String} endTime,
-	         * 							{String} text }]
+	           * {String} startTime,
+	           * {String} endTime,
+	           * {String} text }]
 	       *
 	       */
 	      var fromSrt = function fromSrt(data, ms) {
-	        var useMs = ms ? true : false;
+	        var useMs = !!ms;
 	
 	        data = data.replace(/\r/g, '');
 	        var regex = /(\d+)\n(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})/g;
@@ -2306,7 +2305,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'tick',
 	    value: function tick() {
-	      if (this.Player.playerInfo.subtitleEnabled && this.Player.playerInfo.currentState === "Playing") {
+	      if (this.Player.playerInfo.subtitleEnabled && this.Player.playerInfo.currentState === 'Playing') {
 	        if (typeof this.currentSub !== 'undefined') {
 	          if (Math.trunc(this.Player.videoElement.currentTime * 1000) > this.currentSub.startTime && Math.trunc(this.Player.videoElement.currentTime * 1000) < this.currentSub.endTime) {
 	            _logger2.default.addLog('Subtitle TEXT', 'info', this.currentSub.text);
@@ -5201,7 +5200,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'encode',
 	    value: function encode(obj) {
-	      var k,
+	      var k = void 0,
 	          str = 'https://www.google-analytics.com/collect?v=1';
 	      for (k in obj) {
 	        if (obj[k]) {
@@ -5304,7 +5303,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _logger2.default.addLog('Device_Arcelik', 'info', 'Arcelik Device Initialized');
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
-	    window['isDebugEnabled'] = _this.Config.debug;
+	    window.isDebugEnabled = _this.Config.debug;
 	    return _this;
 	  }
 	
@@ -5435,7 +5434,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @extends Device
 	   * @constructor
 	   */
-	  function DevicePhilips() {
+	  function DevicePhilips(config) {
 	    _classCallCheck(this, DevicePhilips);
 	
 	    var _this = _possibleConstructorReturn(this, (DevicePhilips.__proto__ || Object.getPrototypeOf(DevicePhilips)).call(this));
@@ -5446,7 +5445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.initKeyListener();
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
-	    window['isDebugEnabled'] = _this.Config.debug;
+	    window.isDebugEnabled = _this.Config.debug;
 	    _logger2.default.addLog('Device_Philips', 'info', 'Philips device is in progress');
 	
 	    return _this;
@@ -5592,7 +5591,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.initKeyListener();
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
-	    window['isDebugEnabled'] = _this.Config.debug;
+	    window.isDebugEnabled = _this.Config.debug;
 	
 	    return _this;
 	  }
@@ -5671,7 +5670,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _logger2.default.addLog('Device_Vestel', 'info', 'Vestel Device Initialized');
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
-	    window['isDebugEnabled'] = _this.Config.debug;
+	    window.isDebugEnabled = _this.Config.debug;
 	
 	    return _this;
 	  }
@@ -5763,7 +5762,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _logger2.default.addLog('Device_Arcelik', 'info', 'Arcelik Device Initialized');
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
-	    window['isDebugEnabled'] = _this.Config.debug;
+	    window.isDebugEnabled = _this.Config.debug;
 	    return _this;
 	  }
 	
@@ -5854,7 +5853,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _logger2.default.addLog('Device_WebOS', 'info', 'Arcelik Device Initialized');
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
-	    window['isDebugEnabled'] = _this.Config.debug;
+	    window.isDebugEnabled = _this.Config.debug;
 	
 	    _this.addWebOSLib();
 	    return _this;
@@ -5873,10 +5872,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(DeviceWebOs, [{
 	    key: 'addWebOSLib',
 	    value: function addWebOSLib() {
-	      /*    this.webOSLibrary = document.createElement('script');
-	          this.webOSLibrary.setAttribute('type', 'text/javascript');
-	          this.webOSLibrary.setAttribute('src', 'lib/webOS.js');
-	          document.body.appendChild(this.webOSLibrary);*/
+	      /* this.webOSLibrary = document.createElement('script');
+	      this.webOSLibrary.setAttribute('type', 'text/javascript');
+	      this.webOSLibrary.setAttribute('src', 'lib/webOS.js');
+	      document.body.appendChild(this.webOSLibrary); */
 	      // this.WebOsLibrary = WebOsLibrary;
 	      _logger2.default.addLog('Device_WebOs', 'info', 'WebOs Library loaded successfully', this.WebOsLibrary);
 	      return true;

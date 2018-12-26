@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "webpack --mode=dev",
+    "build": "webpack --progress --colors",
     "dev": "webpack --progress --colors --watch --mode=dev",
     "test": "karma start karma.conf.js --single-run",
     "cover": "open coverage/lcov-report/index.html",
@@ -47,6 +47,7 @@
     "karma-webpack": "^1.8.0",
     "mocha": "3.1.2",
     "phantomjs-prebuilt": "^2.1.3",
+    "uglifyjs-webpack-plugin": "^2.1.0",
     "webpack": "1.13.2",
     "webpack-merge": "^0.14.1",
     "yargs": "6.0.0",
