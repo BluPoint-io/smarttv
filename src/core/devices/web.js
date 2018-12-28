@@ -34,11 +34,13 @@ class DeviceWeb extends Device {
     this.videoElement.style.position = 'absolute';
     this.videoElement.setAttribute('width', this.Config.width);
     this.videoElement.setAttribute('height', this.Config.height);
+    this.videoElement.setAttribute('data', '');
     this.videoElement.setAttribute('id', this.Config.videoPlayerId);
     this.videoElement.setAttribute('data', '');
     this.videoElement.setAttribute('class', 'player');
+    this.videoElement.style.visibility = 'hidden';
     document.body.appendChild(this.videoElement);
-    this.setPlayerInfo();
+    this.setPlayerInfo('NULL', 'WEB');
     this.registerVideoEvents();
     Logger.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
     this.initAudioClass();

@@ -1,6 +1,7 @@
 import Device from '../device';
 import Logger from '../../service/logger';
-// const WebOsLibrary = require('../../helpers/WebOS.js');
+
+const WebOsLibrary = require('../../helpers/WebOS.js');
 
 class DeviceWebOs extends Device {
 
@@ -34,11 +35,8 @@ class DeviceWebOs extends Device {
    * @return {Boolean} true
    */
   addWebOSLib() {
-/*    this.webOSLibrary = document.createElement('script');
-    this.webOSLibrary.setAttribute('type', 'text/javascript');
-    this.webOSLibrary.setAttribute('src', 'lib/webOS.js');
-    document.body.appendChild(this.webOSLibrary);*/
-    // this.WebOsLibrary = WebOsLibrary;
+    // @TODO: Selçuk'a sorulacak (Nerden buldun lan bu kodu)
+    WebOsLibrary();
     Logger.addLog('Device_WebOs', 'info', 'WebOs Library loaded successfully', this.WebOsLibrary);
     return true;
   }
@@ -60,10 +58,11 @@ class DeviceWebOs extends Device {
     this.videoElement.style.position = 'absolute';
     this.videoElement.setAttribute('width', this.Config.width);
     this.videoElement.setAttribute('height', this.Config.height);
-    this.videoElement.setAttribute('id', '');
+    this.videoElement.setAttribute('id', this.Config.videoPlayerId);
     this.videoElement.setAttribute('class', 'player');
+    this.videoElement.style.visibility = 'hidden';
     document.body.appendChild(this.videoElement);
-    this.setPlayerInfo('WEBOS');
+    this.setPlayerInfo('playready', 'WEBOS');
     this.registerVideoEvents();
     Logger.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
     this.initAudioClass();

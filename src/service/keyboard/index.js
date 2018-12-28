@@ -1,7 +1,8 @@
 import Recognizer from 'smarttv-device-recognizer';
 
 export default class Keyboard {
-  constructor(Events, currentDevice) {this.Events = Events;
+  constructor(Events, currentDevice) {
+    this.Events = Events;
     this.currentDevice = currentDevice;
     this.keyList = Recognizer.getKeyCodes(currentDevice.brandName);
     this.attachKeyListeners();
@@ -9,7 +10,10 @@ export default class Keyboard {
 
   attachKeyListeners() {
     window.addEventListener('keydown', (e) => {
-      e.preventDefault();
+      const { tagName } = document.activeElement || {};
+      if (!tagName || !(tagName.toLowerCase() === 'textarea' || tagName.toLowerCase() === 'input')) {
+        e.preventDefault();
+      }
       switch (e.keyCode) {
         case this.keyList.LEFT:
           this.Events.triggerEvent('keyDown', ['LEFT']);
@@ -53,6 +57,9 @@ export default class Keyboard {
         case this.keyList.FF:
           this.Events.triggerEvent('keyDown', ['FF']);
           break;
+        case this.keyList.RW:
+          this.Events.triggerEvent('keyDown', ['RW']);
+          break
         case this.keyList.ONE:
           this.Events.triggerEvent('keyDown', ['ONE']);
           break;

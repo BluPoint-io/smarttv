@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "webpack --mode=dev",
+    "build": "webpack --progress",
     "dev": "webpack --progress --colors --watch --mode=dev",
     "test": "karma start karma.conf.js --single-run",
     "cover": "open coverage/lcov-report/index.html",
@@ -23,6 +23,7 @@
     "babel-eslint": "7.0.0",
     "babel-loader": "6.2.5",
     "babel-plugin-add-module-exports": "0.2.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-es2015": "6.16.0",
     "es-module-loader": "^2.1.5",
     "eslint": "^3.13.0",

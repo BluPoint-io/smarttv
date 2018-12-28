@@ -30,21 +30,31 @@ class DeviceArcelik extends Device {
    * @return {Boolean} true
    */
   createVideoElement() {
-    if (this.videoElement) {
+    if (this.objectPlayer) {
       this.deleteVideoElement();
     }
-    this.videoElement = document.createElement('video');
-    this.videoElement.style.position = 'absolute';
-    this.videoElement.setAttribute('width', this.Config.width);
-    this.videoElement.setAttribute('height', this.Config.height);
-    this.videoElement.setAttribute('id', 'dtv-video');
-    this.videoElement.setAttribute('data', '');
-    this.videoElement.setAttribute('class', 'player');
-    document.body.appendChild(this.videoElement);
-    this.setPlayerInfo('OIPF');
-    this.registerVideoEvents();
-    Logger.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
+    this.createOIPFDrmAgent();
+    this.setPlayerInfo('playready', 'OIPF');
+    Logger.addLog('Player', 'info', 'Arcelik Player Element Created and Registered Video Events');
     this.initAudioClass();
+    if (!this.arcelikAudio) {
+      this.arcelikAudio = document.createElement('audio');
+      this.arcelikAudio.setAttribute('class', 'player-audio');
+      this.arcelikAudio.style.position = 'absolute';
+      document.body.appendChild(this.arcelikAudio);
+      Logger.addLog('Player', 'info', 'Arcelik Audio Player Created');
+    }
+    this.createObjectPlayer('arcelikPlayer');
+    if (window.arSmartTV) {
+      window.arSmartTV.init(
+        () => {
+          console.log('arcelik sdk initialized.');
+        },
+        () => {
+          console.log('arcelik sdk not initialized.');
+        }
+      );
+    }
     return true;
   }
 

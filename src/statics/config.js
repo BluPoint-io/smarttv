@@ -6,7 +6,7 @@ const Config = {
   width: '100%',
   height: '100%',
   debug: true,
-  videoPlayerId: 'dtv-video',
+  videoPlayerId: 'bluvideo',
   vastOptions: {
     media_type : 'video/mp4',
     media_bitrate_min : 200,
@@ -17,7 +17,7 @@ const Config = {
     playReady: {
       mimeType: 'application/vnd.ms-playready.initiator+xml',
       DRMSystemID: 'urn:dvb:casystemid:19219',
-      licenserUrl: ''
+      licenserUrl: 'http://ss.dogannet.tv/playreadylicenser/rightsmanager.asmx'
     }
   }
 };
