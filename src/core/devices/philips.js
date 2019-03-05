@@ -18,8 +18,7 @@ class DevicePhilips extends Device {
     Logger.addLog('Device_Philips', 'info', 'Philips device is in progress');
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
-    window['isDebugEnabled'] = this.Config.debug;
-
+    window.isDebugEnabled = this.Config.debug;
   }
 
   /**
@@ -44,9 +43,8 @@ class DevicePhilips extends Device {
     document.body.appendChild(this.videoElement);
     this.setPlayerInfo('PLAYREADY', 'PHILIPS');
     this.registerVideoEvents();
-    Logger.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
+    Logger.addLog('Device_Philips', 'info', 'Player Element Created and Registered Video Events');
     this.initAudioClass();
-    return null;
   }
 }
 
