@@ -18,7 +18,7 @@ class DeviceTizen extends Device {
     this.initKeyListener();
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
-    window['isDebugEnabled'] = this.Config.debug;
+    window.isDebugEnabled = this.Config.debug;
     this.addTizenLib();
   }
 
@@ -27,7 +27,6 @@ class DeviceTizen extends Device {
     this.scriptfile.src = '$WEBAPIS/webapis/webapis.js';
     document.head.appendChild(this.scriptfile);
     Logger.addLog('Device_Tizen', 'info', 'Tizen Library loaded successfully');
-    return true;
   }
 
   createVideoElement() {
@@ -47,9 +46,8 @@ class DeviceTizen extends Device {
     this.setPlayerInfo('PLAYREADY', 'TIZEN');
     this.videoElement.style.visibility = 'hidden';
     this.tizenRegisterEvents();
-    Logger.addLog('Player', 'info', 'Samsung Tizen Created and Registered Video Events');
+    Logger.addLog('Device_Tizen', 'info', 'Samsung Tizen Created and Registered Video Events');
     this.initAudioClass();
-    return null;
   }
 }
 
