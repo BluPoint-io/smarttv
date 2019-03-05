@@ -301,28 +301,28 @@ class Player {
    * @return {*}
    */
   initAds(type, url) {
-    const _this = this;
-    _this.playerInfo.adsType = type;
-    _this.playerInfo.adsEnabled = true;
+    this.playerInfo.adsType = type;
+    this.playerInfo.adsEnabled = true;
     switch (type) {
-      case 'VMAP': // eslint-disable-line
-        const xhr = new window.XMLHttpRequest();
+      case 'VMAP': {
+        const xhr = new XMLHttpRequest();
         xhr.open('GET', url);
         xhr.send();
-        _this.Events.on('vmapLoaded', (vmapObject) => {
-          _this.prepareVastFromVmap(vmapObject);
+        this.Events.on('vmapLoaded', (vmapObject) => {
+          this.prepareVastFromVmap(vmapObject);
         });
-        xhr.onreadystatechange = function () {
+        xhr.onreadystatechange = () => {
           if (xhr.readyState === 4) {
             // Parse VMAP
-            Vast.parseVMAP(xhr.responseXML, _this.Events);
+            Vast.parseVMAP(xhr.responseXML, this.Events);
             Logger.addLog('Player - ADS', 'info', 'VMAP Target Loaded Successfully');
-            _this.addAdsCaption();
+            this.addAdsCaption();
           }
         };
         break;
+      }
       case 'VAST':
-        console.log('VAST');
+        Logger.addLog('Player - ADS', 'info', 'VAST');
         break;
       default:
         return Logger.addLog('Player - Ads', 'error', '');
@@ -584,35 +584,31 @@ class Player {
    * @method initVastAd
    */
   initVastAd(time) {
-    const _this = this;
     this.videoElement.src = '';
     this.captionDiv.style.visibility = 'visible';
     this.captionDiv.innerHTML = 'Reklamlar Yükleniyor';
     this.vastElement.src = this.vastReadyItems[0].mediaFile;
     this.vastElement.removeAttribute('controls');
     this.vastElement.addEventListener('loadedmetadata', () => {
-      _this.videoElement.style.visibility = 'hidden';
-      _this.vastElement.style.visibility = 'visible';
-      _this.captionDiv.innerHTML = _this.Config.vastOptions.ad_caption;
-      console.log('Meta Data YüklenDi');
-      _this.vastElement.play();
+      this.videoElement.style.visibility = 'hidden';
+      this.vastElement.style.visibility = 'visible';
+      this.captionDiv.innerHTML = this.Config.vastOptions.ad_caption;
+      this.vastElement.play();
     });
     this.vastElement.addEventListener('ended', () => {
-      console.log('Bitti');
-      _this.vastElement.style.visibility = 'hidden';
-      _this.videoElement.style.visibility = 'visible';
-      _this.captionDiv.style.visibility = 'hidden';
-      _this.adsInProgress = false;
-      _this.videoElement.src = _this.playerInfo.src;
-      _this.videoElement.currentTime = time;
-      _this.play();
+      this.vastElement.style.visibility = 'hidden';
+      this.videoElement.style.visibility = 'visible';
+      this.captionDiv.style.visibility = 'hidden';
+      this.adsInProgress = false;
+      this.videoElement.src = this.playerInfo.src;
+      this.videoElement.currentTime = time;
+      this.play();
     });
     this.vastElement.addEventListener('play', () => {
-      console.log('Reklam Başladı');
+      Logger.addLog('Player', 'info', 'Ads is started');
     });
-    console.log(`init ettik${time}`);
     Vast.vastArray.splice(0, 1);
-    _this.vastReadyItems.splice(0, 1);
+    this.vastReadyItems.splice(0, 1);
 
   }
 
@@ -644,19 +640,16 @@ class Player {
    * @method unloadDrmClient
    */
   unloadDrmClient() {
-    console.log('Unload Geldi');
-    const _this = this;
-    if (this.currentDevice.brandName === 'webos' && _this._WebOS.isDrmClientLoaded) {
+    if (this.currentDevice.brandName === 'webos' && this._WebOS.isDrmClientLoaded) {
       webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
         method: 'unload',
-        parameters: { clientId: _this._WebOS.clientId },
-        onSuccess: (result) => {
-          _this._WebOS.isDrmClientLoaded = false;
-          console.log('DRM Client is unloaded successfully.');
+        parameters: { clientId: this._WebOS.clientId },
+        onSuccess: () => {
+          this._WebOS.isDrmClientLoaded = false;
+          Logger.addLog('Player', 'info', 'DRM Client is unloaded successfully.');
         },
         onFailure: (result) => {
-          console.log(`[${result.errorCode}] ${result.errorText}`);
-          // Do something for error handling
+          Logger.addLog('Player', 'error', `[${result.errorCode}] ${result.errorText}`);
         }
       });
     }
@@ -670,29 +663,24 @@ class Player {
    * @method setupWebOSDrm
    */
   setupWebOSDrm() {
-    console.log('setupWebOSDrm calıstı');
-    const _this = this;
-    _this._WebOS = {};
-
-    _this._WebOS.appId = 'com.blu.smarttv';
-    _this._WebOS.clientId = '';
-    _this._WebOS.isDrmClientLoaded = '';
-
-    webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
+    this._WebOS = {};
+    this._WebOS.appId = this.Config.appId;
+    this._WebOS.clientId = '';
+    this._WebOS.isDrmClientLoaded = '';
+    window.webOS.service.request('luna://com.webos.service.drm', {
       method: 'load',
       parameters: {
-        drmType: _this.playerInfo.drmType,
-        appId: _this._WebOS.appId
+        drmType: this.playerInfo.drmType,
+        appId: this._WebOS.appId
       },
       onSuccess: (result) => {
-        _this._WebOS.clientId = result.clientId;
-        _this._WebOS.isDrmClientLoaded = true;
-        console.log('DRM Client is loaded successfully.');
-        _this.sendWebOSDrm();
+        this._WebOS.clientId = result.clientId;
+        this._WebOS.isDrmClientLoaded = true;
+        Logger.addLog('Player', 'info', 'DRM Client is loaded successfully.');
+        this.sendWebOSDrm();
       },
       onFailure: (result) => {
-        console.log(`[${result.errorCode}] ${result.errorText}`);
-        // Do something for error handling
+        Logger.addLog('Player', 'error', `[${result.errorCode}] ${result.errorText}`);
       }
     });
   }
@@ -704,29 +692,27 @@ class Player {
    * @method sendWebOSDrm
    */
   sendWebOSDrm() {
-    this._WebOS.msg = `<?xml version="1.0" encoding="utf-8"?>
+    this._WebOS.msg = `
+    <?xml version="1.0" encoding="utf-8"?>
     <PlayReadyInitiator xmlns= "http://schemas.microsoft.com/DRM/2007/03/protocols/">
-    <LicenseAcquisition>
-    <Header><WRMHEADER xmlns= "http://schemas.microsoft.com/DRM/2007/03/PlayReadyHeader" version="4.0.0.0">
-    <DATA>
-    <PROTECTINFO>
-    <KEYLEN>16
-    </KEYLEN>
-    <ALGID>AESCTR</ALGID>
-    </PROTECTINFO>
-    <LA_URL>${this.Config.DRM.licenserUrl}</LA_URL>
-    <KID>lFmb2gxg0Cr5bfEnJXgJeA==</KID>
-    <CHECKSUM>P7ORpD2IpA==</CHECKSUM>
-    </DATA>
-    </WRMHEADER>
-    </Header>
-    <CustomData>${this.playerInfo.customData}</CustomData>
-    </LicenseAcquisition>
+      <LicenseAcquisition>
+        <Header>
+          <WRMHEADER xmlns= "http://schemas.microsoft.com/DRM/2007/03/PlayReadyHeader" version="4.0.0.0">
+            <DATA>
+              <PROTECTINFO>
+                <KEYLEN>16</KEYLEN>
+                <ALGID>AESCTR</ALGID>
+              </PROTECTINFO>
+              <LA_URL>${this.Config.DRM.licenserUrl}</LA_URL>
+              <KID>lFmb2gxg0Cr5bfEnJXgJeA==</KID>
+              <CHECKSUM>P7ORpD2IpA==</CHECKSUM>
+            </DATA>
+          </WRMHEADER>
+        </Header>
+        <CustomData>${this.playerInfo.customData}</CustomData>
+      </LicenseAcquisition>
     </PlayReadyInitiator>`;
-
-    const _this = this;
-
-    webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
+    window.webOS.service.request('luna://com.webos.service.drm', {
       method: 'sendDrmMessage',
       parameters: {
         clientId: this._WebOS.clientId,
@@ -735,24 +721,22 @@ class Player {
         drmSystemId: this.Config.DRM.drmSystemId
       },
       onSuccess: (result) => {
-        _this._WebOS.msgId = result.msgId;
-        _this._WebOS.resultCode = result.resultCode;
-        _this._WebOS.resultMsg = result.resultMsg;
-        console.log(`Message ID: ${_this._WebOS.msgId}`);
-        console.log(`[${_this._WebOS.resultCode}] ${_this._WebOS.resultMsg}`);
-        _this._WebOS.options = {};
-        _this._WebOS.options.option = {};
-        _this._WebOS.options.option.drm = {};
-        _this._WebOS.options.option.drm.type = _this.playerInfo.drmType;
-        _this._WebOS.options.option.drm.clientId = _this._WebOS.clientId;
-        _this._WebOS.mediaOption = escape(JSON.stringify(_this._WebOS.options));
-        _this.Events.triggerEvent('DRM_WebOSReady');
-        if (_this._WebOS.resultCode !== 0) {
-          // Do Handling DRM message error
-        }
+        this._WebOS.msgId = result.msgId;
+        this._WebOS.resultCode = result.resultCode;
+        this._WebOS.resultMsg = result.resultMsg;
+        this._WebOS.options = {
+          drm: {
+            type: this.playerInfo.drmType,
+            clientId: this._WebOS.clientId
+          }
+        };
+        this._WebOS.mediaOption = escape(JSON.stringify(this._WebOS.options));
+        this.Events.triggerEvent('DRM_WebOSReady');
+        Logger.addLog('Player', 'info', 'Message ID', result.msgId);
+        Logger.addLog('Player', 'info', `[${result.resultCode}] ${result.resultMsg}`);
       },
       onFailure: (result) => {
-        console.log(`[${result.errorCode}] ${result.errorText}`);
+        Logger.addLog('Player', 'error', `[${result.errorCode}] ${result.errorText}`);
       }
     });
 
@@ -768,7 +752,6 @@ class Player {
     this.Audio = new Audio();
     this.changeAudioWithOrder = this.Audio.changeAudioWithOrder;
     this.getCurrentAudioWithOrder = this.Audio.getCurrentAudioWithOrder;
-    this.denemeSERDAR = this.Audio.getThis;
   }
 
   /**
