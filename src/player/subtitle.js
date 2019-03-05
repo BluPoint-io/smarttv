@@ -114,26 +114,26 @@ class Subtitle {
    * @private
    */
   tick() {
-    if (this.Player.playerInfo.subtitleEnabled && this.Player.playerInfo.currentState === 'Playing') {
-      if (typeof this.currentSub !== 'undefined') {
-        const { tizen, webapis, arSmartTV } = window;
-        let cts;
-        if (tizen && webapis) {
-          cts = webapis.avplay.getCurrentTime();
-        } else if (arSmartTV) {
-          cts = this.Player.objectPlayer.playPosition;
-        } else {
-          cts = this.Player.videoElement.currentTime * 1000;
-        }
-        if (Math.trunc(cts) > this.currentSub.startTime && Math.trunc(cts) < this.currentSub.endTime) {
-          this.target.style.opacity = 1;
-          this.target.innerText = this.currentSub.text;
-        } else if (Math.trunc(cts) > this.currentSub.endTime) {
-          this.target.innerText = '';
-          this.target.style.opacity = 0;
-          this.currentSubIndex += 1;
-          this.currentSub = this.subs[this.currentSubIndex];
-        }
+    const { subtitleEnabled, currentState } = this.Player.playerInfo;
+    if (subtitleEnabled && (currentState === 'Playing' || currentState === 'Play')) {
+      if (!this.currentSub) return;
+      const { tizen, webapis, arSmartTV } = window;
+      let cts;
+      if (tizen && webapis) {
+        cts = webapis.avplay.getCurrentTime();
+      } else if (arSmartTV) {
+        cts = this.Player.objectPlayer.playPosition;
+      } else {
+        cts = this.Player.videoElement.currentTime * 1000;
+      }
+      if (Math.trunc(cts) > this.currentSub.startTime && Math.trunc(cts) < this.currentSub.endTime) {
+        this.target.style.opacity = 1;
+        this.target.innerText = this.currentSub.text;
+      } else if (Math.trunc(cts) > this.currentSub.endTime) {
+        this.target.innerText = '';
+        this.target.style.opacity = 0;
+        this.currentSubIndex += 1;
+        this.currentSub = this.subs[this.currentSubIndex];
       }
     }
   }
