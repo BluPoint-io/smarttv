@@ -18,12 +18,11 @@ class DeviceWebOs extends Device {
     this.initPlayerClass();
     this.initNetworkClass();
     this.initKeyListener();
-    Logger.addLog('Device_WebOS', 'info', 'Arcelik Device Initialized');
+    Logger.addLog('Device_WebOs', 'info', 'WebOs Device Initialized');
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
-    window['isDebugEnabled'] = this.Config.debug;
-
-    this.addWebOSLib();
+    window.isDebugEnabled = this.Config.debug;
+    this.constructor.addWebOSLib();
   }
 
   /**
@@ -34,11 +33,9 @@ class DeviceWebOs extends Device {
    * @method addWebOsLib
    * @return {Boolean} true
    */
-  addWebOSLib() {
-    // @TODO: Selçuk'a sorulacak (Nerden buldun lan bu kodu)
+  static addWebOSLib() {
     WebOsLibrary();
-    Logger.addLog('Device_WebOs', 'info', 'WebOs Library loaded successfully', this.WebOsLibrary);
-    return true;
+    Logger.addLog('Device_WebOs', 'info', 'WebOs Library loaded successfully', window.webOS);
   }
 
   /**
@@ -53,7 +50,6 @@ class DeviceWebOs extends Device {
     if (this.videoElement) {
       this.deleteVideoElement();
     }
-    console.log(this.Config);
     this.videoElement = document.createElement('video');
     this.videoElement.style.position = 'absolute';
     this.videoElement.setAttribute('width', this.Config.width);
@@ -64,9 +60,8 @@ class DeviceWebOs extends Device {
     document.body.appendChild(this.videoElement);
     this.setPlayerInfo('playready', 'WEBOS');
     this.registerVideoEvents();
-    Logger.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
+    Logger.addLog('Device_WebOs', 'info', 'Player Element Created and Registered Video Events');
     this.initAudioClass();
-    return null;
   }
 }
 
