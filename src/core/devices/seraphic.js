@@ -19,7 +19,7 @@ class DeviceSeraphic extends Device {
     Logger.addLog('Device_Seraphic', 'info', 'Seraphic Device Initialized');
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
-    window['isDebugEnabled'] = this.Config.debug;
+    window.isDebugEnabled = this.Config.debug;
   }
 
   /**
@@ -38,8 +38,7 @@ class DeviceSeraphic extends Device {
     this.setPlayerInfo('PLAYREADY', 'OIPF');
     this.initAudioClass();
     this.createObjectPlayer('sraf_av');
-    Logger.addLog('Player', 'info', 'Seraphic Player Element Created and Registered Video Events');
-    return null;
+    Logger.addLog('Device_Seraphic', 'info', 'Seraphic Player Element Created and Registered Video Events');
   }
 }
 
