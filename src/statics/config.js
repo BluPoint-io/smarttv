@@ -19,7 +19,8 @@ const Config = {
       DRMSystemID: 'urn:dvb:casystemid:19219',
       licenserUrl: 'http://ss.dogannet.tv/playreadylicenser/rightsmanager.asmx'
     }
-  }
+  },
+  appId: 'com.blu.smarttv'
 };
 
 export default Config;
