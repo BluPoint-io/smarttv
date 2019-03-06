@@ -16,8 +16,8 @@ const Config = {
   DRM: {
     playReady: {
       mimeType: 'application/vnd.ms-playready.initiator+xml',
-      DRMSystemID: 'urn:dvb:casystemid:19219',
-      licenserUrl: 'http://ss.dogannet.tv/playreadylicenser/rightsmanager.asmx'
+      DRMSystemID: '',
+      licenserUrl: ''
     }
   },
   appId: 'com.blu.smarttv'

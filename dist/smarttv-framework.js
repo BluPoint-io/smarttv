@@ -195,7 +195,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Device, [{
 	    key: 'initEvents',
 	    value: function initEvents() {
-	      _logger2.default.addLog('Device', 'progress', 'Events Class Initialization Started');
+	      _logger2.default.addLog('Device', 'info', 'Events Class Initialization Started');
 	      this.Events = new _events2.default(_logger2.default);
 	      return this.Events;
 	    }
@@ -213,7 +213,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'initPlayerClass',
 	    value: function initPlayerClass() {
-	      _logger2.default.addLog('Device', 'progress', 'Player Class Initialization Started');
+	      _logger2.default.addLog('Device', 'info', 'Player Class Initialization Started');
 	      this.Player = new _player2.default(this.currentDevice, this.Events, this.Config);
 	      return this.Player;
 	    }
@@ -1023,8 +1023,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _audio = __webpack_require__(4);
@@ -1046,6 +1044,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function tizenSetScreenSaver() {
+	  var open = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+	  var _window = window,
+	      tizen = _window.tizen,
+	      webapis = _window.webapis;
+	
+	  if (tizen && webapis) {
+	    var _webapis$appcommon$Ap = webapis.appcommon.AppCommonScreenSaverState,
+	        SCREEN_SAVER_ON = _webapis$appcommon$Ap.SCREEN_SAVER_ON,
+	        SCREEN_SAVER_OFF = _webapis$appcommon$Ap.SCREEN_SAVER_OFF;
+	
+	    webapis.appcommon.setScreenSaver(open ? SCREEN_SAVER_ON : SCREEN_SAVER_OFF, function (result) {
+	      _logger2.default.addLog('Player', 'info', 'Screen saver ' + (open ? 'enabled' : 'disabled'), result);
+	    }, function (error) {
+	      _logger2.default.addLog('Player', 'error', JSON.stringify(error));
+	    });
+	  }
+	}
 	
 	var Player = function () {
 	
@@ -1155,7 +1172,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (videoElement) {
 	        videoElement.stop();
 	        document.body.removeChild(videoElement);
-	        videoElement = null;
+	        this.videoElement = null;
+	        this.objectPlayer = null;
 	      }
 	      return true;
 	    }
@@ -1181,154 +1199,144 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'addVideoSource',
 	    value: function addVideoSource(src, contentType, customData, drm) {
 	      var _this = this;
+	
+	      var _window2 = window,
+	          webapis = _window2.webapis,
+	          tizen = _window2.tizen;
+	
 	      this.autoLoop = false;
 	      this.playerInfo.customData = customData;
 	      this.playerInfo.src = src;
-	      this.playerInfo._contentType = contentType;
-	      this.playerInfo._drm = drm;
-	      this.playerInfo._customData = _extends({}, customData);
-	
-	      console.log('playerInfo -> ' + JSON.stringify(_this.playerInfo));
-	      if (this.playerInfo._drm) {
-	        console.log('Found playReady Content & drmType is ' + this.playerInfo.drmType + ' drmOrganizer ' + this.playerInfo.drmOrganizer);
+	      _logger2.default.addLog('Player', 'info', JSON.stringify(this.playerInfo));
+	      if (drm) {
+	        _logger2.default.addLog('Player', 'info', 'Found playReady Content & drmType is ' + this.playerInfo.drmType + ' drmOrganizer ' + this.playerInfo.drmOrganizer);
 	        switch (this.playerInfo.drmOrganizer) {
 	          case 'OIPF':
+	            {
+	              var oipfMessage = '\n            <?xml version="1.0" encoding="utf-8"?>\n            <PlayReadyInitiator xmlns="http://schemas.microsoft.com/DRM/2007/03/protocols/">\n              <LicenseServerUriOverride>\n                <LA_URL>' + this.Config.DRM.playReady.licenserUrl + '</LA_URL>\n              </LicenseServerUriOverride>\n              <SetCustomData>\n                <CustomData>' + this.playerInfo.customData + '</CustomData>\n              </SetCustomData>\n            </PlayReadyInitiator>';
 	
-	            var oipfMessage = '<?xml version="1.0" encoding="utf-8"?>' + '<PlayReadyInitiator xmlns="http://schemas.microsoft.com/DRM/2007/03/protocols/">' + '<LicenseServerUriOverride>' + '<LA_URL>' + _this.Config.DRM.playReady.licenserUrl + '</LA_URL>' + '</LicenseServerUriOverride>' + '<SetCustomData><CustomData>' + _this.playerInfo._customData + '</CustomData></SetCustomData></PlayReadyInitiator>';
+	              var mimeType = this.Config.DRM.playReady.mimeType;
+	              var DRMSystemID = this.Config.DRM.playReady.DRMSystemID;
 	
-	            var mimeType = this.Config.DRM.playReady.mimeType;
-	            var DRMSystemID = this.Config.DRM.playReady.DRMSystemID;
+	              this.OIPFDrmObject.sendDRMMessage(mimeType, oipfMessage, DRMSystemID);
 	
-	            this.OIPFDrmObject.sendDRMMessage(mimeType, oipfMessage, DRMSystemID);
-	
-	            if (this.videoElement) {
-	              this.videoElement.style.visibility = 'visible';
-	              this.sourceElement = document.createElement('source');
-	              this.sourceElement.setAttribute('src', this.playerInfo.src);
-	              if (!this.videoElement.firstChild) {
-	                this.videoElement.appendChild(this.sourceElement);
-	              }
-	              this.videoElement.load();
-	            } else if (this.objectPlayer) {
-	              this.objectVideoEvents();
-	              this.objectPlayer.style.visibility = 'visible';
-	              this.objectPlayer.setAttribute('type', 'application/vnd.ms-sstr+xml');
-	              this.objectPlayer.setAttribute('data', this.playerInfo.src);
-	            }
-	            break;
-	          case 'TIZEN':
-	            var avplayVersion = webapis.tvinfo.getVersion();
-	            this.videoElement.style.visibility = 'visible';
-	            webapis.avplay.close();
-	            webapis.avplay.open(_this.playerInfo.src);
-	
-	            var drmParam = {
-	              LicenseServer: this.Config.DRM.playReady.licenserUrl,
-	              CustomData: customData
-	            };
-	            if (String(src).match(/\/manifest/i)) {
-	              webapis.avplay.setDrm('PLAYREADY', 'SetProperties', JSON.stringify(drmParam));
-	            } else if (String(src).match(/\.wvm/)) {
-	              webapis.avplay.setStreamingProperty('WIDEVINE', {});
-	              webapis.avplay.setDrm('WIDEVINE_CLASSIC', 'SetProperties', JSON.stringify(drmParam));
-	            }
-	
-	            // if (parseInt(avplayVersion) >= 3) {
-	            // 	webapis.avplay.prepare();
-	            // } else {
-	            // 	webapis.avplay.prepareAsync(
-	            // 		function () {
-	            // 			console.log("prepare success");
-	            // 		},
-	            // 		function () {
-	            // 			console.log("prepare failed");
-	            // 		}
-	            // 	);
-	            // }
-	
-	            webapis.avplay.prepareAsync(function () {
-	              tizen.systeminfo.getPropertyValue('DISPLAY', function (result) {
-	                webapis.avplay.setDisplayRect(0, 0, result.resolutionWidth, result.resolutionHeight);
-	                if (webapis.productinfo.isUdPanelSupported()) {
-	                  console.log('4K UHD is supported');
-	                  _this.playerInfo.uhd = true;
+	              if (this.videoElement) {
+	                this.videoElement.style.visibility = 'visible';
+	                this.sourceElement = document.createElement('source');
+	                this.sourceElement.setAttribute('src', this.playerInfo.src);
+	                if (!this.videoElement.firstChild) {
+	                  this.videoElement.appendChild(this.sourceElement);
 	                }
+	                this.videoElement.load();
+	              } else if (this.objectPlayer) {
+	                this.objectVideoEvents();
+	                this.objectPlayer.style.visibility = 'visible';
+	                this.objectPlayer.setAttribute('type', 'application/vnd.ms-sstr+xml');
+	                this.objectPlayer.setAttribute('data', this.playerInfo.src);
+	              }
+	              break;
+	            }
+	          case 'TIZEN':
+	            {
+	              this.videoElement.style.visibility = 'visible';
+	              webapis.avplay.close();
+	              webapis.avplay.open(this.playerInfo.src);
+	
+	              var drmParam = {
+	                LicenseServer: this.Config.DRM.playReady.licenserUrl,
+	                CustomData: customData
+	              };
+	              if (String(src).match(/\/manifest/i)) {
+	                webapis.avplay.setDrm('PLAYREADY', 'SetProperties', JSON.stringify(drmParam));
+	              } else if (String(src).match(/\.wvm/)) {
+	                webapis.avplay.setStreamingProperty('WIDEVINE', {});
+	                webapis.avplay.setDrm('WIDEVINE_CLASSIC', 'SetProperties', JSON.stringify(drmParam));
+	              }
+	
+	              webapis.avplay.prepareAsync(function () {
+	                tizen.systeminfo.getPropertyValue('DISPLAY', function (result) {
+	                  webapis.avplay.setDisplayRect(0, 0, result.resolutionWidth, result.resolutionHeight);
+	                  if (webapis.productinfo.isUdPanelSupported()) {
+	                    _logger2.default.addLog('Player', 'info', '4K UHD is supported');
+	                    _this.playerInfo.uhd = true;
+	                  }
+	                });
 	              });
-	            });
 	
-	            break;
+	              break;
+	            }
 	          case 'WEBOS':
-	            this.setupWebOSDrm();
-	            this.videoElement.style.visibility = 'visible';
-	            this.Events.addListener('DRM_WebOSReady', function () {
-	              _this.sourceElement = document.createElement('source');
-	              _this.sourceElement.setAttribute('src', _this.playerInfo.src);
-	              _this.sourceElement.setAttribute('type', 'application/vnd.ms-sstr+xml;mediaOption=' + _this._WebOS.mediaOption);
-	              if (!_this.videoElement.firstChild) {
-	                _this.videoElement.appendChild(_this.sourceElement);
-	              }
-	              document.body.setAttribute('onunload', _this.unloadDrmClient);
-	            });
-	            break;
+	            {
+	              this.setupWebOSDrm();
+	              this.videoElement.style.visibility = 'visible';
+	              this.Events.addListener('DRM_WebOSReady', function () {
+	                _this.sourceElement = document.createElement('source');
+	                _this.sourceElement.setAttribute('src', _this.playerInfo.src);
+	                _this.sourceElement.setAttribute('type', 'application/vnd.ms-sstr+xml;mediaOption=' + _this._WebOS.mediaOption);
+	                !_this.videoElement.firstChild && _this.videoElement.appendChild(_this.sourceElement);
+	                document.body.setAttribute('onunload', _this.unloadDrmClient);
+	              });
+	              break;
+	            }
 	          default:
-	            console.log('STANDART');
+	            _logger2.default.addLog('Player', 'info', 'STANDART');
 	        }
-	      } else {
-	        if ('tizen' in window && 'webapis' in window) {
-	          this.videoElement.style.visibility = 'visible';
-	          webapis.avplay.close();
-	          webapis.avplay.open(_this.playerInfo.src);
-	
-	          webapis.avplay.prepareAsync(function () {
-	            tizen.systeminfo.getPropertyValue('DISPLAY', function (result) {
-	              webapis.avplay.setDisplayRect(0, 0, result.resolutionWidth, result.resolutionHeight);
-	              if (webapis.productinfo.isUdPanelSupported()) {
-	                console.log('4K UHD is supported');
-	                _this.playerInfo.uhd = true;
-	              }
-	            });
+	      } else if (tizen && webapis) {
+	        this.videoElement.style.visibility = 'visible';
+	        webapis.avplay.close();
+	        webapis.avplay.open(this.playerInfo.src);
+	        webapis.avplay.prepareAsync(function () {
+	          tizen.systeminfo.getPropertyValue('DISPLAY', function (result) {
+	            webapis.avplay.setDisplayRect(0, 0, result.resolutionWidth, result.resolutionHeight);
+	            if (webapis.productinfo.isUdPanelSupported()) {
+	              _logger2.default.addLog('Player', 'info', '4K UHD is supported');
+	              _this.playerInfo.uhd = true;
+	            }
 	          });
-	        } else if (this.videoElement) {
-	          var options = {};
-	          options.mediaTransportType = String(src).match(/\.m3u8/) ? 'HLS' : 'URI';
-	          options.mediaFormat = {};
-	          options.mediaFormat.type = 'video';
-	          options.adaptiveStreaming = {};
-	          options.adaptiveStreaming.apativeResolution = true;
-	          options.adaptiveStreaming.seamlessPlay = true;
-	          options.option = {};
+	        });
+	      } else if (this.videoElement) {
+	        var options = {
+	          mediaTransportType: String(src).match(/\.m3u8/) ? 'HLS' : 'URI',
+	          mediaFormat: {
+	            type: 'video'
+	          },
+	          adaptiveStreaming: {
+	            apativeResolution: true,
+	            seamlessPlay: true
+	          },
+	          option: {}
+	        };
 	
-	          var mediaOption = escape(JSON.stringify(options));
+	        var mediaOption = escape(JSON.stringify(options));
 	
-	          this.videoElement.style.visibility = 'visible';
-	          // this.videoElement.src = this.playerInfo.src;
-	          this.sourceElement = document.createElement('source');
-	          this.sourceElement.setAttribute('src', this.playerInfo.src);
+	        this.videoElement.style.visibility = 'visible';
+	        // this.videoElement.src = this.playerInfo.src;
+	        this.sourceElement = document.createElement('source');
+	        this.sourceElement.setAttribute('src', this.playerInfo.src);
 	
-	          if (String(src).match(/\/manifest/i)) {
-	            this.sourceElement.setAttribute('type', 'application/vnd.ms-sstr+xml;mediaOption=' + mediaOption);
-	          } else if (String(src).match(/\.wvm/)) {
-	            this.sourceElement.setAttribute('type', 'video/mp4;mediaOption=' + mediaOption);
-	          } else if (String(src).match(/\.mp4/)) {
-	            this.sourceElement.setAttribute('type', 'video/mp4;mediaOption=' + mediaOption);
-	          } else if (String(src).match(/\.m3u8/)) {
-	            this.sourceElement.setAttribute('type', 'application/vnd.apple.mpegurl;mediaOption=' + mediaOption);
-	          }
+	        if (String(src).match(/\/manifest/i)) {
+	          this.sourceElement.setAttribute('type', 'application/vnd.ms-sstr+xml;mediaOption=' + mediaOption);
+	        } else if (String(src).match(/\.wvm/)) {
+	          this.sourceElement.setAttribute('type', 'video/mp4;mediaOption=' + mediaOption);
+	        } else if (String(src).match(/\.mp4/)) {
+	          this.sourceElement.setAttribute('type', 'video/mp4;mediaOption=' + mediaOption);
+	        } else if (String(src).match(/\.m3u8/)) {
+	          this.sourceElement.setAttribute('type', 'application/vnd.apple.mpegurl;mediaOption=' + mediaOption);
+	        }
 	
-	          if (!this.videoElement.firstChild) {
-	            this.videoElement.appendChild(this.sourceElement);
-	          }
+	        if (!this.videoElement.firstChild) {
+	          this.videoElement.appendChild(this.sourceElement);
+	        }
 	
-	          if (this.videoElement.readyState != 0) {
-	            this.videoElement.load();
-	          }
-	        } else if (this.objectPlayer) {
-	          this.objectVideoEvents();
-	          this.objectPlayer.style.visibility = 'visible';
-	          this.objectPlayer.setAttribute('data', this.playerInfo.src);
-	          if (this.currentDevice.brandName == 'seraphic') {
-	            this.objectPlayer.setAttribute('type', 'video/mpeg4');
-	          }
+	        if (this.videoElement.readyState !== 0) {
+	          this.videoElement.load();
+	        }
+	      } else if (this.objectPlayer) {
+	        this.objectVideoEvents();
+	        this.objectPlayer.style.visibility = 'visible';
+	        this.objectPlayer.setAttribute('data', this.playerInfo.src);
+	        if (this.currentDevice.brandName === 'seraphic') {
+	          this.objectPlayer.setAttribute('type', 'video/mpeg4');
 	        }
 	      }
 	      _logger2.default.addLog('Player', 'info', 'This is a DRM-Free Content');
@@ -1348,29 +1356,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'initAds',
 	    value: function initAds(type, url) {
-	      var _this = this;
-	      _this.playerInfo.adsType = type;
-	      _this.playerInfo.adsEnabled = true;
+	      var _this2 = this;
+	
+	      this.playerInfo.adsType = type;
+	      this.playerInfo.adsEnabled = true;
 	      switch (type) {
 	        case 'VMAP':
-	          // eslint-disable-line
-	          var xhr = new window.XMLHttpRequest();
-	          xhr.open('GET', url);
-	          xhr.send();
-	          _this.Events.on('vmapLoaded', function (vmapObject) {
-	            _this.prepareVastFromVmap(vmapObject);
-	          });
-	          xhr.onreadystatechange = function () {
-	            if (xhr.readyState === 4) {
-	              // Parse VMAP
-	              _vast2.default.parseVMAP(xhr.responseXML, _this.Events);
-	              _logger2.default.addLog('Player - ADS', 'info', 'VMAP Target Loaded Successfully');
-	              _this.addAdsCaption();
-	            }
-	          };
-	          break;
+	          {
+	            var xhr = new XMLHttpRequest();
+	            xhr.open('GET', url);
+	            xhr.send();
+	            this.Events.on('vmapLoaded', function (vmapObject) {
+	              _this2.prepareVastFromVmap(vmapObject);
+	            });
+	            xhr.onreadystatechange = function () {
+	              if (xhr.readyState === 4) {
+	                // Parse VMAP
+	                _vast2.default.parseVMAP(xhr.responseXML, _this2.Events);
+	                _logger2.default.addLog('Player - ADS', 'info', 'VMAP Target Loaded Successfully');
+	                _this2.addAdsCaption();
+	              }
+	            };
+	            break;
+	          }
 	        case 'VAST':
-	          console.log('VAST');
+	          _logger2.default.addLog('Player - ADS', 'info', 'VAST');
 	          break;
 	        default:
 	          return _logger2.default.addLog('Player - Ads', 'error', '');
@@ -1645,35 +1655,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'initVastAd',
 	    value: function initVastAd(time) {
-	      var _this = this;
+	      var _this3 = this;
+	
 	      this.videoElement.src = '';
 	      this.captionDiv.style.visibility = 'visible';
 	      this.captionDiv.innerHTML = 'Reklamlar Yükleniyor';
 	      this.vastElement.src = this.vastReadyItems[0].mediaFile;
 	      this.vastElement.removeAttribute('controls');
 	      this.vastElement.addEventListener('loadedmetadata', function () {
-	        _this.videoElement.style.visibility = 'hidden';
-	        _this.vastElement.style.visibility = 'visible';
-	        _this.captionDiv.innerHTML = _this.Config.vastOptions.ad_caption;
-	        console.log('Meta Data YüklenDi');
-	        _this.vastElement.play();
+	        _this3.videoElement.style.visibility = 'hidden';
+	        _this3.vastElement.style.visibility = 'visible';
+	        _this3.captionDiv.innerHTML = _this3.Config.vastOptions.ad_caption;
+	        _this3.vastElement.play();
 	      });
 	      this.vastElement.addEventListener('ended', function () {
-	        console.log('Bitti');
-	        _this.vastElement.style.visibility = 'hidden';
-	        _this.videoElement.style.visibility = 'visible';
-	        _this.captionDiv.style.visibility = 'hidden';
-	        _this.adsInProgress = false;
-	        _this.videoElement.src = _this.playerInfo.src;
-	        _this.videoElement.currentTime = time;
-	        _this.play();
+	        _this3.vastElement.style.visibility = 'hidden';
+	        _this3.videoElement.style.visibility = 'visible';
+	        _this3.captionDiv.style.visibility = 'hidden';
+	        _this3.adsInProgress = false;
+	        _this3.videoElement.src = _this3.playerInfo.src;
+	        _this3.videoElement.currentTime = time;
+	        _this3.play();
 	      });
 	      this.vastElement.addEventListener('play', function () {
-	        console.log('Reklam Başladı');
+	        _logger2.default.addLog('Player', 'info', 'Ads is started');
 	      });
-	      console.log('init ettik' + time);
 	      _vast2.default.vastArray.splice(0, 1);
-	      _this.vastReadyItems.splice(0, 1);
+	      this.vastReadyItems.splice(0, 1);
 	    }
 	
 	    /**
@@ -1710,19 +1718,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'unloadDrmClient',
 	    value: function unloadDrmClient() {
-	      console.log('Unload Geldi');
-	      var _this = this;
-	      if (this.currentDevice.brandName === 'webos' && _this._WebOS.isDrmClientLoaded) {
+	      var _this4 = this;
+	
+	      if (this.currentDevice.brandName === 'webos' && this._WebOS.isDrmClientLoaded) {
 	        webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
 	          method: 'unload',
-	          parameters: { clientId: _this._WebOS.clientId },
-	          onSuccess: function onSuccess(result) {
-	            _this._WebOS.isDrmClientLoaded = false;
-	            console.log('DRM Client is unloaded successfully.');
+	          parameters: { clientId: this._WebOS.clientId },
+	          onSuccess: function onSuccess() {
+	            _this4._WebOS.isDrmClientLoaded = false;
+	            _logger2.default.addLog('Player', 'info', 'DRM Client is unloaded successfully.');
 	          },
 	          onFailure: function onFailure(result) {
-	            console.log('[' + result.errorCode + '] ' + result.errorText);
-	            // Do something for error handling
+	            _logger2.default.addLog('Player', 'error', '[' + result.errorCode + '] ' + result.errorText);
 	          }
 	        });
 	      }
@@ -1739,29 +1746,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'setupWebOSDrm',
 	    value: function setupWebOSDrm() {
-	      console.log('setupWebOSDrm calıstı');
-	      var _this = this;
-	      _this._WebOS = {};
+	      var _this5 = this;
 	
-	      _this._WebOS.appId = 'com.blu.smarttv';
-	      _this._WebOS.clientId = '';
-	      _this._WebOS.isDrmClientLoaded = '';
-	
-	      webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
+	      this._WebOS = {};
+	      this._WebOS.appId = this.Config.appId;
+	      this._WebOS.clientId = '';
+	      this._WebOS.isDrmClientLoaded = '';
+	      window.webOS.service.request('luna://com.webos.service.drm', {
 	        method: 'load',
 	        parameters: {
-	          drmType: _this.playerInfo.drmType,
-	          appId: _this._WebOS.appId
+	          drmType: this.playerInfo.drmType,
+	          appId: this._WebOS.appId
 	        },
 	        onSuccess: function onSuccess(result) {
-	          _this._WebOS.clientId = result.clientId;
-	          _this._WebOS.isDrmClientLoaded = true;
-	          console.log('DRM Client is loaded successfully.');
-	          _this.sendWebOSDrm();
+	          _this5._WebOS.clientId = result.clientId;
+	          _this5._WebOS.isDrmClientLoaded = true;
+	          _logger2.default.addLog('Player', 'info', 'DRM Client is loaded successfully.');
+	          _this5.sendWebOSDrm();
 	        },
 	        onFailure: function onFailure(result) {
-	          console.log('[' + result.errorCode + '] ' + result.errorText);
-	          // Do something for error handling
+	          _logger2.default.addLog('Player', 'error', '[' + result.errorCode + '] ' + result.errorText);
 	        }
 	      });
 	    }
@@ -1776,11 +1780,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'sendWebOSDrm',
 	    value: function sendWebOSDrm() {
-	      this._WebOS.msg = '<?xml version="1.0" encoding="utf-8"?>\n    <PlayReadyInitiator xmlns= "http://schemas.microsoft.com/DRM/2007/03/protocols/">\n    <LicenseAcquisition>\n    <Header><WRMHEADER xmlns= "http://schemas.microsoft.com/DRM/2007/03/PlayReadyHeader" version="4.0.0.0">\n    <DATA>\n    <PROTECTINFO>\n    <KEYLEN>16\n    </KEYLEN>\n    <ALGID>AESCTR</ALGID>\n    </PROTECTINFO>\n    <LA_URL>' + this.Config.DRM.licenserUrl + '</LA_URL>\n    <KID>lFmb2gxg0Cr5bfEnJXgJeA==</KID>\n    <CHECKSUM>P7ORpD2IpA==</CHECKSUM>\n    </DATA>\n    </WRMHEADER>\n    </Header>\n    <CustomData>' + this.playerInfo.customData + '</CustomData>\n    </LicenseAcquisition>\n    </PlayReadyInitiator>';
+	      var _this6 = this;
 	
-	      var _this = this;
-	
-	      webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
+	      this._WebOS.msg = '\n    <?xml version="1.0" encoding="utf-8"?>\n    <PlayReadyInitiator xmlns= "http://schemas.microsoft.com/DRM/2007/03/protocols/">\n      <LicenseAcquisition>\n        <Header>\n          <WRMHEADER xmlns= "http://schemas.microsoft.com/DRM/2007/03/PlayReadyHeader" version="4.0.0.0">\n            <DATA>\n              <PROTECTINFO>\n                <KEYLEN>16</KEYLEN>\n                <ALGID>AESCTR</ALGID>\n              </PROTECTINFO>\n              <LA_URL>' + this.Config.DRM.licenserUrl + '</LA_URL>\n              <KID>lFmb2gxg0Cr5bfEnJXgJeA==</KID>\n              <CHECKSUM>P7ORpD2IpA==</CHECKSUM>\n            </DATA>\n          </WRMHEADER>\n        </Header>\n        <CustomData>' + this.playerInfo.customData + '</CustomData>\n      </LicenseAcquisition>\n    </PlayReadyInitiator>';
+	      window.webOS.service.request('luna://com.webos.service.drm', {
 	        method: 'sendDrmMessage',
 	        parameters: {
 	          clientId: this._WebOS.clientId,
@@ -1789,24 +1792,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	          drmSystemId: this.Config.DRM.drmSystemId
 	        },
 	        onSuccess: function onSuccess(result) {
-	          _this._WebOS.msgId = result.msgId;
-	          _this._WebOS.resultCode = result.resultCode;
-	          _this._WebOS.resultMsg = result.resultMsg;
-	          console.log('Message ID: ' + _this._WebOS.msgId);
-	          console.log('[' + _this._WebOS.resultCode + '] ' + _this._WebOS.resultMsg);
-	          _this._WebOS.options = {};
-	          _this._WebOS.options.option = {};
-	          _this._WebOS.options.option.drm = {};
-	          _this._WebOS.options.option.drm.type = _this.playerInfo.drmType;
-	          _this._WebOS.options.option.drm.clientId = _this._WebOS.clientId;
-	          _this._WebOS.mediaOption = escape(JSON.stringify(_this._WebOS.options));
-	          _this.Events.triggerEvent('DRM_WebOSReady');
-	          if (_this._WebOS.resultCode !== 0) {
-	            // Do Handling DRM message error
-	          }
+	          _this6._WebOS.msgId = result.msgId;
+	          _this6._WebOS.resultCode = result.resultCode;
+	          _this6._WebOS.resultMsg = result.resultMsg;
+	          _this6._WebOS.options = {
+	            drm: {
+	              type: _this6.playerInfo.drmType,
+	              clientId: _this6._WebOS.clientId
+	            }
+	          };
+	          _this6._WebOS.mediaOption = escape(JSON.stringify(_this6._WebOS.options));
+	          _this6.Events.triggerEvent('DRM_WebOSReady');
+	          _logger2.default.addLog('Player', 'info', 'Message ID', result.msgId);
+	          _logger2.default.addLog('Player', 'info', '[' + result.resultCode + '] ' + result.resultMsg);
 	        },
 	        onFailure: function onFailure(result) {
-	          console.log('[' + result.errorCode + '] ' + result.errorText);
+	          _logger2.default.addLog('Player', 'error', '[' + result.errorCode + '] ' + result.errorText);
 	        }
 	      });
 	    }
@@ -1824,7 +1825,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.Audio = new _audio2.default();
 	      this.changeAudioWithOrder = this.Audio.changeAudioWithOrder;
 	      this.getCurrentAudioWithOrder = this.Audio.getCurrentAudioWithOrder;
-	      this.denemeSERDAR = this.Audio.getThis;
 	    }
 	
 	    /**
@@ -1837,15 +1837,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'addSubtitle',
 	    value: function addSubtitle(srt, targetElement) {
-	      var _this2 = this;
+	      var _this7 = this;
 	
 	      this.removeSubtitle();
 	      this.Events.addListener('player_onTimeUpdate', function () {
-	        _this2.playerInfo.subtitleEnabled && _this2.Subtitle.tick();
+	        _this7.playerInfo.subtitleEnabled && _this7.Subtitle.tick();
 	      });
 	      this.Events.addListener('player_onEnded', function () {
-	        if (_this2.playerInfo.subtitleEnabled) {
-	          _this2.Subtitle.target.innerText = '';
+	        if (_this7.playerInfo.subtitleEnabled) {
+	          _this7.Subtitle.target.innerText = '';
 	        }
 	      });
 	      this.playerInfo.subtitleEnabled = true;
@@ -1854,14 +1854,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'removeSubtitle',
 	    value: function removeSubtitle() {
-	      var _this3 = this;
+	      var _this8 = this;
 	
 	      this.Events.removeListener('player_onTimeUpdate', function () {
-	        _this3.playerInfo.subtitleEnabled && _this3.Subtitle.tick();
+	        _this8.playerInfo.subtitleEnabled && _this8.Subtitle.tick();
 	      });
 	      this.Events.removeListener('player_onEnded', function () {
-	        if (_this3.playerInfo.subtitleEnabled) {
-	          _this3.Subtitle.target.innerText = '';
+	        if (_this8.playerInfo.subtitleEnabled) {
+	          _this8.Subtitle.target.innerText = '';
 	        }
 	      });
 	      this.playerInfo.subtitleEnabled = false;
@@ -1905,7 +1905,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'enableTrack',
 	    value: function enableTrack(track) {
-	      if (!this.videoElement.textTracks || this.videoElement.textTracks.length) return;
+	      if (!this.videoElement.textTracks || !this.videoElement.textTracks.length) return;
 	      var _iteratorNormalCompletion2 = true;
 	      var _didIteratorError2 = false;
 	      var _iteratorError2 = undefined;
@@ -1914,7 +1914,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        for (var _iterator2 = this.videoElement.textTracks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
 	          var trackItem = _step2.value;
 	
-	          console.log(trackItem.language, track);
+	          _logger2.default.addLog('Player', 'info', trackItem.language, track);
 	          trackItem.mode = trackItem.language === track ? 'showing' : 'disabled';
 	        }
 	      } catch (err) {
@@ -1943,14 +1943,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'play',
 	    value: function play() {
-	      var _window = window,
-	          tizen = _window.tizen,
-	          webapis = _window.webapis;
+	      var _window3 = window,
+	          tizen = _window3.tizen,
+	          webapis = _window3.webapis;
 	
 	      try {
 	        if (tizen && webapis) {
 	          webapis.avplay.play();
-	          console.log('video oynatılıyor...');
+	          _logger2.default.addLog('Player', 'info', 'Video is playing...');
 	        } else if (this.videoElement) {
 	          this.videoElement.play();
 	        } else if (this.objectPlayer) {
@@ -1959,16 +1959,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.Events.triggerEvent('player_onPlay', ['Play']);
 	        this.playerInfo.currentState = 'Play';
 	      } catch (error) {
-	        console.log('player not ready', error.message);
+	        _logger2.default.addLog('Player', 'error', 'Player not ready', error.message);
 	      }
-	
-	      if (tizen && webapis) {
-	        webapis.appcommon.setScreenSaver(webapis.appcommon.AppCommonScreenSaverState.SCREEN_SAVER_OFF, function (result) {
-	          console.log('screen saver disabled', result);
-	        }, function (error) {
-	          console.log(JSON.stringify(error));
-	        });
-	      }
+	      tizenSetScreenSaver(false);
 	    }
 	
 	    /**
@@ -1996,20 +1989,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'pause',
 	    value: function pause() {
-	      var _window2 = window,
-	          tizen = _window2.tizen,
-	          webapis = _window2.webapis;
+	      var _window4 = window,
+	          tizen = _window4.tizen,
+	          webapis = _window4.webapis;
 	
 	      if (tizen && webapis) {
 	        webapis.avplay.pause();
-	        this.Events.triggerEvent('player_onPause', ['Pause']);
 	      } else if (this.videoElement) {
 	        this.videoElement.pause();
-	        this.Events.triggerEvent('player_onPause', ['Pause']);
 	      } else if (this.objectPlayer) {
 	        this.objectPlayer.play(0);
-	        this.Events.triggerEvent('player_onPause', ['Pause']);
 	      }
+	      this.Events.triggerEvent('player_onPause', ['Pause']);
 	      this.playerInfo.currentState = 'Paused';
 	    }
 	
@@ -2023,28 +2014,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'togglePlay',
 	    value: function togglePlay() {
-	      var _window3 = window,
-	          tizen = _window3.tizen,
-	          webapis = _window3.webapis;
+	      var _window5 = window,
+	          tizen = _window5.tizen,
+	          webapis = _window5.webapis;
 	
+	      var pausedState = void 0;
 	      if (tizen && webapis) {
-	        if (webapis.avplay.getState() === 'PLAYING') {
-	          this.pause();
-	        } else {
-	          this.play();
-	        }
+	        pausedState = webapis.avplay.getState() !== 'PLAYING';
 	      } else if (this.videoElement) {
-	        if (this.videoElement.paused) {
-	          this.play();
-	        } else {
-	          this.pause();
-	        }
+	        pausedState = this.videoElement.paused;
 	      } else if (this.objectPlayer) {
-	        if (this.objectPlayer.playState === 2) {
-	          this.play();
-	        } else {
-	          this.pause();
-	        }
+	        pausedState = this.objectPlayer.playState === 2;
+	      }
+	      if (pausedState) {
+	        this.play();
+	      } else {
+	        this.pause();
 	      }
 	    }
 	
@@ -2073,73 +2058,65 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'tizenRegisterEvents',
 	    value: function tizenRegisterEvents() {
-	      var _this4 = this;
+	      var _this9 = this;
 	
-	      var _window4 = window,
-	          tizen = _window4.tizen,
-	          webapis = _window4.webapis;
+	      var _window6 = window,
+	          tizen = _window6.tizen,
+	          webapis = _window6.webapis;
 	
 	      var listener = {
 	        onbufferingstart: function onbufferingstart() {
-	          console.log('Buffering start.');
-	          _this4.Events.triggerEvent('player_onWaiting');
-	        },
-	        onbufferingprogress: function onbufferingprogress(percent) {
-	          // console.log("Buffering progress data : " + percent);
+	          _logger2.default.addLog('Player', 'info', 'Buffering start');
+	          _this9.Events.triggerEvent('player_onWaiting');
 	        },
 	        onbufferingcomplete: function onbufferingcomplete() {
-	          console.log('Buffering complete.');
-	          _this4.Events.triggerEvent('player_onDurationChange', [Math.trunc(webapis.avplay.getDuration())]);
-	          _this4.playerInfo.duration = Math.trunc(webapis.avplay.getDuration() / 1000);
-	          if (_this4.playerInfo.subtitleEnabled) {
-	            _this4.Subtitle.target.innerText = '';
-	            _this4.Subtitle.setCurrentSubtitle();
+	          _logger2.default.addLog('Player', 'info', 'Buffering complete');
+	          _this9.Events.triggerEvent('player_onDurationChange', [Math.trunc(webapis.avplay.getDuration())]);
+	          _this9.playerInfo.duration = Math.trunc(webapis.avplay.getDuration() / 1000);
+	          if (_this9.playerInfo.subtitleEnabled) {
+	            _this9.Subtitle.target.innerText = '';
+	            _this9.Subtitle.setCurrentSubtitle();
 	          }
 	          var avplayState = webapis.avplay.getState();
-	          if (avplayState !== 'IDLE' && avplayState !== 'NONE' && avplayState === 'READY' && (_this4.autoLoop === true || _this4.playerInfo.currentState === 'Play' || _this4.playerInfo.currentState === 'Playing')) {
-	            _this4.playerInfo.currentState = 'Play';
+	          if (avplayState !== 'IDLE' && avplayState !== 'NONE' && avplayState === 'READY' && (_this9.autoLoop === true || _this9.playerInfo.currentState === 'Play' || _this9.playerInfo.currentState === 'Playing')) {
+	            _this9.playerInfo.currentState = 'Play';
 	            webapis.avplay.play();
-	            console.log('buffer completed, video play');
+	            _logger2.default.addLog('Player', 'info', 'buffer completed, video play');
 	          }
 	        },
 	        onstreamcompleted: function onstreamcompleted() {
-	          console.log('Stream Completed autoLoop: ', _this4.autoLoop);
-	          _this4.playerInfo.currentState = 'Finished';
-	          _this4.Events.triggerEvent('player_onEnded', ['Video Finished']);
+	          _logger2.default.addLog('Player', 'info', 'Stream Completed autoLoop', _this9.autoLoop);
+	          _this9.playerInfo.currentState = 'Finished';
+	          _this9.Events.triggerEvent('player_onEnded', ['Video Finished']);
 	          var avplayState = webapis.avplay.getState();
-	          if (avplayState !== 'IDLE' && avplayState !== 'NONE' && (avplayState === 'PLAYING' || avplayState === 'READY') && _this4.autoLoop === true) {
-	            console.log('loop video devam et...');
+	          if (avplayState !== 'IDLE' && avplayState !== 'NONE' && (avplayState === 'PLAYING' || avplayState === 'READY') && _this9.autoLoop) {
+	            _logger2.default.addLog('Player', 'info', 'Loop video continue');
 	            webapis.avplay.seekTo(0);
-	          } else if (tizen && webapis) {
-	            webapis.appcommon.setScreenSaver(webapis.appcommon.AppCommonScreenSaverState.SCREEN_SAVER_ON, function (result) {
-	              console.log('screen saver enabled', result);
-	            }, function (error) {
-	              console.log(JSON.stringify(error));
-	            });
 	          }
+	          tizenSetScreenSaver(true);
 	        },
 	        oncurrentplaytime: function oncurrentplaytime(currentTime) {
-	          _this4.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(currentTime)]);
+	          _this9.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(currentTime)]);
 	          var state = webapis.avplay.getState();
 	          switch (state) {
 	            case 'PLAYING':
-	              _this4.Events.triggerEvent('player_onPlay', ['Play']);
-	              _this4.playerInfo.currentState = 'Play';
+	              _this9.Events.triggerEvent('player_onPlay', ['Play']);
+	              _this9.playerInfo.currentState = 'Play';
 	              break;
 	
 	            case 'PAUSED':
-	              _this4.Events.triggerEvent('player_onPause', ['Pause']);
-	              _this4.playerInfo.currentState = 'Paused';
+	              _this9.Events.triggerEvent('player_onPause', ['Pause']);
+	              _this9.playerInfo.currentState = 'Paused';
 	              break;
 	
 	            case 'READY':
-	              _this4.Events.triggerEvent('player_onMetaDataLoaded', ['Meta Data Loaded']);
-	              _this4.playerInfo.metaDataLoaded = true;
+	              _this9.Events.triggerEvent('player_onMetaDataLoaded', ['Meta Data Loaded']);
+	              _this9.playerInfo.metaDataLoaded = true;
 	              break;
 	
 	            case 'IDLE':
-	              _this4.Events.triggerEvent('player_onDataLoaded', ['Data Loaded']);
-	              _this4.playerInfo.dataLoaded = true;
+	              _this9.Events.triggerEvent('player_onDataLoaded', ['Data Loaded']);
+	              _this9.playerInfo.dataLoaded = true;
 	              break;
 	
 	            default:
@@ -2147,18 +2124,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	          }
 	        },
 	        onerror: function onerror(eventType) {
-	          console.log('event type error : ' + eventType);
-	          _this4.Events.triggerEvent('player_onError', [eventType]);
-	          _this4.playerInfo.currentState = 'Error';
+	          _logger2.default.addLog('Player', 'error', 'event type error', eventType);
+	          _this9.Events.triggerEvent('player_onError', [eventType]);
+	          _this9.playerInfo.currentState = 'Error';
 	        },
 	        onevent: function onevent(eventType, eventData) {
-	          console.log('event type: ' + eventType, 'data: ' + eventData);
+	          _logger2.default.addLog('Player', 'info', 'Event type', eventType);
 	        },
-	        onsubtitlechange: function onsubtitlechange(duration, text, data3, data4) {
-	          console.log('subtitleText: ' + text);
+	        onsubtitlechange: function onsubtitlechange(duration, text) {
+	          _logger2.default.addLog('Player', 'info', 'Subittle text', text);
 	        },
 	        ondrmevent: function ondrmevent(drmEvent, drmData) {
-	          console.log('DRM callback: ' + drmEvent, 'data: ' + drmData);
+	          _logger2.default.addLog('Player', 'info', 'DRM callback: ' + drmEvent, drmData);
 	        }
 	      };
 	      webapis.avplay.setListener(listener);
@@ -2198,85 +2175,64 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'objectVideoEvents',
 	    value: function objectVideoEvents() {
-	      var _this5 = this;
+	      var _this10 = this;
 	
-	      this.audioLoaded = false;
 	      var playStates = ['stopped', 'playing', 'paused', 'connecting', 'buffering', 'finished', 'error'];
-	      // 0 stopped
-	      // 1 playing
-	      // 2 paused
-	      // 3 connecting
-	      // 4 buffering
-	      // 5 finished
-	      // 6 error
-	      // const pr = ['data', 'type', 'playPosition', 'playTime', 'playState', 'error', 'speed'];
-	      var ps = void 0;
-	      if (!this.objectInterval) {
-	        this.objectPlayer.onPlayStateChange = function (event) {
-	          ps = _this5.objectPlayer.playState;
-	          console.log('event -> ' + playStates[ps] + ' -> ' + ps);
-	          var error = '';
-	          switch (ps) {
-	            case 0:
-	              _this5.playerInfo.currentState = 'Stopped';
-	              _this5.Events.triggerEvent('player_onEnded', ['Video Stopped']);
+	      if (this.objectInterval) return;
+	      this.objectPlayer.onPlayStateChange = function (event) {
+	        _logger2.default.addLog('Player', 'info', 'Event: ' + playStates[ps], ps);
+	        var ps = _this10.objectPlayer.playState;
+	        switch (ps) {
+	          case 0:
+	            _this10.playerInfo.currentState = 'Stopped';
+	            _this10.Events.triggerEvent('player_onEnded', ['Video Stopped']);
+	            break;
+	          case 1:
+	            // get duration
+	            _this10.Events.triggerEvent('player_onDurationChange', [Math.trunc(_this10.objectPlayer.playTime)]);
+	            _this10.playerInfo.duration = Math.trunc(_this10.objectPlayer.playTime / 1000);
+	            _this10.Events.triggerEvent('player_onPlay', ['Play']);
+	            _this10.playerInfo.currentState = 'Play';
+	            break;
+	          case 2:
+	            _this10.Events.triggerEvent('player_onPause', ['Pause']);
+	            _this10.playerInfo.currentState = 'Paused';
+	            break;
+	          case 3:
+	            _this10.Events.triggerEvent('player_onProgress', ['Downloading Video']);
+	            break;
+	          case 4:
+	            _this10.Events.triggerEvent('player_onWaiting');
+	            if (_this10.playerInfo.subtitleEnabled) {
+	              _this10.Subtitle.target.innerText = '';
+	              _this10.Subtitle.setCurrentSubtitle();
+	            }
+	            break;
+	          case 5:
+	            _this10.playerInfo.currentState = 'Finished';
+	            _this10.Events.triggerEvent('player_onEnded', ['Video Finished']);
+	            if (_this10.autoLoop && ps !== 0) {
+	              _this10.objectPlayer.play(1);
+	            }
+	            break;
+	          case 6:
+	            {
+	              var objectPlayerErrors = ['A/V format not supported', 'cannot connect to server or lost connection', 'unidentified error'];
+	              _this10.Events.triggerEvent('player_onError', [objectPlayerErrors[_this10.objectPlayer.error]]);
+	              _this10.playerInfo.currentState = 'Error';
 	              break;
-	            case 1:
-	              // get duration
-	              _this5.Events.triggerEvent('player_onDurationChange', [Math.trunc(_this5.objectPlayer.playTime)]);
-	              _this5.playerInfo.duration = Math.trunc(_this5.objectPlayer.playTime / 1000);
-	              _this5.Events.triggerEvent('player_onPlay', ['Play']);
-	              _this5.playerInfo.currentState = 'Play';
-	              break;
-	            case 2:
-	              _this5.Events.triggerEvent('player_onPause', ['Pause']);
-	              _this5.playerInfo.currentState = 'Paused';
-	              break;
-	            case 3:
-	              _this5.Events.triggerEvent('player_onProgress', ['Downloading Video']);
-	              break;
-	            case 4:
-	              _this5.Events.triggerEvent('player_onWaiting');
-	              if (_this5.playerInfo.subtitleEnabled) {
-	                _this5.Subtitle.target.innerText = '';
-	                _this5.Subtitle.setCurrentSubtitle();
-	              }
-	              break;
-	            case 5:
-	              _this5.playerInfo.currentState = 'Finished';
-	              _this5.Events.triggerEvent('player_onEnded', ['Video Finished']);
-	              if (_this5.autoLoop && ps !== 0) {
-	                _this5.objectPlayer.play(1);
-	              }
-	              break;
-	            case 6:
-	              switch (_this5.objectPlayer.error) {
-	                case 0:
-	                  error = 'A/V format not supported';
-	                  break;
-	                case 1:
-	                  error = 'cannot connect to server or lost connection';
-	                  break;
-	                case 2:
-	                  error = 'unidentified error';
-	                  break;
-	                default:
-	                  break;
-	              }
-	              _this5.Events.triggerEvent('player_onError', [error]);
-	              _this5.playerInfo.currentState = 'Error';
-	              break;
-	            default:
-	              break;
-	          }
-	        };
-	        this.objectInterval = setInterval(function () {
-	          if (_this5.objectPlayer.playState === 1) {
-	            // trigger current time
-	            _this5.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(_this5.objectPlayer.playPosition)]);
-	          }
-	        }, 500);
-	      }
+	            }
+	          default:
+	            break;
+	        }
+	      };
+	      clearInterval(this.objectInterval);
+	      this.objectInterval = setInterval(function () {
+	        if (_this10.objectPlayer.playState === 1) {
+	          // trigger current time
+	          _this10.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(_this10.objectPlayer.playPosition)]);
+	        }
+	      }, 500);
 	    }
 	
 	    /**
@@ -2288,49 +2244,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'registerVideoEvents',
 	    value: function registerVideoEvents() {
-	      var _this6 = this;
+	      var _this11 = this;
 	
 	      this.videoElement.addEventListener('canplay', function () {
-	        _this6.playerInfo.canPlay = true;
-	        _this6.Events.triggerEvent('player_onCanPlay');
+	        _this11.playerInfo.canPlay = true;
+	        _this11.Events.triggerEvent('player_onCanPlay');
 	      });
-	
 	      this.videoElement.addEventListener('canplaythrough', function () {
-	        _this6.playerInfo.canPlayThrough = true;
-	        _this6.Events.triggerEvent('player_onCanPlayThrough');
+	        _this11.playerInfo.canPlayThrough = true;
+	        _this11.Events.triggerEvent('player_onCanPlayThrough');
 	      });
-	
 	      this.videoElement.addEventListener('durationchange', function () {
-	        _this6.Events.triggerEvent('player_onDurationChange', [Math.trunc(_this6.videoElement.duration)]);
-	        _this6.playerInfo.duration = _this6.videoElement.duration;
+	        _this11.Events.triggerEvent('player_onDurationChange', [Math.trunc(_this11.videoElement.duration)]);
+	        _this11.playerInfo.duration = _this11.videoElement.duration;
 	      });
-	
 	      this.videoElement.addEventListener('ended', function () {
-	        _this6.playerInfo.currentState = 'Finished';
-	        _this6.Events.triggerEvent('player_onEnded', ['Video Finished']);
-	        if (_this6.autoLoop) {
-	          _this6.playWithLoop();
+	        _this11.playerInfo.currentState = 'Finished';
+	        _this11.Events.triggerEvent('player_onEnded', ['Video Finished']);
+	        if (_this11.autoLoop) {
+	          _this11.playWithLoop();
 	        }
 	      });
-	
 	      this.videoElement.addEventListener('loadeddata', function () {
-	        _this6.Events.triggerEvent('player_onDataLoaded', ['Data Loaded']);
-	        _this6.playerInfo.dataLoaded = true;
-	        if (_this6.playerInfo.subtitleEnabled) {
-	          _this6.Subtitle.target.innerText = '';
-	          _this6.Subtitle.setCurrentSubtitle();
+	        _this11.Events.triggerEvent('player_onDataLoaded', ['Data Loaded']);
+	        _this11.playerInfo.dataLoaded = true;
+	      });
+	      this.videoElement.addEventListener('loadedmetadata', function () {
+	        _this11.Events.triggerEvent('player_onMetaDataLoaded', ['Meta Data Loaded']);
+	        _this11.playerInfo.metaDataLoaded = true;
+	        if (_this11.playerInfo.subtitleEnabled) {
+	          _this11.Subtitle.target.innerText = '';
+	          _this11.Subtitle.setCurrentSubtitle();
 	        }
 	      });
-	
-	      this.videoElement.addEventListener('loadedmetadata', function () {
-	        _this6.Events.triggerEvent('player_onMetaDataLoaded', ['Meta Data Loaded']);
-	        _this6.playerInfo.metaDataLoaded = true;
-	      });
-	
 	      this.videoElement.addEventListener('error', function () {
-	        var errorMessage = JSON.stringify(_this6.videoElement.error);
-	        if (_this6.videoElement.error && _this6.videoElement.error.code) {
-	          switch (_this6.videoElement.error.code) {
+	        var errorMessage = JSON.stringify(_this11.videoElement.error);
+	        if (_this11.videoElement.error && _this11.videoElement.error.code) {
+	          switch (_this11.videoElement.error.code) {
 	            case 1:
 	              /* MEDIA_ERR_ABORTED */
 	              errorMessage = 'fetching process aborted by user';
@@ -2347,69 +2297,60 @@ return /******/ (function(modules) { // webpackBootstrap
 	              /* MEDIA_ERR_SRC_NOT_SUPPORTED */
 	              errorMessage = 'audio/video not supported';
 	              break;
+	            default:
+	              break;
 	          }
 	        }
-	        _this6.Events.triggerEvent('player_onError', [errorMessage]);
-	        _this6.playerInfo.currentState = 'Error';
+	        _this11.Events.triggerEvent('player_onError', [errorMessage]);
+	        _this11.playerInfo.currentState = 'Error';
 	      });
-	
-	      this.videoElement.addEventListener('loadstart', function () {
-	        _this6.Events.triggerEvent('player_onLoadStart', ['Load Started']);
-	      });
-	
-	      this.videoElement.addEventListener('pause', function () {
-	        _this6.Events.triggerEvent('player_onPause', ['Pause']);
-	        _this6.playerInfo.currentState = 'Paused';
-	      });
-	
-	      this.videoElement.addEventListener('play', function () {
-	        _this6.Events.triggerEvent('player_onPlay', ['Play']);
-	        _this6.playerInfo.currentState = 'Play';
-	      });
-	
-	      this.videoElement.addEventListener('playing', function () {
-	        _this6.Events.triggerEvent('player_onPlaying', ['Playing']);
-	        _this6.playerInfo.currentState = 'Playing';
-	      });
-	
-	      this.videoElement.addEventListener('progress', function () {
-	        _this6.Events.triggerEvent('player_onProgress', ['Downloading Video']);
-	      });
-	
-	      this.videoElement.addEventListener('ratechange', function () {
-	        _this6.Events.triggerEvent('player_onRateChange', [_this6.videoElement.playbackRate]);
-	        _this6.playerInfo.playbackRate = _this6.videoElement.playbackRate;
-	      });
-	
-	      this.videoElement.addEventListener('seeked', function () {
-	        _this6.Events.triggerEvent('player_onSeeked', ['Seek Completed']);
-	        _this6.playerInfo.isSeeking = false;
-	        if (_this6.playerInfo.subtitleEnabled) {
-	          _this6.Subtitle.target.innerText = '';
-	          _this6.Subtitle.setCurrentSubtitle();
-	        }
-	      });
-	
-	      this.videoElement.addEventListener('seeking', function () {
-	        _this6.Events.triggerEvent('player_onSeeking', ['Seek In Progress']);
-	        _this6.playerInfo.isSeeking = true;
-	      });
-	
-	      this.videoElement.addEventListener('timeupdate', function () {
-	        _this6.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(_this6.videoElement.currentTime)]);
-	        if (_this6.playerInfo.adsEnabled) {
-	          _this6.checkAdsStatus();
-	        }
-	      });
-	
-	      this.videoElement.addEventListener('volumechange', function () {
-	        _this6.Events.triggerEvent('player_onVolumeChange', [_this6.videoElement.volume]);
-	        _this6.videoElement.currentVolume = _this6.videoElement.volume;
-	      });
-	
 	      this.videoElement.addEventListener('waiting', function () {
-	        _this6.Events.triggerEvent('player_onWaiting');
-	        _this6.playerInfo.currentState = 'Waiting';
+	        _this11.Events.triggerEvent('player_onWaiting');
+	        _this11.playerInfo.currentState = 'Waiting';
+	      });
+	      this.videoElement.addEventListener('volumechange', function () {
+	        _this11.Events.triggerEvent('player_onVolumeChange', [_this11.videoElement.volume]);
+	        _this11.videoElement.currentVolume = _this11.videoElement.volume;
+	      });
+	      this.videoElement.addEventListener('timeupdate', function () {
+	        _this11.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(_this11.videoElement.currentTime)]);
+	        if (_this11.playerInfo.adsEnabled) {
+	          _this11.checkAdsStatus();
+	        }
+	      });
+	      this.videoElement.addEventListener('seeking', function () {
+	        _this11.Events.triggerEvent('player_onSeeking', ['Seek In Progress']);
+	        _this11.playerInfo.isSeeking = true;
+	      });
+	      this.videoElement.addEventListener('seeked', function () {
+	        _this11.Events.triggerEvent('player_onSeeked', ['Seek Completed']);
+	        _this11.playerInfo.isSeeking = false;
+	        if (_this11.playerInfo.subtitleEnabled) {
+	          _this11.Subtitle.target.innerText = '';
+	          _this11.Subtitle.setCurrentSubtitle();
+	        }
+	      });
+	      this.videoElement.addEventListener('ratechange', function () {
+	        _this11.Events.triggerEvent('player_onRateChange', [_this11.videoElement.playbackRate]);
+	        _this11.playerInfo.playbackRate = _this11.videoElement.playbackRate;
+	      });
+	      this.videoElement.addEventListener('progress', function () {
+	        _this11.Events.triggerEvent('player_onProgress', ['Downloading Video']);
+	      });
+	      this.videoElement.addEventListener('playing', function () {
+	        _this11.Events.triggerEvent('player_onPlaying', ['Playing']);
+	        _this11.playerInfo.currentState = 'Playing';
+	      });
+	      this.videoElement.addEventListener('play', function () {
+	        _this11.Events.triggerEvent('player_onPlay', ['Play']);
+	        _this11.playerInfo.currentState = 'Play';
+	      });
+	      this.videoElement.addEventListener('pause', function () {
+	        _this11.Events.triggerEvent('player_onPause', ['Pause']);
+	        _this11.playerInfo.currentState = 'Paused';
+	      });
+	      this.videoElement.addEventListener('loadstart', function () {
+	        _this11.Events.triggerEvent('player_onLoadStart', ['Load Started']);
 	      });
 	    }
 	
@@ -2431,36 +2372,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        document.head.appendChild(this.OIPFDrmObject);
 	      }
 	      this.OIPFDrmObject.onDRMMessageResult = function (msgId, resultMsg, resultCode) {
-	        console.info('msgId -> ' + msgId);
-	        console.info('resultMsg -> ' + resultMsg);
-	        console.info('resultCode -> ' + resultCode);
-	        if (resultCode === 0) {
-	          console.warn('DRM Initialized Successfuly, Result Code = ' + resultCode + '!');
-	        } else {
-	          switch (resultCode) {
-	            case 1:
-	              console.warn('Error Code : 1 / Unknown Error - ' + HtmlEncode(resultMsg));
-	              break;
-	            case 2:
-	              console.warn('Error Code : 2 / Cannot Process Result');
-	              break;
-	            case 3:
-	              console.warn('Error Code : 3 / Unknown MIME Type');
-	              break;
-	            case 4:
-	              console.warn('Error Code : 4 / User Consent Required');
-	              break;
-	            case 5:
-	              console.warn('Error Code : 5 / Unknown DRM system');
-	              break;
-	            case 6:
-	              console.warn('Error Code : 6 / Wrong format');
-	              break;
-	            default:
-	              console.warn(Error, resultCode);
-	              break;
-	          }
-	        }
+	        _logger2.default.addLog('Player', 'info', 'msgId', msgId);
+	        _logger2.default.addLog('Player', 'info', 'resultMsg', resultMsg);
+	        _logger2.default.addLog('Player', 'info', 'resultCode', resultCode);
+	        var resultCodeMessages = ['DRM Initialized Successfuly', 'Unknown Error', 'Cannot Process Result', 'Unknown MIME Type', 'User Consent Required', 'Unknown DRM system', 'Wrong format'];
+	        if (!resultCodeMessages[resultCode]) return;
+	        _logger2.default.addLog('Player', 'warn', resultCodeMessages[resultCode], resultMsg);
 	      };
 	    }
 	
@@ -2492,25 +2409,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'seekToTime',
 	    value: function seekToTime(value) {
 	      try {
-	        var _window5 = window,
-	            _tizen = _window5.tizen,
-	            _webapis = _window5.webapis;
+	        var _window7 = window,
+	            tizen = _window7.tizen,
+	            webapis = _window7.webapis;
 	
-	        if (_tizen && _webapis) {
-	          var state = _webapis.avplay.getState();
+	        if (tizen && webapis) {
+	          var state = webapis.avplay.getState();
 	          if (state !== 'IDLE' && state !== 'NONE') {
-	            _webapis.avplay.seekTo(value * 1000);
+	            webapis.avplay.seekTo(value * 1000);
 	          }
 	        } else if (this.videoElement) {
 	          this.videoElement.currentTime = value;
-	        } else if (this.objectPlayer) {
-	          if (this.objectPlayer.playState !== 6) {
-	            this.objectPlayer.seek(value * 1000);
-	          }
+	        } else if (this.objectPlayer && this.objectPlayer.playState !== 6) {
+	          this.objectPlayer.seek(value * 1000);
 	        }
-	        console.warn('seek to time: ', value);
+	        _logger2.default.addLog('Player', 'warn', 'Seek to time', value);
 	      } catch (error) {
-	        console.info('dont overload, wait buffer completed...', error.message);
+	        _logger2.default.addLog('Player', 'error', 'dont overload, wait buffer completed', error.message);
 	      }
 	    }
 	
@@ -2584,18 +2499,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Audio, [{
 	    key: 'changeAudioWithOrder',
 	    value: function changeAudioWithOrder(order) {
-	      var _this = this;
-	      var audioTracks = _this.videoElement.audioTracks;
-	      if (typeof audioTracks !== 'undefined' && audioTracks.length > 0) {
-	        for (var i = 0; i < audioTracks.length; i += 1) {
-	          if (order === i) {
-	            audioTracks[i].enabled = true;
-	            _this.Events.triggerEvent('player_currentAudio', [i]);
-	          } else {
-	            audioTracks[i].enabled = false;
-	          }
+	      var audioTracks = this.videoElement.audioTracks;
+	      if (!audioTracks || !audioTracks.length) return false;
+	      for (var i = 0; i < audioTracks.length; i += 1) {
+	        if (order === i) {
+	          audioTracks[i].enabled = true;
+	          this.Events.triggerEvent('player_currentAudio', [i]);
+	        } else {
+	          audioTracks[i].enabled = false;
 	        }
-	        return true;
 	      }
 	    }
 	
@@ -2613,18 +2525,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'getCurrentAudioWithOrder',
 	    value: function getCurrentAudioWithOrder() {
-	      var _this = this;
-	      var audioTracks = _this.videoElement.audioTracks;
+	      var audioTracks = this.videoElement.audioTracks;
 	      if (typeof audioTracks !== 'undefined' && audioTracks.length > 0) {
 	        for (var i = 0; i < audioTracks.length; i += 1) {
 	          if (audioTracks[i].enabled) {
-	            _this.Events.triggerEvent('player_currentAudio', [i]);
-	            _this.videoElement.currentAudioElement = audioTracks[i];
+	            this.Events.triggerEvent('player_currentAudio', [i]);
+	            this.videoElement.currentAudioElement = audioTracks[i];
 	            return i;
 	          }
 	        }
 	      } else {
-	        return _logger2.default.addLog('Audio', 'info', 'There is no multiple audio content');
+	        _logger2.default.addLog('Audio', 'info', 'There is no multiple audio content');
 	      }
 	    }
 	  }]);
@@ -2676,7 +2587,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @for Logger
 	     */
 	    value: function addLog(from, type, message, variable) {
-	      if (!window['isDebugEnabled']) return false;
+	      if (!window.isDebugEnabled) return false;
 	      switch (type) {
 	        case 'create':
 	          console.log('[' + from + '] %c -> { ' + type + ' } \n\n ' + message + (variable ? ' => ' : ''), 'color: #009b1c;', variable || '');
@@ -2684,7 +2595,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        case 'info':
 	          console.log('[' + from + '] %c -> { ' + type + ' } \n\n ' + message + (variable ? ' => ' : ''), 'color: orange;', variable || '');
 	          break;
-	        case 'progress':
+	        case 'warn':
 	          console.log('[' + from + '] %c -> { ' + type + ' } \n\n ' + message + (variable ? ' => ' : ''), 'color: #008adb;', variable || '');
 	          break;
 	        case 'error':
@@ -2849,30 +2760,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'tick',
 	    value: function tick() {
-	      if (this.Player.playerInfo.subtitleEnabled && this.Player.playerInfo.currentState === 'Playing') {
-	        if (typeof this.currentSub !== 'undefined') {
-	          var _window2 = window,
-	              tizen = _window2.tizen,
-	              webapis = _window2.webapis,
-	              arSmartTV = _window2.arSmartTV;
+	      var _Player$playerInfo = this.Player.playerInfo,
+	          subtitleEnabled = _Player$playerInfo.subtitleEnabled,
+	          currentState = _Player$playerInfo.currentState;
 	
-	          var cts = void 0;
-	          if (tizen && webapis) {
-	            cts = webapis.avplay.getCurrentTime();
-	          } else if (arSmartTV) {
-	            cts = this.Player.objectPlayer.playPosition;
-	          } else {
-	            cts = this.Player.videoElement.currentTime * 1000;
-	          }
-	          if (Math.trunc(cts) > this.currentSub.startTime && Math.trunc(cts) < this.currentSub.endTime) {
-	            this.target.style.opacity = 1;
-	            this.target.innerText = this.currentSub.text;
-	          } else if (Math.trunc(cts) > this.currentSub.endTime) {
-	            this.target.innerText = '';
-	            this.target.style.opacity = 0;
-	            this.currentSubIndex += 1;
-	            this.currentSub = this.subs[this.currentSubIndex];
-	          }
+	      if (subtitleEnabled && (currentState === 'Playing' || currentState === 'Play')) {
+	        if (!this.currentSub) return;
+	        var _window2 = window,
+	            tizen = _window2.tizen,
+	            webapis = _window2.webapis,
+	            arSmartTV = _window2.arSmartTV;
+	
+	        var cts = void 0;
+	        if (tizen && webapis) {
+	          cts = webapis.avplay.getCurrentTime();
+	        } else if (arSmartTV) {
+	          cts = this.Player.objectPlayer.playPosition;
+	        } else {
+	          cts = this.Player.videoElement.currentTime * 1000;
+	        }
+	        if (Math.trunc(cts) > this.currentSub.startTime && Math.trunc(cts) < this.currentSub.endTime) {
+	          this.target.style.opacity = 1;
+	          this.target.innerText = this.currentSub.text;
+	        } else if (Math.trunc(cts) > this.currentSub.endTime) {
+	          this.target.innerText = '';
+	          this.target.style.opacity = 0;
+	          this.currentSubIndex += 1;
+	          this.currentSub = this.subs[this.currentSubIndex];
 	        }
 	      }
 	    }
@@ -3712,10 +3626,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  DRM: {
 	    playReady: {
 	      mimeType: 'application/vnd.ms-playready.initiator+xml',
-	      DRMSystemID: 'urn:dvb:casystemid:19219',
-	      licenserUrl: 'http://ss.dogannet.tv/playreadylicenser/rightsmanager.asmx'
+	      DRMSystemID: '',
+	      licenserUrl: ''
 	    }
-	  }
+	  },
+	  appId: 'com.blu.smarttv'
 	};
 	
 	exports.default = Config;
@@ -5510,7 +5425,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 38 */
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -5526,45 +5441,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(Storage, null, [{
-	    key: 'set',
-	
+	    key: "set",
 	
 	    /**
 	     * Set value to the storage
 	     *
 	     * @param {String} name
 	     * @param {Object/String/Number} value
-	     * @returns {Boolean}
 	     */
 	    value: function set(name, value) {
-	      if (window.localStorage) {
-	        return window.localStorage.setItem(name, JSON.stringify(value));
-	      }
+	      window.localStorage && window.localStorage.setItem(name, JSON.stringify(value));
 	    }
 	
 	    /**
 	     * Get value from the storage
 	     *
 	     * @param {String} name
-	     * @returns {Object/String/Number} Retrurns FALSE
+	     * @returns {Object/String/Number} value
 	     */
 	
 	  }, {
-	    key: 'get',
+	    key: "get",
 	    value: function get(name) {
-	      var value = void 0;
-	
-	      if (window.localStorage) {
-	        value = window.localStorage.getItem(name);
-	        if (typeof value !== 'undefined') {
-	          try {
-	            return JSON.parse(value);
-	          } catch (e) {
-	            return value;
-	          }
-	        }
-	      }
-	      return false;
+	      var value = window.localStorage && window.localStorage.getItem(name);
+	      return value && JSON.parse(value);
 	    }
 	
 	    /**
@@ -5574,13 +5474,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	
 	  }, {
-	    key: 'clear',
+	    key: "clear",
 	    value: function clear() {
-	      if (window.localStorage) {
-	        return window.localStorage.clear();
-	      }
-	
-	      return false;
+	      window.localStorage && window.localStorage.clear();
 	    }
 	  }]);
 	
@@ -5588,7 +5484,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 	
 	exports.default = Storage;
-	module.exports = exports['default'];
+	module.exports = exports["default"];
 
 /***/ },
 /* 39 */
@@ -5870,7 +5766,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _logger2.default.addLog('Device_Arcelik', 'info', 'Arcelik Device Initialized');
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
-	    window['isDebugEnabled'] = _this.Config.debug;
+	    window.isDebugEnabled = _this.Config.debug;
 	    return _this;
 	  }
 	
@@ -5892,24 +5788,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      this.createOIPFDrmAgent();
 	      this.setPlayerInfo('playready', 'OIPF');
-	      _logger2.default.addLog('Player', 'info', 'Arcelik Player Element Created and Registered Video Events');
+	      _logger2.default.addLog('Device_Arcelik', 'info', 'Arcelik Player Element Created and Registered Video Events');
 	      this.initAudioClass();
 	      if (!this.arcelikAudio) {
 	        this.arcelikAudio = document.createElement('audio');
 	        this.arcelikAudio.setAttribute('class', 'player-audio');
 	        this.arcelikAudio.style.position = 'absolute';
 	        document.body.appendChild(this.arcelikAudio);
-	        _logger2.default.addLog('Player', 'info', 'Arcelik Audio Player Created');
+	        _logger2.default.addLog('Device_Arcelik', 'info', 'Arcelik Audio Player Created');
 	      }
 	      this.createObjectPlayer('arcelikPlayer');
 	      if (window.arSmartTV) {
 	        window.arSmartTV.init(function () {
-	          console.log('arcelik sdk initialized.');
+	          _logger2.default.addLog('Device_Arcelik', 'info', 'sdk initialized');
 	        }, function () {
-	          console.log('arcelik sdk not initialized.');
+	          _logger2.default.addLog('Device_Arcelik', 'info', 'sdk not initialized');
 	        });
+	      } else {
+	        _logger2.default.addLog('Device_Arcelik', 'warn', 'sdk not found');
 	      }
-	      return true;
 	    }
 	  }]);
 	
@@ -6020,8 +5917,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _logger2.default.addLog('Device_Philips', 'info', 'Philips device is in progress');
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
-	    window['isDebugEnabled'] = _this.Config.debug;
-	
+	    window.isDebugEnabled = _this.Config.debug;
 	    return _this;
 	  }
 	
@@ -6051,9 +5947,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      document.body.appendChild(this.videoElement);
 	      this.setPlayerInfo('PLAYREADY', 'PHILIPS');
 	      this.registerVideoEvents();
-	      _logger2.default.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
+	      _logger2.default.addLog('Device_Philips', 'info', 'Player Element Created and Registered Video Events');
 	      this.initAudioClass();
-	      return null;
 	    }
 	  }]);
 	
@@ -6165,7 +6060,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _logger2.default.addLog('Device_Seraphic', 'info', 'Seraphic Device Initialized');
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
-	    window['isDebugEnabled'] = _this.Config.debug;
+	    window.isDebugEnabled = _this.Config.debug;
 	    return _this;
 	  }
 	
@@ -6189,8 +6084,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.setPlayerInfo('PLAYREADY', 'OIPF');
 	      this.initAudioClass();
 	      this.createObjectPlayer('sraf_av');
-	      _logger2.default.addLog('Player', 'info', 'Seraphic Player Element Created and Registered Video Events');
-	      return null;
+	      _logger2.default.addLog('Device_Seraphic', 'info', 'Seraphic Player Element Created and Registered Video Events');
 	    }
 	  }]);
 	
@@ -6250,7 +6144,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.initKeyListener();
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
-	    window['isDebugEnabled'] = _this.Config.debug;
+	    window.isDebugEnabled = _this.Config.debug;
 	    _this.addTizenLib();
 	    return _this;
 	  }
@@ -6262,7 +6156,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.scriptfile.src = '$WEBAPIS/webapis/webapis.js';
 	      document.head.appendChild(this.scriptfile);
 	      _logger2.default.addLog('Device_Tizen', 'info', 'Tizen Library loaded successfully');
-	      return true;
 	    }
 	  }, {
 	    key: 'createVideoElement',
@@ -6283,9 +6176,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.setPlayerInfo('PLAYREADY', 'TIZEN');
 	      this.videoElement.style.visibility = 'hidden';
 	      this.tizenRegisterEvents();
-	      _logger2.default.addLog('Player', 'info', 'Samsung Tizen Created and Registered Video Events');
+	      _logger2.default.addLog('Device_Tizen', 'info', 'Samsung Tizen Created and Registered Video Events');
 	      this.initAudioClass();
-	      return null;
 	    }
 	  }]);
 	
@@ -6345,7 +6237,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _logger2.default.addLog('Device_Vestel', 'info', 'Vestel Device Initialized');
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
-	    window['isDebugEnabled'] = _this.Config.debug;
+	    window.isDebugEnabled = _this.Config.debug;
 	
 	    return _this;
 	  }
@@ -6378,8 +6270,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      document.body.appendChild(this.videoElement);
 	      this.setPlayerInfo('playready', 'OIPF');
 	      this.registerVideoEvents();
-	      _logger2.default.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
-	      return null;
+	      _logger2.default.addLog('Device_Vestel', 'info', 'Player Element Created and Registered Video Events');;
 	    }
 	  }]);
 	
@@ -6436,10 +6327,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.initPlayerClass();
 	    _this.initNetworkClass();
 	    _this.initKeyListener();
-	    _logger2.default.addLog('Device_Arcelik', 'info', 'Arcelik Device Initialized');
+	    _logger2.default.addLog('Device_Web', 'info', 'Web Device Initialized');
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
-	    window['isDebugEnabled'] = _this.Config.debug;
+	    window.isDebugEnabled = _this.Config.debug;
 	    return _this;
 	  }
 	
@@ -6462,15 +6353,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.videoElement.setAttribute('height', this.Config.height);
 	      this.videoElement.setAttribute('data', '');
 	      this.videoElement.setAttribute('id', this.Config.videoPlayerId);
-	      this.videoElement.setAttribute('data', '');
 	      this.videoElement.setAttribute('class', 'player');
 	      this.videoElement.style.visibility = 'hidden';
 	      document.body.appendChild(this.videoElement);
 	      this.setPlayerInfo('NULL', 'WEB');
 	      this.registerVideoEvents();
-	      _logger2.default.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
+	      _logger2.default.addLog('Device_Web', 'info', 'Player Element Created and Registered Video Events');
 	      this.initAudioClass();
-	      return null;
 	    }
 	  }]);
 	
@@ -6529,12 +6418,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.initPlayerClass();
 	    _this.initNetworkClass();
 	    _this.initKeyListener();
-	    _logger2.default.addLog('Device_WebOS', 'info', 'Arcelik Device Initialized');
+	    _logger2.default.addLog('Device_WebOs', 'info', 'WebOs Device Initialized');
 	    _this.Player.createVideoElement = _this.createVideoElement;
 	    _this.Config = Object.assign(_this.Config, config); // Merges default config with user config
-	    window['isDebugEnabled'] = _this.Config.debug;
-	
-	    _this.addWebOSLib();
+	    window.isDebugEnabled = _this.Config.debug;
+	    _this.constructor.addWebOSLib();
 	    return _this;
 	  }
 	
@@ -6549,13 +6437,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	  _createClass(DeviceWebOs, [{
-	    key: 'addWebOSLib',
-	    value: function addWebOSLib() {
-	      // @TODO: Selçuk'a sorulacak (Nerden buldun lan bu kodu)
-	      WebOsLibrary();
-	      _logger2.default.addLog('Device_WebOs', 'info', 'WebOs Library loaded successfully', this.WebOsLibrary);
-	      return true;
-	    }
+	    key: 'createVideoElement',
+	
 	
 	    /**
 	     * Abstract Player createVideoElement function.
@@ -6565,14 +6448,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @method createVideoElement
 	     * @return {Boolean} true
 	     */
-	
-	  }, {
-	    key: 'createVideoElement',
 	    value: function createVideoElement() {
 	      if (this.videoElement) {
 	        this.deleteVideoElement();
 	      }
-	      console.log(this.Config);
 	      this.videoElement = document.createElement('video');
 	      this.videoElement.style.position = 'absolute';
 	      this.videoElement.setAttribute('width', this.Config.width);
@@ -6583,9 +6462,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      document.body.appendChild(this.videoElement);
 	      this.setPlayerInfo('playready', 'WEBOS');
 	      this.registerVideoEvents();
-	      _logger2.default.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
+	      _logger2.default.addLog('Device_WebOs', 'info', 'Player Element Created and Registered Video Events');
 	      this.initAudioClass();
-	      return null;
+	    }
+	  }], [{
+	    key: 'addWebOSLib',
+	    value: function addWebOSLib() {
+	      WebOsLibrary();
+	      _logger2.default.addLog('Device_WebOs', 'info', 'WebOs Library loaded successfully', window.webOS);
 	    }
 	  }]);
 	
