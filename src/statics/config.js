@@ -20,7 +20,7 @@ const Config = {
       licenserUrl: ''
     }
   },
-  appId: 'com.blu.smarttv'
+  appId: ''
 };
 
 export default Config;
