@@ -290,6 +290,34 @@ class Player {
     Logger.addLog('Player', 'info', 'This is a DRM-Free Content');
   }
 
+  deleteVideoSource() {
+    try {
+      const { tizen, webapis } = window;
+      this.playerInfo.currentState = 'Stop';
+      this.playerInfo.duration = 0;
+      this.autoLoop = true;
+      if (tizen && webapis) {
+        this.videoElement.style.visibility = 'hidden';
+        webapis.avplay.stop();
+        webapis.avplay.close();
+      } else if (this.videoElement) {
+        this.videoElement.style.visibility = 'hidden';
+        while (this.videoElement.firstChild) {
+          this.videoElement.removeChild(this.videoElement.firstChild);
+        }
+        this.videoElement.load();
+      } else if (this.objectPlayer) {
+        clearInterval(this.objectInterval);
+        this.objectInterval = null;
+        this.objectPlayer.play(0);
+        this.objectPlayer.setAttribute('data', '');
+        this.objectPlayer.style.visibility = 'hidden';
+      }
+    } catch (error) {
+      Logger.addLog('Player', 'error', 'Delete video source error', error.message);
+    }
+  }
+
   /**
    * Initialize ads with given source and type. So type is mandatory field to operate
    *
