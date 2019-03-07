@@ -8,3 +8,4 @@ folder
 .idea
 .sonar
 Gruntfile.js
+dist

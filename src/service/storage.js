@@ -1,40 +1,23 @@
-
 export default class Storage {
-
   /**
    * Set value to the storage
    *
    * @param {String} name
    * @param {Object/String/Number} value
-   * @returns {Boolean}
    */
   static set(name, value) {
-    if(window.localStorage) {
-      return window.localStorage.setItem(name, JSON.stringify(value));
-    }
+    window.localStorage && window.localStorage.setItem(name, JSON.stringify(value));
   }
 
   /**
    * Get value from the storage
    *
    * @param {String} name
-   * @returns {Object/String/Number} Retrurns FALSE
+   * @returns {Object/String/Number} value
    */
   static get(name) {
-    let value;
-
-    if (window.localStorage) {
-      value = window.localStorage.getItem(name);
-      if (typeof value !== 'undefined') {
-        try {
-          return JSON.parse(value);
-        }
-        catch (e) {
-          return value;
-        }
-      }
-    }
-    return false;
+    const value = window.localStorage && window.localStorage.getItem(name);
+    return value && JSON.parse(value);
   }
 
   /**
@@ -43,10 +26,6 @@ export default class Storage {
    * @returns {Boolean}
    */
   static clear() {
-    if (window.localStorage) {
-      return window.localStorage.clear();
-    }
-
-    return false;
+    window.localStorage && window.localStorage.clear();
   }
 }

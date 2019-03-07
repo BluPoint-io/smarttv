@@ -1,505 +1,315 @@
-window.webOS = window.webOS || {};
-
-// device.js
-(function () {
-  try {
-    var deviceInfo = JSON.parse(PalmSystem.deviceInfo);
-    webOS.device = deviceInfo
-  } catch (e) {
-    webOS.device = {}
-  }
-})();
-
-// platform.js
-(function () {
-  if (window.PalmSystem) {
-    webOS.platform = {};
-    if (navigator.userAgent.indexOf("SmartTV") > -1 || navigator.userAgent.indexOf("Large Screen") > -1) {
-      webOS.platform.tv = true
-    } else if (webOS.device.platformVersionMajor && webOS.device.platformVersionMinor) {
+!(function () {
+  (window.webOS = window.webOS || {}), 'object' == typeof module && module.exports && (module.exports = window.webOS);
+})(), (function () {
+  if (((webOS.platform = {}), window.PalmSystem)) {
+    if (navigator.userAgent.indexOf('SmartWatch') > -1) {
+      webOS.platform.watch = !0;
+    } else if (navigator.userAgent.indexOf('SmartTV') > -1 || navigator.userAgent.indexOf('Large Screen') > -1) {
+      webOS.platform.tv = !0;
+    } else {
       try {
-        var major = parseInt(webOS.device.platformVersionMajor);
-        var minor = parseInt(webOS.device.platformVersionMinor);
-        if (major < 3 || major == 3 && minor <= 0) {
-          webOS.platform.legacy = true
-        } else {
-          webOS.platform.open = true
+        var e = JSON.parse(PalmSystem.deviceInfo || '{}');
+        if (e.platformVersionMajor && e.platformVersionMinor) {
+          var t = parseInt(e.platformVersionMajor), o = parseInt(e.platformVersionMinor);
+          t < 3 || (3 == t && o <= 0) ? (webOS.platform.legacy = !0) : (webOS.platform.open = !0);
         }
-      } catch (e) {
-        webOS.platform.open = true
+      } catch (i) {
+        webOS.platform.open = !0;
       }
-    } else {
-      webOS.platform.open = true
+      (window.Mojo = window.Mojo || {
+        relaunch: function (e) {
+        }
+      }), window.PalmSystem && PalmSystem.stageReady && PalmSystem.stageReady();
     }
+  } else {
+    webOS.platform.unknown = !0;
   }
-})();
-
-// application.js
-(function () {
-  webOS.fetchAppId = function () {
-    if (window.PalmSystem) {
-      return PalmSystem.identifier.split(" ")[0]
-    }
-  };
-  webOS.fetchAppInfo = function () {
-    if (!this.appInfo) {
-      var readAppInfoFile = function (filepath) {
-        if (window.palmGetResource) {
+})(), (function () {
+  (webOS.fetchAppId = function () {
+    if (window.PalmSystem && PalmSystem.identifier) return PalmSystem.identifier.split(' ')[0];
+  }), (webOS.fetchAppInfo = function (e, t) {
+    if (webOS.appInfo) {
+      e && e(webOS.appInfo);
+    } else {
+      var o = function (t, o) {
+        if (!t && o) {
           try {
-            return palmGetResource(filepath)
-          } catch (e) {
-            console.log("error reading appinfo.json" + e.message)
+            (webOS.appInfo = JSON.parse(o)), e && e(webOS.appInfo);
+          } catch (i) {
+            console.error('Unable to parse appinfo.json file for ' + appID), e && e();
           }
         } else {
-          var req = new XMLHttpRequest;
-          req.open("GET", filepath + "?palmGetResource=true", false);
-          req.send(null);
-          if (req.status >= 200 && req.status < 300) {
-            return req.responseText
-          } else {
-            console.log("error reading appinfo.json")
-          }
+          e && e();
         }
+      }, i = new XMLHttpRequest();
+      i.onreadystatechange = function () {
+        4 == i.readyState && ((i.status >= 200 && i.status < 300) || 0 === i.status ? o(void 0, i.responseText) : o({ status: 404 }));
       };
-      var appID = this.fetchAppId();
-      var paths = [this.fetchAppRootPath() + "appinfo.json", "file:///media/cryptofs/apps/usr/palm/applications/" + appID + "/appinfo.json", "file:///usr/palm/applications/" + appID + "/appinfo.json"];
-      var index = paths[0].indexOf(appID);
-      if (index > -1) {
-        paths.unshift(paths[0].substring(0, index) + appID + "/appinfo.json")
-      }
-      var appInfoJSON = undefined;
-      for (var i = 0; i < paths.length && !appInfoJSON; i++) {
-        appInfoJSON = readAppInfoFile(paths[i])
-      }
-      if (appInfoJSON) {
-        this.appInfo = enyo.json.parse(appInfoJSON)
+      try {
+        i.open('GET', t || 'appinfo.json', !0), i.send(null);
+      } catch (s) {
+        o({ status: 404 });
       }
     }
-    return this.appInfo
-  };
-  webOS.fetchAppRootPath = function () {
-    var base = window.location.href;
-    if ("baseURI" in window.document) {
-      base = window.document.baseURI
+  }), (webOS.fetchAppRootPath = function () {
+    var e = window.location.href;
+    if ('baseURI' in window.document) {
+      e = window.document.baseURI;
     } else {
-      var baseTags = window.document.getElementsByTagName("base");
-      if (baseTags.length > 0) {
-        base = baseTags[0].href
+      var t = window.document.getElementsByTagName('base');
+      t.length > 0 && (e = t[0].href);
+    }
+    var o = e.match(new RegExp('.*://[^#]*/'));
+    return o ? o[0] : '';
+  }), (webOS.platformBack = function () {
+    if (window.PalmSystem && PalmSystem.platformBack) return PalmSystem.platformBack();
+  });
+})(), (function () {
+  webOS.deviceInfo = function (e) {
+    if (this.device) {
+      e(this.device);
+    } else {
+      this.device = {};
+      try {
+        var t = JSON.parse(PalmSystem.deviceInfo);
+        (this.device.modelName = t.modelName), (this.device.modelNameAscii = t.modelNameAscii), (this.device.version = t.platformVersion), (this.device.versionMajor = t.platformVersionMajor), (this.device.versionMinor = t.platformVersionMinor), (this.device.versionDot = t.platformVersionDot), (this.device.sdkVersion = t.platformVersion), (this.device.screenWidth = t.screenWidth), (this.device.screenHeight = t.screenHeight);
+      } catch (o) {
+        this.device.modelName = this.device.modelNameAscii = 'webOS Device';
+      }
+      (this.device.screenHeight = this.device.screenHeight || screen.height), (this.device.screenWidth = this.device.screenWidth || screen.width);
+      var i = this;
+      webOS.platform.tv ? webOS.service.request('luna://com.webos.service.tv.systemproperty', {
+        method: 'getSystemInfo',
+        parameters: { keys: ['firmwareVersion', 'modelName', 'sdkVersion', 'UHD'] },
+        onSuccess: function (t) {
+          if (((i.device.modelName = t.modelName || i.device.modelName), (i.device.modelNameAscii = t.modelName || i.device.modelNameAscii), (i.device.sdkVersion = t.sdkVersion || i.device.sdkVersion), (i.device.uhd = 'true' === t.UHD), (t.firmwareVersion && '0.0.0' !== t.firmwareVersion) || (t.firmwareVersion = t.sdkVersion), t.firmwareVersion)) {
+            i.device.version = t.firmwareVersion;
+            for (var o = i.device.version.split('.'), s = ['versionMajor', 'versionMinor', 'versionDot'], n = 0; n < s.length; n++) {
+              try {
+                i.device[s[n]] = parseInt(o[n]);
+              } catch (r) {
+                i.device[s[n]] = o[n];
+              }
+            }
+          }
+          e(i.device);
+        },
+        onFailure: function (t) {
+          e(i.device);
+        }
+      }) : (webOS.platform.watch && (this.device.modelName = this.device.modelNameAscii = 'webOS Watch'), e(this.device));
+    }
+  };
+})(), (function () {
+  webOS.feedback = {
+    play: function (e) {
+      if (webOS && webOS.platform && webOS.platform.watch) {
+        var t = { name: e || 'touch', sink: 'pfeedback' };
+        if (!window.PalmServiceBridge) return;
+        webOS.service.request('luna://com.palm.audio/systemsounds', {
+          method: 'playFeedback',
+          parameters: t,
+          subscribe: !1,
+          resubscribe: !1
+        });
       }
     }
-    var match = base.match(new RegExp(".*://[^#]*/"));
-    if (match) {
-      return match[0]
+  };
+})(), (function () {
+  webOS.keyboard = {
+    isShowing: function () {
+      return !!(PalmSystem && PalmSystem.isKeyboardVisible && PalmSystem.isKeyboardVisible());
     }
-    return ""
-  }
-})();
-
-// keyboard.js
-(function () {
-  var hasVKeyboard = !(webOS.platform.legacy && webOS.device.platformVersionMajor && parseInt(webOS.device.platformVersionMajor) < 3);
-  if (hasVKeyboard) {
-    var state = {};
-    Mojo = window.Mojo || {};
-    Mojo.keyboardShown = function (inKeyboardShowing) {
-      state.isShowing = inKeyboardShowing
-    };
-    webOS.keyboard = {
-      types: {
-        text: 0,
-        password: 1,
-        search: 2,
-        range: 3,
-        email: 4,
-        number: 5,
-        phone: 6,
-        url: 7,
-        color: 8
-      }, isShowing: function () {
-        return state.isShowing || false
-      }, show: function (type) {
-        if (this.isManualMode() && window.PalmSystem) {
-          PalmSystem.keyboardShow(type || 0)
-        }
-      }, hide: function () {
-        if (this.isManualMode() && window.PalmSystem) {
-          PalmSystem.keyboardHide()
-        }
-      }, setManualMode: function (mode) {
-        state.manual = mode;
-        if (window.PalmSystem) {
-          PalmSystem.setManualKeyboardEnabled(mode)
-        }
-      }, isManualMode: function () {
-        return state.manual || false
-      }, forceShow: function (inType) {
-        this.setManualMode(true);
-        if (window.PalmSystem) {
-          PalmSystem.keyboardShow(inType || 0)
-        }
-      }, forceHide: function () {
-        this.setManualMode(true);
-        if (window.PalmSystem) {
-          PalmSystem.keyboardHide()
-        }
-      }
-    }
-  }
-})();
-
-// launch.js
-(function () {
-  if ((webOS.platform.legacy || webOS.platform.open) && !window.cordova) {
-    var fireDocumentEvent = function (type, data) {
-      var evt = document.createEvent("Events");
-      evt.initEvent(type, false, false);
-      for (var i in data) {
-        evt[i] = data[i]
-      }
-      document.dispatchEvent(evt)
-    };
-    Mojo = window.Mojo || {};
-    var lp = JSON.parse(PalmSystem.launchParams || "{}") || {};
-    fireDocumentEvent("webOSLaunch", {type: "webOSLaunch", detail: lp});
-    window.Mojo.relaunch = function (e) {
-      var lp = JSON.parse(PalmSystem.launchParams || "{}") || {};
-      if (lp["palm-command"] && lp["palm-command"] == "open-app-menu") {
-        fireDocumentEvent("menubutton", {});
-        return true
-      } else {
-        fireDocumentEvent("webOSRelaunch", {type: "webOSRelaunch", detail: lp})
-      }
-    };
-    if (window.PalmSystem) {
-      window.PalmSystem.stageReady()
-    }
-  }
-})();
-
-// notification.js
-(function () {
+  };
+})(), (function () {
   webOS.notification = {
-    showToast: function (params, callback) {
-      var message = params.message || "";
-      var icon = params.icon || "";
-      var source = webOS.fetchAppId();
-      var appId = params.appId || source;
-      var toastParams = params.params || {};
-      var target = params.target;
-      var noaction = params.noaction;
-      var stale = params.stale || false;
-      var soundClass = params.soundClass || "";
-      var soundFile = params.soundFile || "";
-      var soundDurationMs = params.soundDurationMs || "";
+    showToast: function (e, t) {
+      var o = e.message || '', i = e.icon || '', s = webOS.fetchAppId(), n = e.appId || s,
+        r = e.appParams || {}, a = e.target, c = e.noaction, l = e.stale || !1, m = e.soundClass || '',
+        u = e.soundFile || '', d = e.soundDurationMs || '';
       if (webOS.platform.legacy || webOS.platform.open) {
-        // var response = params.response || {banner: true};
-        var id = PalmSystem.addBannerMessage(message, JSON.stringify(toastParams), icon, soundClass, soundFile, soundDurationMs);
-        callback && callback(id)
+        var f = (e.response || { banner: !0 }, PalmSystem.addBannerMessage(o, JSON.stringify(r), i, m, u, d));
+        t && t(f);
       } else {
-        if (message.length > 60) {
-          console.warn("Toast notification message is longer than recommended. May not display as intended")
-        }
-        var reqParam = {sourceId: source, message: message, stale: stale, noaction: noaction};
-        if (icon && icon.length > 0) {
-          reqParam.iconUrl = icon
-        }
-        if (!noaction) {
-          if (target) {
-            reqParam.onclick = {target: target}
-          } else {
-            reqParam.onclick = {appId: appId, params: toastParams}
-          }
-        }
-        this.showToastRequest = webOS.service.request("palm://com.webos.notification", {
-          method: "createToast",
-          parameters: reqParam,
-          onSuccess: function (inResponse) {
-            callback && callback(inResponse.toastId)
+        o.length > 60 && console.warn('Toast notification message is longer than recommended. May not display as intended');
+        var b = { sourceId: s, message: o, stale: l, noaction: c };
+        i && i.length > 0 && (b.iconUrl = i), c || (a ? (b.onclick = { target: a }) : (b.onclick = {
+          appId: n,
+          params: r
+        })), (this.showToastRequest = webOS.service.request('palm://com.webos.notification', {
+          method: 'createToast',
+          parameters: b,
+          onSuccess: function (e) {
+            t && t(e.toastId);
           },
-          onFailure: function (inError) {
-            console.error("Failed to create toast: " + JSON.stringify(inError));
-            callback && callback()
+          onFailure: function (e) {
+            console.error('Failed to create toast: ' + JSON.stringify(e)), t && t();
           }
-        })
+        }));
       }
-    }, removeToast: function (toastId) {
+    }, removeToast: function (e) {
       if (webOS.platform.legacy || webOS.platform.open) {
         try {
-          PalmSystem.removeBannerMessage(toastId)
-        } catch (e) {
-          console.warn(e);
-          PalmSystem.clearBannerMessage()
+          PalmSystem.removeBannerMessage(e);
+        } catch (t) {
+          console.warn(t), PalmSystem.clearBannerMessage();
         }
       } else {
-        this.removeToastRequest = webOS.service.request("palm://com.webos.notification", {
-          method: "closeToast",
-          parameters: {toastId: toastId}
-        })
+        this.removeToastRequest = webOS.service.request('palm://com.webos.notification', {
+          method: 'closeToast',
+          parameters: { toastId: e }
+        });
       }
     }, supportsDashboard: function () {
-      return webOS.platform.legacy || webOS.platform.open
-    }, showDashboard: function (url, html) {
+      return webOS.platform.legacy || webOS.platform.open;
+    }, showDashboard: function (e, t) {
       if (webOS.platform.legacy || webOS.platform.open) {
-        var dash = window.open(url, "_blank", 'attributes={"window":"dashboard"}');
-        if (html) {
-          dash.document.write(html)
-        }
-        if (dash.PalmSystem) {
-          dash.PalmSystem.stageReady()
-        }
-        return dash
-      } else {
-        console.warn("Dashboards are not supported on this version of webOS.")
+        var o = window.open(e, '_blank', 'attributes={"window":"dashboard"}');
+        return t && o.document.write(t), o.PalmSystem && o.PalmSystem.stageReady(), o;
       }
-    }
-  }
-})();
-
-// orientation.js
-(function () {
-  webOS.orientation = {
-    setOrientation: function (orientation) {
-      if (window.PalmSystem && PalmSystem.setWindowOrientation) {
-        PalmSystem.setWindowOrientation(orientation)
-      }
-    }, getOrientation: function () {
-      if (window.PalmSystem && PalmSystem.setWindowOrientation) {
-        return PalmSystem.windowOrientation
-      } else {
-        return "up"
-      }
-    }
-  }
-})();
-
-// pmloglib.js
-(function () {
-  // var levelNone = -1;
-  var levelEmergency = 0;
-  var levelAlert = 1;
-  var levelCritical = 2;
-  var levelError = 3;
-  var levelWarning = 4;
-  var levelNotice = 5;
-  var levelInfo = 6;
-  var levelDebug = 7;
-  var isObject = function (obj) {
-    return !!obj && typeof obj === "object" && Object.prototype.toString.call(obj) !== "[object Array]"
-  };
-  var log = function (level, messageId, keyVals, freeText) {
-    if (window.PalmSystem) {
-      if (keyVals && !isObject(keyVals)) {
-        level = levelError;
-        keyVals = {msgid: messageId};
-        messageId = "MISMATCHED_FMT";
-        freeText = null;
-        console.warn("webOSLog called with invalid format: keyVals must be an object")
-      }
-      if (!messageId && level != levelDebug) {
-        console.warn("webOSLog called with invalid format: messageId was empty")
-      }
-      if (keyVals) {
-        keyVals = JSON.stringify(keyVals)
-      }
-      if (window.PalmSystem.PmLogString) {
-        if (level == levelDebug) {
-          window.PalmSystem.PmLogString(level, null, null, freeText)
-        } else {
-          window.PalmSystem.PmLogString(level, messageId, keyVals, freeText)
-        }
-      } else {
-        console.error("Unable to send log; PmLogString not found in this version of PalmSystem")
-      }
+      console.warn('Dashboards are not supported on this version of webOS.');
     }
   };
-  webOS.emergency = function (messageId, keyVals, freeText) {
-    log(levelEmergency, messageId, keyVals, freeText)
+})(), (function () {
+  var e = 0, t = 1, o = 2, i = 3, s = 4, n = 5, r = 6, a = 7, c = function (e) {
+    return !!e && 'object' == typeof e && '[object Array]' !== Object.prototype.toString.call(e);
+  }, l = function (e, t, o, s) {
+    window.PalmSystem && (o && !c(o) && ((e = i), (o = { msgid: t }), (t = 'MISMATCHED_FMT'), (s = null), console.warn('webOSLog called with invalid format: keyVals must be an object')), t || e == a || console.warn('webOSLog called with invalid format: messageId was empty'), o && (o = JSON.stringify(o)), window.PalmSystem.PmLogString ? e == a ? window.PalmSystem.PmLogString(e, null, null, s) : window.PalmSystem.PmLogString(e, t, o, s) : console.error('Unable to send log; PmLogString not found in this version of PalmSystem'));
   };
-  webOS.alert = function (messageId, keyVals, freeText) {
-    log(levelAlert, messageId, keyVals, freeText)
-  };
-  webOS.critical = function (messageId, keyVals, freeText) {
-    log(levelCritical, messageId, keyVals, freeText)
-  };
-  webOS.error = function (messageId, keyVals, freeText) {
-    log(levelError, messageId, keyVals, freeText)
-  };
-  webOS.warning = function (messageId, keyVals, freeText) {
-    log(levelWarning, messageId, keyVals, freeText)
-  };
-  webOS.notice = function (messageId, keyVals, freeText) {
-    log(levelNotice, messageId, keyVals, freeText)
-  };
-  webOS.info = function (messageId, keyVals, freeText) {
-    log(levelInfo, messageId, keyVals, freeText)
-  };
-  webOS.debug = function (freeText) {
-    log(levelDebug, "", "", freeText)
-  }
-})();
-
-// service.js
-(function () {
-  function LS2Request(uri, params) {
-    this.uri = uri;
-    params = params || {};
-    if (params.method) {
-      if (this.uri.charAt(this.uri.length - 1) != "/") {
-        this.uri += "/"
-      }
-      this.uri += params.method
-    }
-    if (typeof params.onSuccess === "function") {
-      this.onSuccess = params.onSuccess
-    }
-    if (typeof params.onFailure === "function") {
-      this.onFailure = params.onFailure
-    }
-    if (typeof params.onComplete === "function") {
-      this.onComplete = params.onComplete
-    }
-    this.params = typeof params.parameters === "object" ? params.parameters : {};
-    this.subscribe = params.subscribe || false;
-    if (this.subscribe) {
-      this.params.subscribe = params.subscribe
-    }
-    if (this.params.subscribe) {
-      this.subscribe = this.params.subscribe
-    }
-    this.resubscribe = params.resubscribe || false;
-    this.send()
+  (webOS.emergency = function (t, o, i) {
+    l(e, t, o, i);
+  }), (webOS.alert = function (e, o, i) {
+    l(t, e, o, i);
+  }), (webOS.critical = function (e, t, i) {
+    l(o, e, t, i);
+  }), (webOS.error = function (e, t, o) {
+    l(i, e, t, o);
+  }), (webOS.warning = function (e, t, o) {
+    l(s, e, t, o);
+  }), (webOS.notice = function (e, t, o) {
+    l(n, e, t, o);
+  }), (webOS.info = function (e, t, o) {
+    l(r, e, t, o);
+  }), (webOS.debug = function (e) {
+    l(a, '', '', e);
+  });
+})(), (function () {
+  function e(e, t) {
+    (this.uri = e), (t = t || {}), t.method && ('/' != this.uri.charAt(this.uri.length - 1) && (this.uri += '/'), (this.uri += t.method)), 'function' == typeof t.onSuccess && (this.onSuccess = t.onSuccess), 'function' == typeof t.onFailure && (this.onFailure = t.onFailure), 'function' == typeof t.onComplete && (this.onComplete = t.onComplete), (this.params = 'object' == typeof t.parameters ? t.parameters : {}), (this.subscribe = t.subscribe || !1), this.subscribe && (this.params.subscribe = t.subscribe), this.params.subscribe && (this.subscribe = this.params.subscribe), (this.resubscribe = t.resubscribe || !1), this.send();
   }
 
-  LS2Request.prototype.send = function () {
+  (e.prototype.send = function () {
     if (!window.PalmServiceBridge) {
-      console.error("PalmServiceBridge not found.");
-      return
+      return (this.onFailure && this.onFailure({
+        errorCode: -1,
+        errorText: 'PalmServiceBridge not found.',
+        returnValue: !1
+      }), this.onComplete && this.onComplete({
+        errorCode: -1,
+        errorText: 'PalmServiceBridge not found.',
+        returnValue: !1
+      }), void console.error('PalmServiceBridge not found.'));
     }
-    this.bridge = new PalmServiceBridge;
-    var self = this;
-    this.bridge.onservicecallback = this.callback = function (msg) {
-      var parsedMsg;
-      if (self.cancelled) {
-        return
-      }
-      try {
-        parsedMsg = JSON.parse(msg)
-      } catch (e) {
-        parsedMsg = {errorCode: -1, errorText: msg}
-      }
-      if ((parsedMsg.errorCode || parsedMsg.returnValue === false) && self.onFailure) {
-        self.onFailure(parsedMsg);
-        if (self.resubscribe && self.subscribe) {
-          self.delayID = setTimeout(function () {
-            self.send()
-          }, LS2Request.resubscribeDelay)
+    this.bridge = new PalmServiceBridge();
+    var t = this;
+    (this.bridge.onservicecallback = this.callback = function (o) {
+      var i;
+      if (!t.cancelled) {
+        try {
+          i = JSON.parse(o);
+        } catch (s) {
+          i = { errorCode: -1, errorText: o, returnValue: !1 };
         }
-      } else if (self.onSuccess) {
-        self.onSuccess(parsedMsg)
+        (i.errorCode || 0 == i.returnValue) && t.onFailure ? (t.onFailure(i), t.resubscribe && t.subscribe && (t.delayID = setTimeout(function () {
+          t.send();
+        }, e.resubscribeDelay))) : t.onSuccess && t.onSuccess(i), t.onComplete && t.onComplete(i), t.subscribe || t.cancel();
       }
-      if (self.onComplete) {
-        self.onComplete(parsedMsg)
+    }), this.bridge.call(this.uri, JSON.stringify(this.params));
+  }), (e.prototype.cancel = function () {
+    (this.cancelled = !0), this.resubscribeJob && clearTimeout(this.delayID), this.bridge && (this.bridge.cancel(), (this.bridge = void 0));
+  }), (e.prototype.toString = function () {
+    return '[LS2Request]';
+  }), (e.resubscribeDelay = 1e4), (webOS.service = {
+    request: function (t, o) {
+      return new e(t, o);
+    }, systemPrefix: 'com.webos.', protocol: 'luna://'
+  }), (navigator.service = { request: webOS.service.request }), (navigator.service.Request = navigator.service.request);
+})(), (function () {
+  webOS.libVersion = '0.1.0';
+})(), (function () {
+  webOS.voicereadout = {
+    readAlert: function (e, t) {
+      var o = 'boolean' != typeof t || t;
+      if (webOS && webOS.platform && webOS.platform.watch) {
+        var i, s, n = function (e) {
+          webOS.service.request('luna://com.webos.settingsservice', {
+            method: 'getSystemSettings',
+            parameters: { category: 'VoiceReadOut' },
+            onSuccess: function (t) {
+              t && t.settings.talkbackEnable && e();
+            },
+            onFailure: function (e) {
+              console.error('Failed to get system VoiceReadOut settings: ' + JSON.stringify(e));
+            }
+          });
+        }, r = function (e) {
+          webOS.service.request('luna://com.webos.settingsservice', {
+            method: 'getSystemSettings',
+            parameters: { keys: ['localeInfo'] },
+            onSuccess: function (t) {
+              (i = t.settings.localeInfo.locales.TTS), e();
+            },
+            onFailure: function (e) {
+              console.error('Failed to get system localeInfo settings: ' + JSON.stringify(e));
+            }
+          });
+        }, a = function (e) {
+          webOS.service.request('luna://com.webos.settingsservice', {
+            method: 'getSystemSettings',
+            parameters: { category: 'option', key: 'ttsSpeechRate' },
+            onSuccess: function (t) {
+              (s = Number(t.settings.ttsSpeechRate)), e();
+            },
+            onFailure: function (e) {
+              console.error('Failed to get system speechRate settings: ' + JSON.stringify(e));
+            }
+          });
+        }, c = function () {
+          webOS.service.request('luna://com.lge.service.tts', {
+            method: 'speak',
+            parameters: { locale: i, text: e, speechRate: s }
+          });
+        };
+        n(function () {
+          r(function () {
+            a(c);
+          });
+        });
+      } else if (webOS && webOS.platform && webOS.platform.tv) {
+        var l = function (e) {
+          webOS.service.request('luna://com.webos.settingsservice', {
+            method: 'getSystemSettings',
+            parameters: { keys: ['audioGuidance'], category: 'option' },
+            onSuccess: function (t) {
+              t && 'on' === t.settings.audioGuidance && e();
+            },
+            onFailure: function (e) {
+              console.error('Failed to get system AudioGuidance settings: ' + JSON.stringify(e));
+            }
+          });
+        }, c = function () {
+          webOS.service.request('luna://com.webos.service.tts', {
+            method: 'speak',
+            parameters: { text: e, clear: o },
+            onFailure: function (e) {
+              console.error('Failed to readAlertMessage: ' + JSON.stringify(e));
+            }
+          });
+        };
+        l(c);
+      } else {
+        console.warn('Platform doesn\'t support TTS api.');
       }
-      if (!self.subscribe) {
-        self.cancel()
-      }
-    };
-    this.bridge.call(this.uri, JSON.stringify(this.params))
-  };
-  LS2Request.prototype.cancel = function () {
-    this.cancelled = true;
-    if (this.resubscribeJob) {
-      clearTimeout(this.delayID)
     }
-    if (this.bridge) {
-      this.bridge.cancel();
-      this.bridge = undefined
-    }
   };
-  LS2Request.prototype.toString = function () {
-    return "[LS2Request]"
-  };
-  LS2Request.resubscribeDelay = 1e4;
-  webOS.service = {
-    request: function (uri, params) {
-      return new LS2Request(uri, params)
-    },
-    systemPrefix: webOS.platform.legacy || webOS.platform.open ? "com.palm" : "com.webos",
-    protocol: webOS.platform.legacy && webOS.device.platformVersionMajor && parseInt(webOS.device.platformVersionMajor) <= 1 ? "palm://" : "luna://"
-  };
-  navigator.service = {request: webOS.service.request};
-  navigator.service.Request = navigator.service.request
 })();
-
-// version.js
-(function () {
-  webOS.libVersion = "0.1.0"
-})();
-
-// window.js
-(function () {
-  webOS.window = {
-    launchParams: function (inWindow) {
-      inWindow = inWindow || window;
-      if (inWindow.PalmSystem) {
-        return JSON.parse(inWindow.PalmSystem.launchParams || "{}") || {}
-      }
-      return {}
-    }, isActivated: function (inWindow) {
-      inWindow = inWindow || window;
-      if (inWindow.PalmSystem) {
-        return inWindow.PalmSystem.isActivated
-      }
-      return false
-    }, activate: function (inWindow) {
-      inWindow = inWindow || window;
-      if (inWindow.PalmSystem) {
-        inWindow.PalmSystem.activate()
-      }
-    }, deactivate: function (inWindow) {
-      inWindow = inWindow || window;
-      if (inWindow.PalmSystem) {
-        inWindow.PalmSystem.deactivate()
-      }
-    }, newCard: function (url, html) {
-      if (!url && !(webOS.platform.legacy || webOS.platform.open)) {
-        url = "about:blank"
-      }
-      var child = window.open(url);
-      if (html) {
-        child.document.write(html)
-      }
-      if (child.PalmSystem) {
-        child.PalmSystem.stageReady()
-      }
-      return child
-    }, setFullScreen: function (state) {
-      if (window.PalmSystem && PalmSystem.enableFullScreenMode) {
-        PalmSystem.enableFullScreenMode(state)
-      }
-    }, setWindowProperties: function (inWindow, inProps) {
-      if (arguments.length == 1) {
-        inProps = inWindow;
-        inWindow = window
-      }
-      if (inWindow.PalmSystem && inWindow.PalmSystem.setWindowProperties) {
-        inWindow.webOS.window.properties = inProps = inProps || {};
-        inWindow.PalmSystem.setWindowProperties(inProps)
-      }
-    }, getWindowProperties: function (inWindow) {
-      inWindow = inWindow || window;
-      inWindow.webOS.window.properties = inWindow.webOS.window.properties || {};
-      return inWindow.webOS.window.properties
-    }, blockScreenTimeout: function (state) {
-      webOS.window.properties.blockScreenTimeout = state;
-      this.setWindowProperties(navigator.windowProperties)
-    }, setSubtleLightbar: function (state) {
-      webOS.window.properties.setSubtleLightbar = state;
-      this.setWindowProperties(webOS.window.properties)
-    }, setFastAccelerometer: function (state) {
-      webOS.window.properties.fastAccelerometer = state;
-      this.setWindowProperties(webOS.window.properties)
-    }
-  }
-})();
-

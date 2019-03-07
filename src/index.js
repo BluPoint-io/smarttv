@@ -3,7 +3,7 @@ import CoreDevice from './core/device';
 // import Storage from './service/storage';
 
 if (typeof Object.assign !== 'function') {
-  Object.assign = function(target, varArgs) { // .length of function is 2
+  Object.assign = function (target, varArgs) { // .length of function is 2
     if (target == null) { // TypeError if undefined or null
       throw new TypeError('Cannot convert undefined or null to object');
     }
@@ -26,10 +26,10 @@ if (typeof Object.assign !== 'function') {
   };
 }
 
-Math.trunc = Math.trunc || function(x) {
-    const n = x - x%1;
-    return n===0 && (x<0 || (x===0 && (1/x !== 1/0))) ? -0 : n;
-  };
+Math.trunc = Math.trunc || function (x) {
+  const n = x - x % 1;
+  return n === 0 && (x < 0 || (x === 0 && (1 / x !== 1 / 0))) ? -0 : n;
+};
 
 const device = new CoreDevice();
 const currentDeviceName = device.currentDevice.brandName;

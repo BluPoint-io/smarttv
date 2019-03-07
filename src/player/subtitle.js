@@ -1,4 +1,4 @@
-import Logger from "../service/logger";
+import Logger from '../service/logger';
 
 class Subtitle {
   /**
@@ -11,10 +11,8 @@ class Subtitle {
     this.Player = Player;
     this.srt = srt;
     this.target = document.querySelector(target);
-    Logger.addLog('Player - Subtitle', 'create', `Subtitle initialization started`, this);
+    Logger.addLog('Player - Subtitle', 'create', 'Subtitle initialization started', this);
     this.setSRT(srt);
-    this.Player.Events.addListener('player_onTimeUpdate', () => this.tick());
-    this.Player.Events.addListener('player_onEnded', () => this.target.innerText = '');
   }
 
   /**
@@ -56,9 +54,9 @@ class Subtitle {
      * @param {String} data srt data
      * @param {Boolean} ms true = use miliseconds
      * @return {Object} items [{{String} id,
-		     * 							{String} startTime,
-		     * 							{String} endTime,
-		     * 							{String} text }]
+     * 							{String} startTime,
+     * 							{String} endTime,
+     * 							{String} text }]
      *
      */
     const fromSrt = function (data, ms) {
@@ -93,9 +91,17 @@ class Subtitle {
   }
 
   setCurrentSubtitle() {
-    for (let i = 0; i < this.subs.length; i++) {
-      // this.subs[items[i].startTime] = items[i];
-      if (this.subs[i].startTime > Math.trunc(this.Player.videoElement.currentTime)) {
+    const { tizen, webapis, arSmartTV } = window;
+    let ct;
+    for (let i = 0; i < this.subs.length; i += 1) {
+      if (tizen && webapis) {
+        ct = webapis.avplay.getCurrentTime();
+      } else if (arSmartTV) {
+        ct = this.Player.objectPlayer.playPosition;
+      } else {
+        ct = this.Player.videoElement.currentTime * 1000;
+      }
+      if (this.subs[i].startTime > Math.trunc(ct)) {
         this.currentSubIndex = i;
         this.currentSub = this.subs[i];
         break;
@@ -108,17 +114,26 @@ class Subtitle {
    * @private
    */
   tick() {
-    if (this.Player.playerInfo.subtitleEnabled && this.Player.playerInfo.currentState === "Playing") {
-      if(typeof this.currentSub !== 'undefined') {
-        if(Math.trunc(this.Player.videoElement.currentTime * 1000) > this.currentSub.startTime && Math.trunc(this.Player.videoElement.currentTime * 1000) < this.currentSub.endTime) {
-          Logger.addLog('Subtitle TEXT', 'info', this.currentSub.text);
-          this.target.innerText = this.currentSub.text;
-        } else if (Math.trunc(this.Player.videoElement.currentTime * 1000) > this.currentSub.endTime) {
-          this.currentSubIndex += 1;
-          this.currentSub = this.subs[this.currentSubIndex];
-          this.target.innerText = '';
-          Logger.addLog('Subtitle  TEXT', 'info', 'EMPTY SUB')
-        }
+    const { subtitleEnabled, currentState } = this.Player.playerInfo;
+    if (subtitleEnabled && (currentState === 'Playing' || currentState === 'Play')) {
+      if (!this.currentSub) return;
+      const { tizen, webapis, arSmartTV } = window;
+      let cts;
+      if (tizen && webapis) {
+        cts = webapis.avplay.getCurrentTime();
+      } else if (arSmartTV) {
+        cts = this.Player.objectPlayer.playPosition;
+      } else {
+        cts = this.Player.videoElement.currentTime * 1000;
+      }
+      if (Math.trunc(cts) > this.currentSub.startTime && Math.trunc(cts) < this.currentSub.endTime) {
+        this.target.style.opacity = 1;
+        this.target.innerText = this.currentSub.text;
+      } else if (Math.trunc(cts) > this.currentSub.endTime) {
+        this.target.innerText = '';
+        this.target.style.opacity = 0;
+        this.currentSubIndex += 1;
+        this.currentSub = this.subs[this.currentSubIndex];
       }
     }
   }

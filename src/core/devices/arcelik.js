@@ -18,7 +18,7 @@ class DeviceArcelik extends Device {
     Logger.addLog('Device_Arcelik', 'info', 'Arcelik Device Initialized');
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
-    window['isDebugEnabled'] = this.Config.debug;
+    window.isDebugEnabled = this.Config.debug;
   }
 
   /**
@@ -30,22 +30,33 @@ class DeviceArcelik extends Device {
    * @return {Boolean} true
    */
   createVideoElement() {
-    if (this.videoElement) {
+    if (this.objectPlayer) {
       this.deleteVideoElement();
     }
-    this.videoElement = document.createElement('video');
-    this.videoElement.style.position = 'absolute';
-    this.videoElement.setAttribute('width', this.Config.width);
-    this.videoElement.setAttribute('height', this.Config.height);
-    this.videoElement.setAttribute('id', 'dtv-video');
-    this.videoElement.setAttribute('data', '');
-    this.videoElement.setAttribute('class', 'player');
-    document.body.appendChild(this.videoElement);
-    this.setPlayerInfo('OIPF');
-    this.registerVideoEvents();
-    Logger.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
+    this.createOIPFDrmAgent();
+    this.setPlayerInfo('playready', 'OIPF');
+    Logger.addLog('Device_Arcelik', 'info', 'Arcelik Player Element Created and Registered Video Events');
     this.initAudioClass();
-    return true;
+    if (!this.arcelikAudio) {
+      this.arcelikAudio = document.createElement('audio');
+      this.arcelikAudio.setAttribute('class', 'player-audio');
+      this.arcelikAudio.style.position = 'absolute';
+      document.body.appendChild(this.arcelikAudio);
+      Logger.addLog('Device_Arcelik', 'info', 'Arcelik Audio Player Created');
+    }
+    this.createObjectPlayer('arcelikPlayer');
+    if (window.arSmartTV) {
+      window.arSmartTV.init(
+        () => {
+          Logger.addLog('Device_Arcelik', 'info', 'sdk initialized');
+        },
+        () => {
+          Logger.addLog('Device_Arcelik', 'info', 'sdk not initialized');
+        }
+      );
+    } else {
+      Logger.addLog('Device_Arcelik', 'warn', 'sdk not found');
+    }
   }
 
 }
