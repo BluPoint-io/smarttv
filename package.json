@@ -4,8 +4,8 @@
   "description": "SmartTV Framework",
   "main": "dist/smarttv-framework.js",
   "author": {
-    "name": "Serdar AGLAMIS",
-    "email": "serdaraglamis@gmail.com"
+    "name": "BluPoint IO",
+    "email": "dev@blutv.com"
   },
   "license": "MIT",
   "scripts": {
@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "axios": "0.17.0",
-    "smarttv-device-recognizer": "^1.0.1",
+    "smarttv-device-recognizer": "^1.1.0",
     "smarttv-ui-controller": "0.0.24"
   }
 }
