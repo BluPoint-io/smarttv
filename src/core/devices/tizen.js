@@ -18,24 +18,36 @@ class DeviceTizen extends Device {
     this.initKeyListener();
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
-    window['isDebugEnabled'] = this.Config.debug;
+    window.isDebugEnabled = this.Config.debug;
+    this.addTizenLib();
+  }
 
+  addTizenLib() {
+    this.scriptfile = document.createElement('script');
+    this.scriptfile.src = '$WEBAPIS/webapis/webapis.js';
+    document.head.appendChild(this.scriptfile);
+    Logger.addLog('Device_Tizen', 'info', 'Tizen Library loaded successfully');
   }
 
   createVideoElement() {
-    this.videoElement = document.createElement('video');
-    this.videoElement.style.position = 'absolute';
-    this.videoElement.setAttribute('width', this.Config.width);
-    this.videoElement.setAttribute('height', this.Config.height);
-    this.videoElement.setAttribute('id', this.Config.videoPlayerId);
-    this.videoElement.setAttribute('data', '');
+    if (this.videoElement) {
+      this.deleteVideoElement();
+    }
+    this.videoElement = document.createElement('object');
+    this.videoElement.id = this.Config.videoPlayerId;
+    this.videoElement.setAttribute('type', 'application/avplayer');
     this.videoElement.setAttribute('class', 'player');
+    this.videoElement.style.position = 'absolute';
+    this.videoElement.style.width = this.Config.width;
+    this.videoElement.style.height = this.Config.height;
+    this.videoElement.style.left = '0px';
+    this.videoElement.style.top = '0px';
     document.body.appendChild(this.videoElement);
-    this.setPlayerInfo();
-    this.registerVideoEvents();
-    Logger.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
+    this.setPlayerInfo('PLAYREADY', 'TIZEN');
+    this.videoElement.style.visibility = 'hidden';
+    this.tizenRegisterEvents();
+    Logger.addLog('Device_Tizen', 'info', 'Samsung Tizen Created and Registered Video Events');
     this.initAudioClass();
-    return null;
   }
 }
 

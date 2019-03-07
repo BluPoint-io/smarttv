@@ -3,6 +3,22 @@ import Subtitle from './subtitle';
 import Logger from '../service/logger';
 import Vast from '../service/vast';
 
+function tizenSetScreenSaver(open = true) {
+  const { tizen, webapis } = window;
+  if (tizen && webapis) {
+    const { SCREEN_SAVER_ON, SCREEN_SAVER_OFF } = webapis.appcommon.AppCommonScreenSaverState;
+    webapis.appcommon.setScreenSaver(
+      open ? SCREEN_SAVER_ON : SCREEN_SAVER_OFF,
+      (result) => {
+        Logger.addLog('Player', 'info', `Screen saver ${open ? 'enabled' : 'disabled'}`, result);
+      },
+      (error) => {
+        Logger.addLog('Player', 'error', JSON.stringify(error));
+      }
+    );
+  }
+}
+
 class Player {
 
   /**
@@ -40,8 +56,13 @@ class Player {
     this.videoElement = document.createElement('video');
     this.videoElement.style.position = 'absolute';
     this.videoElement.setAttribute('class', 'player');
-    this.videoElement.setAttribute('id', 'dtv-video');
+    this.videoElement.setAttribute('width', this.Config.width);
+    this.videoElement.setAttribute('height', this.Config.height);
+    this.videoElement.setAttribute('id', this.Config.videoPlayerId);
+    this.videoElement.setAttribute('class', 'player');
+    this.videoElement.style.visibility = 'hidden';
     document.body.appendChild(this.videoElement);
+    this.setPlayerInfo('NULL', 'WEB');
     this.registerVideoEvents();
     Logger.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
     return null;
@@ -55,7 +76,7 @@ class Player {
    * @method setPlayerInfo
    * @return {Object} this.playerInfo
    */
-  setPlayerInfo() {
+  setPlayerInfo(type, organizer) {
     this.playerInfo = {
       canPlay: false,
       canPlayThrough: false,
@@ -66,14 +87,15 @@ class Player {
       metaDataLoaded: false,
       isSeeking: false,
       isStalled: false,
-      currentVolume: this.videoElement.volume,
+      currentVolume: 1,
       customData: null,
-      drmType: null,
-      drmOrganizer: null,
+      drmType: type,
+      drmOrganizer: organizer,
       src: null,
       adsEnabled: false,
       adsType: null,
-      subtitleEnabled: false
+      subtitleEnabled: false,
+      uhd: false
     };
     return this.playerInfo;
   }
@@ -89,8 +111,13 @@ class Player {
    */
   deleteVideoElement() {
     this.pause();
-    document.body.removeChild(this.videoElement);
-    this.videoElement = false;
+    const videoElement = this.videoElement || this.objectPlayer;
+    if (videoElement) {
+      videoElement.stop();
+      document.body.removeChild(videoElement);
+      this.videoElement = null;
+      this.objectPlayer = null;
+    }
     return true;
   }
 
@@ -110,53 +137,184 @@ class Player {
    * @method addVideoSource
    *
    */
-  addVideoSource(src, customData) {
+  addVideoSource(src, contentType, customData, drm) {
+    const { webapis, tizen } = window;
     this.autoLoop = false;
-    // this.Events.removeAllListeners();
     this.playerInfo.customData = customData;
     this.playerInfo.src = src;
-    const _this = this;
-    if (src.match(/\/manifest/i)) {
-      if (this.currentDevice.brandName === 'webos') {
-        this.playerInfo.drmType = 'playready';
-      } else {
-        this.playerInfo.drmType = 'playReady';
-      }
+    Logger.addLog('Player', 'info', JSON.stringify(this.playerInfo));
+    if (drm) {
+      Logger.addLog('Player', 'info', `Found playReady Content & drmType is ${this.playerInfo.drmType} drmOrganizer ${this.playerInfo.drmOrganizer}`);
       switch (this.playerInfo.drmOrganizer) {
-        case 'OIPF': // eslint-disable-line
-          Logger.addLog('Player', 'info', `Found playReady Content & drmType is ${this.playerInfo.drmType}`);
-          this.createOIPFDrmAgent();
-          const oipfMessage = '<?xml version="1.0" encoding="utf-8"?>' +
-            '<PlayReadyInitiator xmlns="http://schemas.microsoft.com/DRM/2007/03/protocols/">' +
-            '<SetCustomData><CustomData>dummy</CustomData></SetCustomData></PlayReadyInitiator>';
-          const mimeType = this.Config.playReady.mimeType;
-          const DRMSystemID = this.Config.playReady.DRMSystemID;
+        case 'OIPF': {
+          const oipfMessage = `
+            <?xml version="1.0" encoding="utf-8"?>
+            <PlayReadyInitiator xmlns="http://schemas.microsoft.com/DRM/2007/03/protocols/">
+              <LicenseServerUriOverride>
+                <LA_URL>${this.Config.DRM.playReady.licenserUrl}</LA_URL>
+              </LicenseServerUriOverride>
+              <SetCustomData>
+                <CustomData>${this.playerInfo.customData}</CustomData>
+              </SetCustomData>
+            </PlayReadyInitiator>`;
+
+          const mimeType = this.Config.DRM.playReady.mimeType;
+          const DRMSystemID = this.Config.DRM.playReady.DRMSystemID;
+
           this.OIPFDrmObject.sendDRMMessage(mimeType, oipfMessage, DRMSystemID);
-          this.videoElement.setAttribute('src', this.playerInfo.src);
+
+          if (this.videoElement) {
+            this.videoElement.style.visibility = 'visible';
+            this.sourceElement = document.createElement('source');
+            this.sourceElement.setAttribute('src', this.playerInfo.src);
+            if (!this.videoElement.firstChild) {
+              this.videoElement.appendChild(this.sourceElement);
+            }
+            this.videoElement.load();
+          } else if (this.objectPlayer) {
+            this.objectVideoEvents();
+            this.objectPlayer.style.visibility = 'visible';
+            this.objectPlayer.setAttribute('type', 'application/vnd.ms-sstr+xml');
+            this.objectPlayer.setAttribute('data', this.playerInfo.src);
+          }
           break;
-        case 'TIZEN':
-          console.log('TIZEN');
+        }
+        case 'TIZEN': {
+          this.videoElement.style.visibility = 'visible';
+          webapis.avplay.close();
+          webapis.avplay.open(this.playerInfo.src);
+
+          const drmParam = {
+            LicenseServer: this.Config.DRM.playReady.licenserUrl,
+            CustomData: customData
+          };
+          if (String(src)
+            .match(/\/manifest/i)) {
+            webapis.avplay.setDrm('PLAYREADY', 'SetProperties', JSON.stringify(drmParam));
+          } else if (String(src)
+            .match(/\.wvm/)) {
+            webapis.avplay.setStreamingProperty('WIDEVINE', {});
+            webapis.avplay.setDrm('WIDEVINE_CLASSIC', 'SetProperties', JSON.stringify(drmParam));
+          }
+
+          webapis.avplay.prepareAsync(() => {
+            tizen.systeminfo.getPropertyValue('DISPLAY', (result) => {
+              webapis.avplay.setDisplayRect(0, 0, result.resolutionWidth, result.resolutionHeight);
+              if (webapis.productinfo.isUdPanelSupported()) {
+                Logger.addLog('Player', 'info', '4K UHD is supported');
+                this.playerInfo.uhd = true;
+              }
+            });
+          });
 
           break;
-        case 'WEBOS':
+        }
+        case 'WEBOS': {
           this.setupWebOSDrm();
+          this.videoElement.style.visibility = 'visible';
           this.Events.addListener('DRM_WebOSReady', () => {
-            _this.sourceElement = document.createElement('source');
-            _this.sourceElement.setAttribute('src', _this.playerInfo.src);
-            _this.sourceElement.setAttribute('type', `application/vnd.ms-sstr+xml;mediaOption=${_this._WebOS.mediaOption}`);
-            _this.videoElement.appendChild(_this.sourceElement);
-            document.body.setAttribute('onunload', _this.unloadDrmClient);
+            this.sourceElement = document.createElement('source');
+            this.sourceElement.setAttribute('src', this.playerInfo.src);
+            this.sourceElement.setAttribute('type', `application/vnd.ms-sstr+xml;mediaOption=${this._WebOS.mediaOption}`);
+            !this.videoElement.firstChild && this.videoElement.appendChild(this.sourceElement);
+            document.body.setAttribute('onunload', this.unloadDrmClient);
           });
           break;
+        }
         default:
-          console.log('STANDART');
+          Logger.addLog('Player', 'info', 'STANDART');
       }
-    } else {
-      Logger.addLog('Player', 'info', 'This is a DRM-Free Content');
-      // _this.sourceElement = document.createElement('source');
-      // _this.sourceElement.setAttribute('src', _this.playerInfo.src);
-      // _this.videoElement.appendChild(_this.sourceElement);
-      this.videoElement.setAttribute('src', _this.playerInfo.src);
+    } else if (tizen && webapis) {
+      this.videoElement.style.visibility = 'visible';
+      webapis.avplay.close();
+      webapis.avplay.open(this.playerInfo.src);
+      webapis.avplay.prepareAsync(() => {
+        tizen.systeminfo.getPropertyValue('DISPLAY', (result) => {
+          webapis.avplay.setDisplayRect(0, 0, result.resolutionWidth, result.resolutionHeight);
+          if (webapis.productinfo.isUdPanelSupported()) {
+            Logger.addLog('Player', 'info', '4K UHD is supported');
+            this.playerInfo.uhd = true;
+          }
+        });
+      });
+    } else if (this.videoElement) {
+      const options = {
+        mediaTransportType: String(src)
+          .match(/\.m3u8/) ? 'HLS' : 'URI',
+        mediaFormat: {
+          type: 'video'
+        },
+        adaptiveStreaming: {
+          apativeResolution: true,
+          seamlessPlay: true
+        },
+        option: {}
+      };
+
+      const mediaOption = escape(JSON.stringify(options));
+
+      this.videoElement.style.visibility = 'visible';
+      // this.videoElement.src = this.playerInfo.src;
+      this.sourceElement = document.createElement('source');
+      this.sourceElement.setAttribute('src', this.playerInfo.src);
+
+      if (String(src)
+        .match(/\/manifest/i)) {
+        this.sourceElement.setAttribute('type', `application/vnd.ms-sstr+xml;mediaOption=${mediaOption}`);
+      } else if (String(src)
+        .match(/\.wvm/)) {
+        this.sourceElement.setAttribute('type', `video/mp4;mediaOption=${mediaOption}`);
+      } else if (String(src)
+        .match(/\.mp4/)) {
+        this.sourceElement.setAttribute('type', `video/mp4;mediaOption=${mediaOption}`);
+      } else if (String(src)
+        .match(/\.m3u8/)) {
+        this.sourceElement.setAttribute('type', `application/vnd.apple.mpegurl;mediaOption=${mediaOption}`);
+      }
+
+      if (!this.videoElement.firstChild) {
+        this.videoElement.appendChild(this.sourceElement);
+      }
+
+      if (this.videoElement.readyState !== 0) {
+        this.videoElement.load();
+      }
+    } else if (this.objectPlayer) {
+      this.objectVideoEvents();
+      this.objectPlayer.style.visibility = 'visible';
+      this.objectPlayer.setAttribute('data', this.playerInfo.src);
+      if (this.currentDevice.brandName === 'seraphic') {
+        this.objectPlayer.setAttribute('type', 'video/mpeg4');
+      }
+    }
+    Logger.addLog('Player', 'info', 'This is a DRM-Free Content');
+  }
+
+  deleteVideoSource() {
+    try {
+      const { tizen, webapis } = window;
+      this.playerInfo.currentState = 'Stop';
+      this.playerInfo.duration = 0;
+      this.autoLoop = true;
+      if (tizen && webapis) {
+        this.videoElement.style.visibility = 'hidden';
+        webapis.avplay.stop();
+        webapis.avplay.close();
+      } else if (this.videoElement) {
+        this.videoElement.style.visibility = 'hidden';
+        while (this.videoElement.firstChild) {
+          this.videoElement.removeChild(this.videoElement.firstChild);
+        }
+        this.videoElement.load();
+      } else if (this.objectPlayer) {
+        clearInterval(this.objectInterval);
+        this.objectInterval = null;
+        this.objectPlayer.play(0);
+        this.objectPlayer.setAttribute('data', '');
+        this.objectPlayer.style.visibility = 'hidden';
+      }
+    } catch (error) {
+      Logger.addLog('Player', 'error', 'Delete video source error', error.message);
     }
   }
 
@@ -171,28 +329,28 @@ class Player {
    * @return {*}
    */
   initAds(type, url) {
-    const _this = this;
-    _this.playerInfo.adsType = type;
-    _this.playerInfo.adsEnabled = true;
+    this.playerInfo.adsType = type;
+    this.playerInfo.adsEnabled = true;
     switch (type) {
-      case 'VMAP': // eslint-disable-line
-        const xhr = new window.XMLHttpRequest();
+      case 'VMAP': {
+        const xhr = new XMLHttpRequest();
         xhr.open('GET', url);
         xhr.send();
-        _this.Events.on('vmapLoaded', (vmapObject) => {
-          _this.prepareVastFromVmap(vmapObject);
+        this.Events.on('vmapLoaded', (vmapObject) => {
+          this.prepareVastFromVmap(vmapObject);
         });
-        xhr.onreadystatechange = function() {
+        xhr.onreadystatechange = () => {
           if (xhr.readyState === 4) {
             // Parse VMAP
-            Vast.parseVMAP(xhr.responseXML, _this.Events);
+            Vast.parseVMAP(xhr.responseXML, this.Events);
             Logger.addLog('Player - ADS', 'info', 'VMAP Target Loaded Successfully');
-            _this.addAdsCaption();
+            this.addAdsCaption();
           }
         };
         break;
+      }
       case 'VAST':
-        console.log('VAST');
+        Logger.addLog('Player - ADS', 'info', 'VAST');
         break;
       default:
         return Logger.addLog('Player - Ads', 'error', '');
@@ -454,35 +612,31 @@ class Player {
    * @method initVastAd
    */
   initVastAd(time) {
-    const _this = this;
     this.videoElement.src = '';
     this.captionDiv.style.visibility = 'visible';
     this.captionDiv.innerHTML = 'Reklamlar Yükleniyor';
     this.vastElement.src = this.vastReadyItems[0].mediaFile;
     this.vastElement.removeAttribute('controls');
     this.vastElement.addEventListener('loadedmetadata', () => {
-      _this.videoElement.style.visibility = 'hidden';
-      _this.vastElement.style.visibility = 'visible';
-      _this.captionDiv.innerHTML = _this.Config.vastOptions.ad_caption;
-      console.log('Meta Data YüklenDi');
-      _this.vastElement.play();
+      this.videoElement.style.visibility = 'hidden';
+      this.vastElement.style.visibility = 'visible';
+      this.captionDiv.innerHTML = this.Config.vastOptions.ad_caption;
+      this.vastElement.play();
     });
     this.vastElement.addEventListener('ended', () => {
-      console.log('Bitti');
-      _this.vastElement.style.visibility = 'hidden';
-      _this.videoElement.style.visibility = 'visible';
-      _this.captionDiv.style.visibility = 'hidden';
-      _this.adsInProgress = false;
-      _this.videoElement.src = _this.playerInfo.src;
-      _this.videoElement.currentTime = time;
-      _this.play();
+      this.vastElement.style.visibility = 'hidden';
+      this.videoElement.style.visibility = 'visible';
+      this.captionDiv.style.visibility = 'hidden';
+      this.adsInProgress = false;
+      this.videoElement.src = this.playerInfo.src;
+      this.videoElement.currentTime = time;
+      this.play();
     });
     this.vastElement.addEventListener('play', () => {
-      console.log('Reklam Başladı');
+      Logger.addLog('Player', 'info', 'Ads is started');
     });
-    console.log(`init ettik${time}`);
     Vast.vastArray.splice(0, 1);
-    _this.vastReadyItems.splice(0, 1);
+    this.vastReadyItems.splice(0, 1);
 
   }
 
@@ -502,7 +656,8 @@ class Player {
     this.captionDiv.innerHTML = this.Config.vastOptions.ad_caption;
     this.wrapperDiv.appendChild(this.captionDiv);
     // Adjust style
-    this.captionDiv.style.left = `${(this.vastElement.offsetWidth / 2) - (document.getElementsByClassName('vastCaption')[0].offsetWidth / 2)}px`;    this.captionDiv.style.visibility = 'hidden';
+    this.captionDiv.style.left = `${(this.vastElement.offsetWidth / 2) - (document.getElementsByClassName('vastCaption')[0].offsetWidth / 2)}px`;
+    this.captionDiv.style.visibility = 'hidden';
     return true;
   }
 
@@ -513,19 +668,16 @@ class Player {
    * @method unloadDrmClient
    */
   unloadDrmClient() {
-    console.log('Unload Geldi');
-    const _this = this;
-    if (this.currentDevice.brandName === 'webos' && _this._WebOS.isDrmClientLoaded) {
+    if (this.currentDevice.brandName === 'webos' && this._WebOS.isDrmClientLoaded) {
       webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
         method: 'unload',
-        parameters: { clientId: _this._WebOS.clientId },
-        onSuccess: (result) => {
-          _this._WebOS.isDrmClientLoaded = false;
-          console.log('DRM Client is unloaded successfully.');
+        parameters: { clientId: this._WebOS.clientId },
+        onSuccess: () => {
+          this._WebOS.isDrmClientLoaded = false;
+          Logger.addLog('Player', 'info', 'DRM Client is unloaded successfully.');
         },
         onFailure: (result) => {
-          console.log(`[${result.errorCode}] ${result.errorText}`);
-          // Do something for error handling
+          Logger.addLog('Player', 'error', `[${result.errorCode}] ${result.errorText}`);
         }
       });
     }
@@ -539,28 +691,24 @@ class Player {
    * @method setupWebOSDrm
    */
   setupWebOSDrm() {
-    const _this = this;
-    _this._WebOS = {};
-
-    _this._WebOS.appId = 'com.dtv.smarttv';
-    _this._WebOS.clientId = '';
-    _this._WebOS.isDrmClientLoaded = '';
-
-    webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
+    this._WebOS = {};
+    this._WebOS.appId = this.Config.appId;
+    this._WebOS.clientId = '';
+    this._WebOS.isDrmClientLoaded = '';
+    window.webOS.service.request('luna://com.webos.service.drm', {
       method: 'load',
       parameters: {
-        drmType: _this.playerInfo.drmType,
-        appId: _this._WebOS.appId
+        drmType: this.playerInfo.drmType,
+        appId: this._WebOS.appId
       },
       onSuccess: (result) => {
-        _this._WebOS.clientId = result.clientId;
-        _this._WebOS.isDrmClientLoaded = true;
-        console.log('DRM Client is loaded successfully.');
-        _this.sendWebOSDrm();
+        this._WebOS.clientId = result.clientId;
+        this._WebOS.isDrmClientLoaded = true;
+        Logger.addLog('Player', 'info', 'DRM Client is loaded successfully.');
+        this.sendWebOSDrm();
       },
       onFailure: (result) => {
-        console.log(`[${result.errorCode}] ${result.errorText}`);
-        // Do something for error handling
+        Logger.addLog('Player', 'error', `[${result.errorCode}] ${result.errorText}`);
       }
     });
   }
@@ -572,29 +720,27 @@ class Player {
    * @method sendWebOSDrm
    */
   sendWebOSDrm() {
-    this._WebOS.msg = `<?xml version="1.0" encoding="utf-8"?>
+    this._WebOS.msg = `
+    <?xml version="1.0" encoding="utf-8"?>
     <PlayReadyInitiator xmlns= "http://schemas.microsoft.com/DRM/2007/03/protocols/">
-    <LicenseAcquisition>
-    <Header><WRMHEADER xmlns= "http://schemas.microsoft.com/DRM/2007/03/PlayReadyHeader" version="4.0.0.0">
-    <DATA>
-    <PROTECTINFO>
-    <KEYLEN>16
-    </KEYLEN>
-    <ALGID>AESCTR</ALGID>
-    </PROTECTINFO>
-    <LA_URL>${this.Config.DRM.licenserUrl}</LA_URL>
-    <KID>lFmb2gxg0Cr5bfEnJXgJeA==</KID>
-    <CHECKSUM>P7ORpD2IpA==</CHECKSUM>
-    </DATA>
-    </WRMHEADER>
-    </Header>
-    <CustomData>${this.playerInfo.customData}</CustomData>
-    </LicenseAcquisition>
+      <LicenseAcquisition>
+        <Header>
+          <WRMHEADER xmlns= "http://schemas.microsoft.com/DRM/2007/03/PlayReadyHeader" version="4.0.0.0">
+            <DATA>
+              <PROTECTINFO>
+                <KEYLEN>16</KEYLEN>
+                <ALGID>AESCTR</ALGID>
+              </PROTECTINFO>
+              <LA_URL>${this.Config.DRM.licenserUrl}</LA_URL>
+              <KID>lFmb2gxg0Cr5bfEnJXgJeA==</KID>
+              <CHECKSUM>P7ORpD2IpA==</CHECKSUM>
+            </DATA>
+          </WRMHEADER>
+        </Header>
+        <CustomData>${this.playerInfo.customData}</CustomData>
+      </LicenseAcquisition>
     </PlayReadyInitiator>`;
-
-    const _this = this;
-
-    webOS.service.request('luna://com.webos.service.drm', { // eslint-disable-line
+    window.webOS.service.request('luna://com.webos.service.drm', {
       method: 'sendDrmMessage',
       parameters: {
         clientId: this._WebOS.clientId,
@@ -603,24 +749,22 @@ class Player {
         drmSystemId: this.Config.DRM.drmSystemId
       },
       onSuccess: (result) => {
-        _this._WebOS.msgId = result.msgId;
-        _this._WebOS.resultCode = result.resultCode;
-        _this._WebOS.resultMsg = result.resultMsg;
-        console.log(`Message ID: ${_this._WebOS.msgId}`);
-        console.log(`[${_this._WebOS.resultCode}] ${_this._WebOS.resultMsg}`);
-        _this._WebOS.options = {};
-        _this._WebOS.options.option = {};
-        _this._WebOS.options.option.drm = {};
-        _this._WebOS.options.option.drm.type = _this.playerInfo.drmType;
-        _this._WebOS.options.option.drm.clientId = _this._WebOS.clientId;
-        _this._WebOS.mediaOption = escape(JSON.stringify(_this._WebOS.options));
-        _this.Events.triggerEvent('DRM_WebOSReady');
-        if (_this._WebOS.resultCode !== 0) {
-          // Do Handling DRM message error
-        }
+        this._WebOS.msgId = result.msgId;
+        this._WebOS.resultCode = result.resultCode;
+        this._WebOS.resultMsg = result.resultMsg;
+        this._WebOS.options = {
+          drm: {
+            type: this.playerInfo.drmType,
+            clientId: this._WebOS.clientId
+          }
+        };
+        this._WebOS.mediaOption = escape(JSON.stringify(this._WebOS.options));
+        this.Events.triggerEvent('DRM_WebOSReady');
+        Logger.addLog('Player', 'info', 'Message ID', result.msgId);
+        Logger.addLog('Player', 'info', `[${result.resultCode}] ${result.resultMsg}`);
       },
       onFailure: (result) => {
-        console.log(`[${result.errorCode}] ${result.errorText}`);
+        Logger.addLog('Player', 'error', `[${result.errorCode}] ${result.errorText}`);
       }
     });
 
@@ -636,7 +780,6 @@ class Player {
     this.Audio = new Audio();
     this.changeAudioWithOrder = this.Audio.changeAudioWithOrder;
     this.getCurrentAudioWithOrder = this.Audio.getCurrentAudioWithOrder;
-    this.denemeSERDAR = this.Audio.getThis;
   }
 
   /**
@@ -646,16 +789,52 @@ class Player {
    * @method initAudioClass
    */
   addSubtitle(srt, targetElement) {
+    this.removeSubtitle();
+    this.Events.addListener('player_onTimeUpdate', () => {
+      this.playerInfo.subtitleEnabled && this.Subtitle.tick();
+    });
+    this.Events.addListener('player_onEnded', () => {
+      if (this.playerInfo.subtitleEnabled) {
+        this.Subtitle.target.innerText = '';
+      }
+    });
     this.playerInfo.subtitleEnabled = true;
-    this.Subtitle = new Subtitle(srt, this, targetElement)
+    this.Subtitle = new Subtitle(srt, this, targetElement);
   }
 
   removeSubtitle() {
+    this.Events.removeListener('player_onTimeUpdate', () => {
+      this.playerInfo.subtitleEnabled && this.Subtitle.tick();
+    });
+    this.Events.removeListener('player_onEnded', () => {
+      if (this.playerInfo.subtitleEnabled) {
+        this.Subtitle.target.innerText = '';
+      }
+    });
     this.playerInfo.subtitleEnabled = false;
     this.Subtitle = null;
+    this.currentSub = null;
+    this.subs = null;
   }
 
+  addTracks(tracks) {
+    for (const trackItem of tracks) {
+      const track = document.createElement('track');
+      track.kind = 'captions';
+      track.label = trackItem.label;
+      track.srclang = trackItem.code;
+      track.src = trackItem.src;
+      this.videoElement.appendChild(track);
+    }
+  }
 
+  enableTrack(track) {
+    if (!this.videoElement.textTracks || !this.videoElement.textTracks.length) return;
+    for (const trackItem of this.videoElement.textTracks) {
+      Logger.addLog('Player', 'info', trackItem.language, track);
+      trackItem.mode = trackItem.language === track ? 'showing' : 'disabled';
+    }
+  }
 
   /**
    * Play trigger for videoElement
@@ -664,7 +843,22 @@ class Player {
    * @method play
    */
   play() {
-    this.videoElement.play();
+    const { tizen, webapis } = window;
+    try {
+      if (tizen && webapis) {
+        webapis.avplay.play();
+        Logger.addLog('Player', 'info', 'Video is playing...');
+      } else if (this.videoElement) {
+        this.videoElement.play();
+      } else if (this.objectPlayer) {
+        this.objectPlayer.play(1);
+      }
+      this.Events.triggerEvent('player_onPlay', ['Play']);
+      this.playerInfo.currentState = 'Play';
+    } catch (error) {
+      Logger.addLog('Player', 'error', 'Player not ready', error.message);
+    }
+    tizenSetScreenSaver(false);
   }
 
   /**
@@ -675,9 +869,8 @@ class Player {
    * @method stop
    */
   stop() {
-    // this.videoElement.remove();
     this.Events.removeAllListeners();
-    this.addVideoSource('');
+    this.deleteVideoSource();
   }
 
   /**
@@ -687,7 +880,16 @@ class Player {
    * @method pause
    */
   pause() {
-    this.videoElement.pause();
+    const { tizen, webapis } = window;
+    if (tizen && webapis) {
+      webapis.avplay.pause();
+    } else if (this.videoElement) {
+      this.videoElement.pause();
+    } else if (this.objectPlayer) {
+      this.objectPlayer.play(0);
+    }
+    this.Events.triggerEvent('player_onPause', ['Pause']);
+    this.playerInfo.currentState = 'Paused';
   }
 
   /**
@@ -697,7 +899,16 @@ class Player {
    * @method togglePlay
    */
   togglePlay() {
-    if (this.videoElement.paused) {
+    const { tizen, webapis } = window;
+    let pausedState;
+    if (tizen && webapis) {
+      pausedState = webapis.avplay.getState() !== 'PLAYING';
+    } else if (this.videoElement) {
+      pausedState = this.videoElement.paused;
+    } else if (this.objectPlayer) {
+      pausedState = this.objectPlayer.playState === 2;
+    }
+    if (pausedState) {
       this.play();
     } else {
       this.pause();
@@ -712,13 +923,195 @@ class Player {
    * @method playWithLoop
    */
   playWithLoop() {
-    if (this.videoElement) {
-      this.autoLoop = true;
-      this.play();
-    }
+    this.autoLoop = true;
+    this.play();
+    this.playerInfo.currentState = 'Play';
   }
 
+  /**
+   * Trigger specific events for all videoElement trigger
+   * @for Player
+   * @method tizenRegisterEvents
+   */
+  tizenRegisterEvents() {
+    const { tizen, webapis } = window;
+    const listener = {
+      onbufferingstart: () => {
+        Logger.addLog('Player', 'info', 'Buffering start');
+        this.Events.triggerEvent('player_onWaiting');
+      },
+      onbufferingcomplete: () => {
+        Logger.addLog('Player', 'info', 'Buffering complete');
+        this.Events.triggerEvent('player_onDurationChange', [Math.trunc(webapis.avplay.getDuration())]);
+        this.playerInfo.duration = Math.trunc(webapis.avplay.getDuration() / 1000);
+        if (this.playerInfo.subtitleEnabled) {
+          this.Subtitle.target.innerText = '';
+          this.Subtitle.setCurrentSubtitle();
+        }
+        const avplayState = webapis.avplay.getState();
+        if (
+          avplayState !== 'IDLE' &&
+          avplayState !== 'NONE' &&
+          avplayState === 'READY' &&
+          (this.autoLoop === true ||
+            this.playerInfo.currentState === 'Play' ||
+            this.playerInfo.currentState === 'Playing')
+        ) {
+          this.playerInfo.currentState = 'Play';
+          webapis.avplay.play();
+          Logger.addLog('Player', 'info', 'buffer completed, video play');
+        }
+      },
+      onstreamcompleted: () => {
+        Logger.addLog('Player', 'info', 'Stream Completed autoLoop', this.autoLoop);
+        this.playerInfo.currentState = 'Finished';
+        this.Events.triggerEvent('player_onEnded', ['Video Finished']);
+        const avplayState = webapis.avplay.getState();
+        if (
+          avplayState !== 'IDLE' &&
+          avplayState !== 'NONE' &&
+          (avplayState === 'PLAYING' || avplayState === 'READY') &&
+          this.autoLoop
+        ) {
+          Logger.addLog('Player', 'info', 'Loop video continue');
+          webapis.avplay.seekTo(0);
+        }
+        tizenSetScreenSaver(true);
+      },
+      oncurrentplaytime: (currentTime) => {
+        this.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(currentTime)]);
+        const state = webapis.avplay.getState();
+        switch (state) {
+          case 'PLAYING':
+            this.Events.triggerEvent('player_onPlay', ['Play']);
+            this.playerInfo.currentState = 'Play';
+            break;
 
+          case 'PAUSED':
+            this.Events.triggerEvent('player_onPause', ['Pause']);
+            this.playerInfo.currentState = 'Paused';
+            break;
+
+          case 'READY':
+            this.Events.triggerEvent('player_onMetaDataLoaded', ['Meta Data Loaded']);
+            this.playerInfo.metaDataLoaded = true;
+            break;
+
+          case 'IDLE':
+            this.Events.triggerEvent('player_onDataLoaded', ['Data Loaded']);
+            this.playerInfo.dataLoaded = true;
+            break;
+
+          default:
+            break;
+        }
+      },
+      onerror: (eventType) => {
+        Logger.addLog('Player', 'error', 'event type error', eventType);
+        this.Events.triggerEvent('player_onError', [eventType]);
+        this.playerInfo.currentState = 'Error';
+      },
+      onevent: (eventType, eventData) => {
+        Logger.addLog('Player', 'info', 'Event type', eventType);
+      },
+      onsubtitlechange: (duration, text) => {
+        Logger.addLog('Player', 'info', 'Subittle text', text);
+      },
+      ondrmevent: (drmEvent, drmData) => {
+        Logger.addLog('Player', 'info', `DRM callback: ${drmEvent}`, drmData);
+      }
+    };
+    webapis.avplay.setListener(listener);
+  }
+
+  /**
+   * Trigger create object player for object player
+   * @for Arçelik Player && Seraphic Player
+   * @method createObjectPlayer
+   */
+  createObjectPlayer(idName) {
+    this.objectPlayer = document.createElement('object');
+    this.objectPlayer.setAttribute('id', idName);
+    this.objectPlayer.setAttribute('type', 'video/mpeg4');
+    this.objectPlayer.setAttribute('class', 'player');
+    this.objectPlayer.setAttribute('data', '');
+    this.objectPlayer.setAttribute('width', this.Config.width);
+    this.objectPlayer.setAttribute('height', this.Config.height);
+    this.objectPlayer.style.position = 'absolute';
+    this.objectPlayer.style.left = '0px';
+    this.objectPlayer.style.top = '0px';
+    this.objectPlayer.style.zIndex = -1;
+    this.objectPlayer.style.visibility = 'hidden';
+    document.body.appendChild(this.objectPlayer);
+    Logger.addLog('Player', 'info', 'Object Player Created');
+  }
+
+  /**
+   * Trigger specific events for all object player trigger (arcelikPlayer)
+   * @for Player
+   * @method objectVideoEvents
+   */
+  objectVideoEvents() {
+    const playStates = ['stopped', 'playing', 'paused', 'connecting', 'buffering', 'finished', 'error'];
+    if (this.objectInterval) return;
+    this.objectPlayer.onPlayStateChange = (event) => {
+      Logger.addLog('Player', 'info', `Event: ${playStates[ps]}`, ps);
+      const ps = this.objectPlayer.playState;
+      switch (ps) {
+        case 0:
+          this.playerInfo.currentState = 'Stopped';
+          this.Events.triggerEvent('player_onEnded', ['Video Stopped']);
+          break;
+        case 1:
+          // get duration
+          this.Events.triggerEvent('player_onDurationChange', [Math.trunc(this.objectPlayer.playTime)]);
+          this.playerInfo.duration = Math.trunc(this.objectPlayer.playTime / 1000);
+          this.Events.triggerEvent('player_onPlay', ['Play']);
+          this.playerInfo.currentState = 'Play';
+          break;
+        case 2:
+          this.Events.triggerEvent('player_onPause', ['Pause']);
+          this.playerInfo.currentState = 'Paused';
+          break;
+        case 3:
+          this.Events.triggerEvent('player_onProgress', ['Downloading Video']);
+          break;
+        case 4:
+          this.Events.triggerEvent('player_onWaiting');
+          if (this.playerInfo.subtitleEnabled) {
+            this.Subtitle.target.innerText = '';
+            this.Subtitle.setCurrentSubtitle();
+          }
+          break;
+        case 5:
+          this.playerInfo.currentState = 'Finished';
+          this.Events.triggerEvent('player_onEnded', ['Video Finished']);
+          if (this.autoLoop && ps !== 0) {
+            this.objectPlayer.play(1);
+          }
+          break;
+        case 6: {
+          const objectPlayerErrors = [
+            'A/V format not supported',
+            'cannot connect to server or lost connection',
+            'unidentified error'
+          ];
+          this.Events.triggerEvent('player_onError', [objectPlayerErrors[this.objectPlayer.error]]);
+          this.playerInfo.currentState = 'Error';
+          break;
+        }
+        default:
+          break;
+      }
+    };
+    clearInterval(this.objectInterval);
+    this.objectInterval = setInterval(() => {
+      if (this.objectPlayer.playState === 1) {
+        // trigger current time
+        this.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(this.objectPlayer.playPosition)]);
+      }
+    }, 500);
+  }
 
   /**
    * Trigger specific events for all videoElement trigger
@@ -726,95 +1119,112 @@ class Player {
    * @method registerVideoEvents
    */
   registerVideoEvents() {
-    const _this = this;
-
-    this.videoElement.oncanplay = () => {
-      _this.playerInfo.canPlay = true;
-      _this.Events.triggerEvent('player_onCanPlay');
-    };
-
-    this.videoElement.oncanplaythrough = () => {
-      _this.playerInfo.canPlayThrough = true;
-      _this.Events.triggerEvent('player_onCanPlayThrough');
-    };
-
-    this.videoElement.ondurationchange = () => {
-      _this.Events.triggerEvent('player_onDurationChange', [Math.trunc(_this.videoElement.duration)]);
-      _this.playerInfo.duration = _this.videoElement.duration;
-    };
-
-    this.videoElement.onended = () => {
-      _this.playerInfo.currentState = 'Finished';
-      _this.Events.triggerEvent('player_onEnded', ['Video Finished']);
-      if(this.autoLoop) {
+    this.videoElement.addEventListener('canplay', () => {
+      this.playerInfo.canPlay = true;
+      this.Events.triggerEvent('player_onCanPlay');
+    });
+    this.videoElement.addEventListener('canplaythrough', () => {
+      this.playerInfo.canPlayThrough = true;
+      this.Events.triggerEvent('player_onCanPlayThrough');
+    });
+    this.videoElement.addEventListener('durationchange', () => {
+      this.Events.triggerEvent('player_onDurationChange', [Math.trunc(this.videoElement.duration)]);
+      this.playerInfo.duration = this.videoElement.duration;
+    });
+    this.videoElement.addEventListener('ended', () => {
+      this.playerInfo.currentState = 'Finished';
+      this.Events.triggerEvent('player_onEnded', ['Video Finished']);
+      if (this.autoLoop) {
         this.playWithLoop();
       }
-    };
-
-    this.videoElement.onloadeddata = () => {
-      _this.Events.triggerEvent('player_onDataLoaded', ['Data Loaded']);
-      _this.playerInfo.dataLoaded = true;
-    };
-
-    this.videoElement.onloadedmetadata = () => {
-      _this.Events.triggerEvent('player_onMetaDataLoaded', ['Meta Data Loaded']);
-      _this.playerInfo.metaDataLoaded = true;
-    };
-
-    this.videoElement.onloadstart = () => {
-      _this.Events.triggerEvent('player_onLoadStart', ['Load Started']);
-    };
-
-    this.videoElement.onpause = () => {
-      _this.Events.triggerEvent('player_onPause', ['Pause']);
-      _this.playerInfo.currentState = 'Paused';
-    };
-
-    this.videoElement.onplay = () => {
-      _this.Events.triggerEvent('player_onPlay', ['Play']);
-      _this.playerInfo.currentState = 'Play';
-    };
-
-    this.videoElement.onplaying = () => {
-      _this.Events.triggerEvent('player_onPlaying', ['Playing']);
-      _this.playerInfo.currentState = 'Playing';
-    };
-
-    this.videoElement.progress = () => {
-      _this.Events.triggerEvent('player_onProgress', ['Downloading Video']);
-    };
-
-    this.videoElement.onratechange = () => {
-      _this.Events.triggerEvent('player_onRateChange', [_this.videoElement.playbackRate]);
-      _this.playerInfo.playbackRate = _this.videoElement.playbackRate;
-    };
-
-    this.videoElement.onseeked = () => {
-      _this.Events.triggerEvent('player_onSeeked', ['Seek Completed']);
-      _this.playerInfo.isSeeking = false;
-    };
-
-    this.videoElement.onseeking = () => {
-      _this.Events.triggerEvent('player_onSeeking', ['Seek In Progress']);
-      _this.playerInfo.isSeeking = true;
-    };
-
-    this.videoElement.ontimeupdate = () => {
-      _this.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(_this.videoElement.currentTime)]);
-      if (_this.playerInfo.adsEnabled) {
-        _this.checkAdsStatus();
+    });
+    this.videoElement.addEventListener('loadeddata', () => {
+      this.Events.triggerEvent('player_onDataLoaded', ['Data Loaded']);
+      this.playerInfo.dataLoaded = true;
+    });
+    this.videoElement.addEventListener('loadedmetadata', () => {
+      this.Events.triggerEvent('player_onMetaDataLoaded', ['Meta Data Loaded']);
+      this.playerInfo.metaDataLoaded = true;
+      if (this.playerInfo.subtitleEnabled) {
+        this.Subtitle.target.innerText = '';
+        this.Subtitle.setCurrentSubtitle();
       }
-    };
-
-    this.videoElement.onvolumechange = () => {
-      _this.Events.triggerEvent('player_onVolumeChange', [_this.videoElement.volume]);
-      _this.videoElement.currentVolume = _this.videoElement.volume;
-    };
-
-    this.videoElement.onwaiting = () => {
-      _this.Events.triggerEvent('player_onWaiting');
-      _this.playerInfo.currentState = 'Waiting';
-    };
+    });
+    this.videoElement.addEventListener('error', () => {
+      let errorMessage = JSON.stringify(this.videoElement.error);
+      if (this.videoElement.error && this.videoElement.error.code) {
+        switch (this.videoElement.error.code) {
+          case 1:
+            /* MEDIA_ERR_ABORTED */
+            errorMessage = 'fetching process aborted by user';
+            break;
+          case 2:
+            /* MEDIA_ERR_NETWORK */
+            errorMessage = 'error occurred when downloading';
+            break;
+          case 3:
+            /* = MEDIA_ERR_DECODE */
+            errorMessage = 'error occurred when decoding';
+            break;
+          case 4:
+            /* MEDIA_ERR_SRC_NOT_SUPPORTED */
+            errorMessage = 'audio/video not supported';
+            break;
+          default:
+            break;
+        }
+      }
+      this.Events.triggerEvent('player_onError', [errorMessage]);
+      this.playerInfo.currentState = 'Error';
+    });
+    this.videoElement.addEventListener('waiting', () => {
+      this.Events.triggerEvent('player_onWaiting');
+      this.playerInfo.currentState = 'Waiting';
+    });
+    this.videoElement.addEventListener('volumechange', () => {
+      this.Events.triggerEvent('player_onVolumeChange', [this.videoElement.volume]);
+      this.videoElement.currentVolume = this.videoElement.volume;
+    });
+    this.videoElement.addEventListener('timeupdate', () => {
+      this.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(this.videoElement.currentTime)]);
+      if (this.playerInfo.adsEnabled) {
+        this.checkAdsStatus();
+      }
+    });
+    this.videoElement.addEventListener('seeking', () => {
+      this.Events.triggerEvent('player_onSeeking', ['Seek In Progress']);
+      this.playerInfo.isSeeking = true;
+    });
+    this.videoElement.addEventListener('seeked', () => {
+      this.Events.triggerEvent('player_onSeeked', ['Seek Completed']);
+      this.playerInfo.isSeeking = false;
+      if (this.playerInfo.subtitleEnabled) {
+        this.Subtitle.target.innerText = '';
+        this.Subtitle.setCurrentSubtitle();
+      }
+    });
+    this.videoElement.addEventListener('ratechange', () => {
+      this.Events.triggerEvent('player_onRateChange', [this.videoElement.playbackRate]);
+      this.playerInfo.playbackRate = this.videoElement.playbackRate;
+    });
+    this.videoElement.addEventListener('progress', () => {
+      this.Events.triggerEvent('player_onProgress', ['Downloading Video']);
+    });
+    this.videoElement.addEventListener('playing', () => {
+      this.Events.triggerEvent('player_onPlaying', ['Playing']);
+      this.playerInfo.currentState = 'Playing';
+    });
+    this.videoElement.addEventListener('play', () => {
+      this.Events.triggerEvent('player_onPlay', ['Play']);
+      this.playerInfo.currentState = 'Play';
+    });
+    this.videoElement.addEventListener('pause', () => {
+      this.Events.triggerEvent('player_onPause', ['Pause']);
+      this.playerInfo.currentState = 'Paused';
+    });
+    this.videoElement.addEventListener('loadstart', () => {
+      this.Events.triggerEvent('player_onLoadStart', ['Load Started']);
+    });
   }
 
   /**
@@ -824,33 +1234,28 @@ class Player {
    * @method createOIPFDrmAgent
    */
   createOIPFDrmAgent() {
-    this.OIPFDrmObject = document.createElement('object');
-    this.OIPFDrmObject.setAttribute('type', 'application/oipfDrmAgent');
-    this.OIPFDrmObject.setAttribute('id', 'oipfDrm');
-    this.OIPFDrmObject.style.display = 'none';
-    document.head.appendChild(this.OIPFDrmObject);
-    this.OIPFDrmObject.onDRMMessageResult = function(msgId, resultMsg, resultCode) {
-      if (resultCode === 0) {
-        Logger.addLog('Player', 'create', `DRM Initialized Successfuly, Result Code = ${resultCode}!`);
-      } else {
-        switch (resultCode) {
-          case 1:
-            Logger.addLog('Player', 'error', 'Error Code : 1 / Unknown Error - ', HtmlEncode(resultMsg)); // eslint-disable-line no-undef
-            break;
-          case 2:
-            Logger.addLog('Player', 'error', 'Error Code : 2 / Cannot Process Result');
-            break;
-          case 3:
-            Logger.addLog('Player', 'error', 'Error Code : 3 / Unknown MIME Type');
-            break;
-          case 4:
-            Logger.addLog('Player', 'error', 'Error Code : 4 / User Consent Required');
-            break;
-          default:
-            Logger.addLog('Player', 'error', 'Error', resultCode);
-            break;
-        }
-      }
+    if (!this.OIPFDrmObject) {
+      this.OIPFDrmObject = document.createElement('object');
+      this.OIPFDrmObject.setAttribute('type', 'application/oipfDrmAgent');
+      this.OIPFDrmObject.setAttribute('id', 'oipfDrm');
+      this.OIPFDrmObject.style.display = 'none';
+      document.head.appendChild(this.OIPFDrmObject);
+    }
+    this.OIPFDrmObject.onDRMMessageResult = (msgId, resultMsg, resultCode) => {
+      Logger.addLog('Player', 'info', 'msgId', msgId);
+      Logger.addLog('Player', 'info', 'resultMsg', resultMsg);
+      Logger.addLog('Player', 'info', 'resultCode', resultCode);
+      const resultCodeMessages = [
+        'DRM Initialized Successfuly',
+        'Unknown Error',
+        'Cannot Process Result',
+        'Unknown MIME Type',
+        'User Consent Required',
+        'Unknown DRM system',
+        'Wrong format'
+      ];
+      if (!resultCodeMessages[resultCode]) return;
+      Logger.addLog('Player', 'warn', resultCodeMessages[resultCode], resultMsg);
     };
   }
 
@@ -875,7 +1280,22 @@ class Player {
    * @method seekToTime
    */
   seekToTime(value) {
-    this.videoElement.currentTime = value;
+    try {
+      const { tizen, webapis } = window;
+      if (tizen && webapis) {
+        const state = webapis.avplay.getState();
+        if (state !== 'IDLE' && state !== 'NONE') {
+          webapis.avplay.seekTo(value * 1000);
+        }
+      } else if (this.videoElement) {
+        this.videoElement.currentTime = value;
+      } else if (this.objectPlayer && this.objectPlayer.playState !== 6) {
+        this.objectPlayer.seek(value * 1000);
+      }
+      Logger.addLog('Player', 'warn', 'Seek to time', value);
+    } catch (error) {
+      Logger.addLog('Player', 'error', 'dont overload, wait buffer completed', error.message);
+    }
   }
 
   /**

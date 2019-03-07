@@ -6,7 +6,7 @@ import Config from '../statics/config';
 import Network from '../service/network/network';
 import Storage from '../service/storage';
 import Keyboard from '../service/keyboard/index';
-import GAnalytics from '../service/ganalytics'
+import GAnalytics from '../service/ganalytics';
 
 class Device {
   /**
@@ -34,7 +34,7 @@ class Device {
    * @return {Object} It returns Events class
    */
   initEvents() {
-    Logger.addLog('Device', 'progress', 'Events Class Initialization Started');
+    Logger.addLog('Device', 'info', 'Events Class Initialization Started');
     this.Events = new Events(Logger);
     return this.Events;
   }
@@ -49,7 +49,7 @@ class Device {
    * @return {Object} It returns Events class
    */
   initPlayerClass() {
-    Logger.addLog('Device', 'progress', 'Player Class Initialization Started');
+    Logger.addLog('Device', 'info', 'Player Class Initialization Started');
     this.Player = new Player(this.currentDevice, this.Events, this.Config);
     return this.Player;
   }

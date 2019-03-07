@@ -15,10 +15,11 @@ class DeviceVestel extends Device {
     this.initEvents();
     this.initPlayerClass();
     this.initNetworkClass();
+    this.initKeyListener()
     Logger.addLog('Device_Vestel', 'info', 'Vestel Device Initialized');
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
-    window['isDebugEnabled'] = this.Config.debug;
+    window.isDebugEnabled = this.Config.debug;
 
   }
 
@@ -34,18 +35,19 @@ class DeviceVestel extends Device {
     if (this.videoElement) {
       this.deleteVideoElement();
     }
-    console.log(this.Config);
+    this.createOIPFDrmAgent();
     this.videoElement = document.createElement('video');
     this.videoElement.style.position = 'absolute';
     this.videoElement.setAttribute('width', this.Config.width);
     this.videoElement.setAttribute('height', this.Config.height);
     this.videoElement.setAttribute('data', '');
+    this.videoElement.setAttribute('id', this.Config.videoPlayerId);
     this.videoElement.setAttribute('class', 'player');
+    this.videoElement.style.visibility = 'hidden';
     document.body.appendChild(this.videoElement);
-    this.setPlayerInfo('OIPF');
+    this.setPlayerInfo('playready', 'OIPF');
     this.registerVideoEvents();
-    Logger.addLog('Player', 'info', 'Player Element Created and Registered Video Events');
-    return null;
+    Logger.addLog('Device_Vestel', 'info', 'Player Element Created and Registered Video Events');;
   }
 }
 

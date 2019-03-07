@@ -22,18 +22,15 @@ class Audio {
    * @return {Boolean}
    */
   changeAudioWithOrder(order) {
-    const _this = this;
-    const audioTracks = _this.videoElement.audioTracks;
-    if (typeof audioTracks !== 'undefined' && audioTracks.length > 0) {
-      for (let i = 0; i < audioTracks.length; i += 1) {
-        if (order === i) {
-          audioTracks[i].enabled = true;
-          _this.Events.triggerEvent('player_currentAudio', [i]);
-        } else {
-          audioTracks[i].enabled = false;
-        }
+    const audioTracks = this.videoElement.audioTracks;
+    if (!audioTracks || !audioTracks.length) return false;
+    for (let i = 0; i < audioTracks.length; i += 1) {
+      if (order === i) {
+        audioTracks[i].enabled = true;
+        this.Events.triggerEvent('player_currentAudio', [i]);
+      } else {
+        audioTracks[i].enabled = false;
       }
-      return true;
     }
   }
 
@@ -48,18 +45,17 @@ class Audio {
    *
    */
   getCurrentAudioWithOrder() {
-    const _this = this;
-    const audioTracks = _this.videoElement.audioTracks;
+    const audioTracks = this.videoElement.audioTracks;
     if (typeof audioTracks !== 'undefined' && audioTracks.length > 0) {
       for (let i = 0; i < audioTracks.length; i += 1) {
         if (audioTracks[i].enabled) {
-          _this.Events.triggerEvent('player_currentAudio', [i]);
-          _this.videoElement.currentAudioElement = audioTracks[i];
+          this.Events.triggerEvent('player_currentAudio', [i]);
+          this.videoElement.currentAudioElement = audioTracks[i];
           return i;
         }
       }
     } else {
-      return Logger.addLog('Audio', 'info', 'There is no multiple audio content');
+      Logger.addLog('Audio', 'info', 'There is no multiple audio content');
     }
   }
 

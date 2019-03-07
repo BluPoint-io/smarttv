@@ -18,7 +18,7 @@ class Logger {
    * @for Logger
    */
   static addLog(from, type, message, variable) {
-    if(!window['isDebugEnabled']) return false;
+    if (!window.isDebugEnabled) return false;
     switch (type) {
       case 'create':
         console.log(`[${from}] %c -> { ${type} } \n\n ${message}${variable ? ' => ' : ''}`, 'color: #009b1c;', (variable || ''));
@@ -26,7 +26,7 @@ class Logger {
       case 'info':
         console.log(`[${from}] %c -> { ${type} } \n\n ${message}${variable ? ' => ' : ''}`, 'color: orange;', (variable || ''));
         break;
-      case 'progress':
+      case 'warn':
         console.log(`[${from}] %c -> { ${type} } \n\n ${message}${variable ? ' => ' : ''}`, 'color: #008adb;', (variable || ''));
         break;
       case 'error':
