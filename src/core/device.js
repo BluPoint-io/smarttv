@@ -15,13 +15,13 @@ class Device {
    * @class Device
    * @constructor
    */
-  constructor() {
+  constructor(config = {}) {
     this.userAgent = navigator.userAgent;
     this.currentDevice = Recognizer.setCurrentDevice();
     this.Player = 'Player is ready to attach';
     this.Events = 'Events mechanism ready to start';
     this.Network = 'Network is not initialized yet';
-    this.Config = Config;
+    this.Config = { ...Config, ...config };
     this.Storage = Storage;
     this.GAnalytics = new GAnalytics();
   }

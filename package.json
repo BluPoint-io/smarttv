@@ -1,6 +1,6 @@
 {
   "name": "smarttv-framework",
-  "version": "0.5.1",
+  "version": "0.6.0-alpha",
   "description": "SmartTV Framework",
   "main": "dist/smarttv-framework.js",
   "author": {
