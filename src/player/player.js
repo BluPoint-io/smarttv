@@ -849,10 +849,10 @@ class Player {
         const interval = setInterval(() => {
           if (webapis.avplay.getState() === 'READY') {
             webapis.avplay.play();
+            Logger.addLog('Player', 'info', 'Video is playing...');
             clearInterval(interval);
           }
         }, 750);
-        Logger.addLog('Player', 'info', 'Video is playing...');
       } else if (this.videoElement) {
         this.videoElement.play();
       } else if (this.objectPlayer) {
