@@ -948,19 +948,6 @@ class Player {
           this.Subtitle.target.innerText = '';
           this.Subtitle.setCurrentSubtitle();
         }
-        const avplayState = webapis.avplay.getState();
-        if (
-          avplayState !== 'IDLE' &&
-          avplayState !== 'NONE' &&
-          avplayState === 'READY' &&
-          (this.autoLoop === true ||
-            this.playerInfo.currentState === 'Play' ||
-            this.playerInfo.currentState === 'Playing')
-        ) {
-          this.playerInfo.currentState = 'Play';
-          webapis.avplay.play();
-          Logger.addLog('Player', 'info', 'buffer completed, video play');
-        }
       },
       onstreamcompleted: () => {
         Logger.addLog('Player', 'info', 'Stream Completed autoLoop', this.autoLoop);
