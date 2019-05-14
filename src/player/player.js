@@ -846,7 +846,12 @@ class Player {
     const { tizen, webapis } = window;
     try {
       if (tizen && webapis) {
-        webapis.avplay.play();
+        const interval = setInterval(() => {
+          if (webapis.avplay.getState() === 'READY') {
+            webapis.avplay.play();
+            clearInterval(interval);
+          }
+        }, 750);
         Logger.addLog('Player', 'info', 'Video is playing...');
       } else if (this.videoElement) {
         this.videoElement.play();
