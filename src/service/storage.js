@@ -16,8 +16,18 @@ export default class Storage {
    * @returns {Object/String/Number} value
    */
   static get(name) {
-    const value = window.localStorage && window.localStorage.getItem(name);
-    return value && JSON.parse(value);
+    let value = 0;
+    if (window.localStorage) {
+      value = window.localStorage.getItem(name);
+      if (typeof value !== 'undefined') {
+        try {
+          return JSON.parse(value);
+        } catch (e) {
+          return value;
+        }
+      }
+    }
+    return false;
   }
 
   /**
