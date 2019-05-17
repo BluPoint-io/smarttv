@@ -7,6 +7,7 @@ import Network from '../service/network/network';
 import Storage from '../service/storage';
 import Keyboard from '../service/keyboard/index';
 import GAnalytics from '../service/ganalytics';
+import Mux from '../service/mux';
 
 class Device {
   /**
@@ -24,6 +25,7 @@ class Device {
     this.Config = { ...Config, ...config };
     this.Storage = Storage;
     this.GAnalytics = new GAnalytics();
+    this.Mux = new Mux(this.Config);
   }
 
   /**
