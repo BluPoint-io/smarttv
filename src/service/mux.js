@@ -6,13 +6,14 @@ import mux from 'mux-embed';
 export default class Mux {
   constructor(configClass) {
     this.Config = configClass;
-    this.mux = this.Config.mux || null;
+    this.mux = this.Config.mux || {};
     this.setMux();
   }
 
   setMux() {
     if (!this.mux.active) return;
-    mux.init(this.Config.mux.playerId, this.Config.mux.options);
+    window.mux = mux;
+    window.mux.init(this.Config.mux.playerId, this.Config.mux.options);
   }
 
   send(type, data = null) {
