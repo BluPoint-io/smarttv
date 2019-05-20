@@ -1,5 +1,6 @@
 import Device from '../device';
 import Logger from '../../service/logger';
+import Mux from "../../service/mux";
 
 class DeviceArcelik extends Device {
   /**
@@ -18,6 +19,7 @@ class DeviceArcelik extends Device {
     Logger.addLog('Device_Arcelik', 'info', 'Arcelik Device Initialized');
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
+    this.Mux = new Mux(this.Config);
     window.isDebugEnabled = this.Config.debug;
   }
 

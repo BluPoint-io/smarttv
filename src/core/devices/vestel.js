@@ -1,5 +1,6 @@
 import Device from '../device';
 import Logger from '../../service/logger';
+import Mux from "../../service/mux";
 
 class DeviceVestel extends Device {
 
@@ -15,10 +16,11 @@ class DeviceVestel extends Device {
     this.initEvents();
     this.initPlayerClass();
     this.initNetworkClass();
-    this.initKeyListener()
+    this.initKeyListener();
     Logger.addLog('Device_Vestel', 'info', 'Vestel Device Initialized');
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
+    this.Mux = new Mux(this.Config);
     window.isDebugEnabled = this.Config.debug;
 
   }

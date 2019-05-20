@@ -1,5 +1,6 @@
 import Device from '../device';
 import Logger from '../../service/logger';
+import Mux from "../../service/mux";
 
 class DeviceLG extends Device {
   /**
@@ -11,6 +12,7 @@ class DeviceLG extends Device {
    */
   constructor() {
     super();
+    this.Mux = new Mux(this.Config);
     Logger.addLog('Device_LG', 'info', 'LG NetCast device is in progress');
   }
 }

@@ -1,5 +1,6 @@
 import Device from '../device';
 import Logger from '../../service/logger';
+import Mux from "../../service/mux";
 
 class DeviceSamsung extends Device {
 
@@ -12,6 +13,7 @@ class DeviceSamsung extends Device {
    */
   constructor() {
     super();
+    this.Mux = new Mux(this.Config);
     Logger.addLog('Device_Samsung', 'info', 'Samsung device is in progress');
 
   }

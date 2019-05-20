@@ -1,5 +1,6 @@
 import Device from '../device';
 import Logger from '../../service/logger';
+import Mux from "../../service/mux";
 
 class DeviceTizen extends Device {
   /**
@@ -18,6 +19,7 @@ class DeviceTizen extends Device {
     this.initKeyListener();
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
+    this.Mux = new Mux(this.Config);
     window.isDebugEnabled = this.Config.debug;
     this.addTizenLib();
   }

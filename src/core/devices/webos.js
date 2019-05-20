@@ -1,5 +1,6 @@
 import Device from '../device';
 import Logger from '../../service/logger';
+import Mux from "../../service/mux";
 
 class DeviceWebOs extends Device {
 
@@ -19,6 +20,7 @@ class DeviceWebOs extends Device {
     Logger.addLog('Device_WebOs', 'info', 'WebOs Device Initialized');
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
+    this.Mux = new Mux(this.Config);
     window.isDebugEnabled = this.Config.debug;
     this.constructor.addWebOSLib();
   }
