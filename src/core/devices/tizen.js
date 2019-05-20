@@ -1,6 +1,6 @@
 import Device from '../device';
 import Logger from '../../service/logger';
-import Mux from "../../service/mux";
+import Mux from '../../service/mux';
 
 class DeviceTizen extends Device {
   /**
