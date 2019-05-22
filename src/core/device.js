@@ -65,8 +65,6 @@ class Device {
     this.Keyboard = new Keyboard(this.Events, this.currentDevice);
   }
 
-  setMuxData() 
-
 }
 
 export default Device;

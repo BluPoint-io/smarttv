@@ -61,29 +61,30 @@ class Player {
     });
   }
 
-  generateMuxData() {
-    return {
-      debug: false,
-      env_key: this.Config.mux.env_key,
-      property_key: this.Config.mux.property_key,
-      player_software_name: this.Config.mux.player_software_name,
-      sub_property_id: this.Config.mux.sub_property_id,
-      player_name: `${this.Config.mux.sub_property_id}-player`,
-      player_init_time: window.muxPlayerInitTime,
-      video_id: this.CurrentWatchData.Media.Id,
-      video_title: this.CurrentWatchData.SelfPath,
-      video_series: this.CurrentWatchData.Url,
-      video_content_type: this.CurrentWatchData.ContentType == 'MovieContainer' ? 'movie' : this.CurrentWatchData.ContentType.toLowerCase(),
-      video_stream_type: this.CurrentWatchData.ContentType == 'Live' ? 'live' : 'on-demand',
-      video_source_duration:
-        !this.playInfo.duration || this.playInfo.duration == 0
-          ? this.CurrentWatchData.Duration
-          : this.playInfo.duration,
-      video_source_height: this.videoElement.clientHeight,
-      player_height: this.videoElement.clientHeight,
-      video_source_width: this.videoElement.clientWidth,
-      player_width: this.videoElement.clientWidth
-    };
+  generateMuxData(config) {
+    console.error(config);
+    // return {
+    //   debug: false,
+    //   env_key: this.Config.mux.env_key,
+    //   property_key: this.Config.mux.property_key,
+    //   player_software_name: this.Config.mux.player_software_name,
+    //   sub_property_id: this.Config.mux.sub_property_id,
+    //   player_name: `${this.Config.mux.sub_property_id}-player`,
+    //   player_init_time: window.muxPlayerInitTime,
+    //   video_id: this.CurrentWatchData.Media.Id,
+    //   video_title: this.CurrentWatchData.SelfPath,
+    //   video_series: this.CurrentWatchData.Url,
+    //   video_content_type: this.CurrentWatchData.ContentType == 'MovieContainer' ? 'movie' : this.CurrentWatchData.ContentType.toLowerCase(),
+    //   video_stream_type: this.CurrentWatchData.ContentType == 'Live' ? 'live' : 'on-demand',
+    //   video_source_duration:
+    //     !this.playInfo.duration || this.playInfo.duration == 0
+    //       ? this.CurrentWatchData.Duration
+    //       : this.playInfo.duration,
+    //   video_source_height: this.videoElement.clientHeight,
+    //   player_height: this.videoElement.clientHeight,
+    //   video_source_width: this.videoElement.clientWidth,
+    //   player_width: this.videoElement.clientWidth
+    // };
   }
 
   /**

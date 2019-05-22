@@ -23,6 +23,10 @@ class DeviceWeb extends Device {
     window.isDebugEnabled = this.Config.debug;
   }
 
+  setMuxData(config) {
+    this.Player.generateMuxData(config);
+  }
+
   /**
    * Abstract Player createVideoElement function.
    *
