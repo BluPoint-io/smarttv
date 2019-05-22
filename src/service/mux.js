@@ -4,7 +4,7 @@
 import mux from 'mux-embed';
 
 export default class Mux {
-  constructor(configClass) {
+  init(configClass) {
     this.Config = configClass;
     this.mux = this.Config.mux || null;
   }
