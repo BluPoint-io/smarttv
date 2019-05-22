@@ -2,7 +2,7 @@ import Audio from './audio';
 import Subtitle from './subtitle';
 import Logger from '../service/logger';
 import Vast from '../service/vast';
-import Mux from '../service/mux';
+import Device from '../core/device';
 
 function tizenSetScreenSaver(open = true) {
   const { tizen, webapis } = window;
@@ -20,7 +20,7 @@ function tizenSetScreenSaver(open = true) {
   }
 }
 
-class Player {
+class Player  {
 
   /**
    * This is for Player operations. It depends to Device. Some methods are abstracted by Devices
@@ -44,7 +44,7 @@ class Player {
     this.muxOptions.data = muxData;
     this.muxOptions.getStateData = this.generateMuxStateData();
     this.muxOptions.getPlayheadTime = () => this.videoElement.currentTime * 1000;
-    Mux.setMux(this.muxOptions);
+    this.Mux.setMux(this.muxOptions);
   }
 
   generateMuxStateData() {
@@ -339,7 +339,7 @@ class Player {
         this.objectPlayer.setAttribute('data', '');
         this.objectPlayer.style.visibility = 'hidden';
       }
-      Mux.send('viewend');
+      this.Mux.send('viewend');
     } catch (error) {
       Logger.addLog('Player', 'error', 'Delete video source error', error.message);
     }
@@ -1141,7 +1141,7 @@ class Player {
     this.videoElement.addEventListener('canplay', () => {
       this.playerInfo.canPlay = true;
       this.Events.triggerEvent('player_onCanPlay');
-      Mux.send('playerready');
+      this.Mux.send('playerready');
     });
     this.videoElement.addEventListener('canplaythrough', () => {
       this.playerInfo.canPlayThrough = true;
@@ -1157,12 +1157,12 @@ class Player {
       if (this.autoLoop) {
         this.playWithLoop();
       }
-      Mux.send('ended');
+      this.Mux.send('ended');
     });
     this.videoElement.addEventListener('loadeddata', () => {
       this.Events.triggerEvent('player_onDataLoaded', ['Data Loaded']);
       this.playerInfo.dataLoaded = true;
-      Mux.send('viewinit');
+      this.Mux.send('viewinit');
     });
     this.videoElement.addEventListener('loadedmetadata', () => {
       this.Events.triggerEvent('player_onMetaDataLoaded', ['Meta Data Loaded']);
@@ -1198,7 +1198,7 @@ class Player {
       }
       this.Events.triggerEvent('player_onError', [errorMessage]);
       this.playerInfo.currentState = 'Error';
-      Mux.send('error');
+      this.Mux.send('error');
     });
     this.videoElement.addEventListener('waiting', () => {
       this.Events.triggerEvent('player_onWaiting');
@@ -1210,7 +1210,7 @@ class Player {
     });
     this.videoElement.addEventListener('timeupdate', () => {
       this.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(this.videoElement.currentTime)]);
-      Mux.send('timeupdate', {
+      this.Mux.send('timeupdate', {
         player_playhead_time: Math.trunc(this.videoElement.currentTime)
       });
       if (this.playerInfo.adsEnabled) {
@@ -1220,7 +1220,7 @@ class Player {
     this.videoElement.addEventListener('seeking', () => {
       this.Events.triggerEvent('player_onSeeking', ['Seek In Progress']);
       this.playerInfo.isSeeking = true;
-      Mux.send('seeking');
+      this.Mux.send('seeking');
     });
     this.videoElement.addEventListener('seeked', () => {
       this.Events.triggerEvent('player_onSeeked', ['Seek Completed']);
@@ -1229,7 +1229,7 @@ class Player {
         this.Subtitle.target.innerText = '';
         this.Subtitle.setCurrentSubtitle();
       }
-      Mux.send('seeked');
+      this.Mux.send('seeked');
     });
     this.videoElement.addEventListener('ratechange', () => {
       this.Events.triggerEvent('player_onRateChange', [this.videoElement.playbackRate]);
@@ -1241,17 +1241,17 @@ class Player {
     this.videoElement.addEventListener('playing', () => {
       this.Events.triggerEvent('player_onPlaying', ['Playing']);
       this.playerInfo.currentState = 'Playing';
-      Mux.send('playing');
+      this.Mux.send('playing');
     });
     this.videoElement.addEventListener('play', () => {
       this.Events.triggerEvent('player_onPlay', ['Play']);
       this.playerInfo.currentState = 'Play';
-      Mux.send('play');
+      this.Mux.send('play');
     });
     this.videoElement.addEventListener('pause', () => {
       this.Events.triggerEvent('player_onPause', ['Pause']);
       this.playerInfo.currentState = 'Paused';
-      Mux.send('pause');
+      this.Mux.send('pause');
     });
     this.videoElement.addEventListener('loadstart', () => {
       this.Events.triggerEvent('player_onLoadStart', ['Load Started']);

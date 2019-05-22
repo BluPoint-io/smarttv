@@ -22,10 +22,10 @@ class Device {
     this.Player = 'Player is ready to attach';
     this.Events = 'Events mechanism ready to start';
     this.Network = 'Network is not initialized yet';
+    this.Mux = 'mux is not initialized yet';
     this.Config = { ...Config, ...config };
     this.Storage = Storage;
     this.GAnalytics = new GAnalytics();
-    this.Mux = new Mux(this.Config);
   }
 
   /**
@@ -63,6 +63,10 @@ class Device {
 
   initKeyListener() {
     this.Keyboard = new Keyboard(this.Events, this.currentDevice);
+  }
+
+  initMux() {
+    this.Mux = new Mux(this.Config);
   }
 
 }

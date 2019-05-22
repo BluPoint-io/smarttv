@@ -16,10 +16,10 @@ class DeviceWeb extends Device {
     this.initPlayerClass();
     this.initNetworkClass();
     this.initKeyListener();
+    this.initMux();
     Logger.addLog('Device_Web', 'info', 'Web Device Initialized');
     this.Player.createVideoElement = this.createVideoElement;
     this.Config = Object.assign(this.Config, config); // Merges default config with user config
-    this.Mux = new Mux(this.Config);
     window.isDebugEnabled = this.Config.debug;
   }
 
