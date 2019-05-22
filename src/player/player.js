@@ -37,11 +37,14 @@ class Player {
     this.Events = events;
     Logger.addLog('Player', 'create', 'Player Class Initialized');
     this.Config = config;
-    const options = {};
-    // options.data = this.generateMuxData();
-    options.getStateData = this.generateMuxStateData();
-    options.getPlayheadTime = () => this.videoElement.currentTime * 1000;
-    Mux.setMux(options);
+    this.muxOptions = {};
+  }
+
+  setMux(muxData) {
+    this.muxOptions.data = muxData;
+    this.muxOptions.getStateData = this.generateMuxStateData();
+    this.muxOptions.getPlayheadTime = () => this.videoElement.currentTime * 1000;
+    Mux.setMux(this.muxOptions);
   }
 
   generateMuxStateData() {
@@ -59,32 +62,6 @@ class Player {
       player_preload_on: this.videoElement.preload, // Return true if the player is preloading data (metadata, on, auto are all "true")
       video_source_url: this.videoElement.src // Return the playback URL (i.e. URL to master manifest or MP4 file)
     });
-  }
-
-  generateMuxData(config) {
-    console.error(config);
-    // return {
-    //   debug: false,
-    //   env_key: this.Config.mux.env_key,
-    //   property_key: this.Config.mux.property_key,
-    //   player_software_name: this.Config.mux.player_software_name,
-    //   sub_property_id: this.Config.mux.sub_property_id,
-    //   player_name: `${this.Config.mux.sub_property_id}-player`,
-    //   player_init_time: window.muxPlayerInitTime,
-    //   video_id: this.CurrentWatchData.Media.Id,
-    //   video_title: this.CurrentWatchData.SelfPath,
-    //   video_series: this.CurrentWatchData.Url,
-    //   video_content_type: this.CurrentWatchData.ContentType == 'MovieContainer' ? 'movie' : this.CurrentWatchData.ContentType.toLowerCase(),
-    //   video_stream_type: this.CurrentWatchData.ContentType == 'Live' ? 'live' : 'on-demand',
-    //   video_source_duration:
-    //     !this.playInfo.duration || this.playInfo.duration == 0
-    //       ? this.CurrentWatchData.Duration
-    //       : this.playInfo.duration,
-    //   video_source_height: this.videoElement.clientHeight,
-    //   player_height: this.videoElement.clientHeight,
-    //   video_source_width: this.videoElement.clientWidth,
-    //   player_width: this.videoElement.clientWidth
-    // };
   }
 
   /**
