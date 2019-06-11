@@ -32,11 +32,11 @@
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-mocha": "^4.12.1",
     "eslint-plugin-react": "^6.9.0",
-    "grunt": "^1.0.3",
+    "grunt": "^1.0.4",
     "grunt-sonar-runner": "^2.4.8",
     "isparta": "^4.1.1",
     "isparta-loader": "^2.0.0",
-    "jsdoc": "^3.4.3",
+    "jsdoc": "^3.6.2",
     "karma": "^4.0.1",
     "karma-babel-preprocessor": "^8.0.0",
     "karma-coverage": "^1.1.2",
@@ -45,14 +45,14 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-spec-reporter": "^0.0.32",
     "karma-webpack": "^3.0.5",
-    "mocha": "^6.0.2",
+    "mocha": "^6.1.4",
     "phantomjs-prebuilt": "^2.1.3",
     "webpack": "1.13.2",
     "webpack-merge": "^0.14.1",
     "yargs": "6.0.0"
   },
   "dependencies": {
-    "axios": "0.17.0",
+    "axios": "^0.19.0",
     "smarttv-device-recognizer": "^1.1.0",
     "smarttv-ui-controller": "0.0.24"
   }
