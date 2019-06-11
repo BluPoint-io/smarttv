@@ -846,8 +846,13 @@ class Player {
     const { tizen, webapis } = window;
     try {
       if (tizen && webapis) {
-        webapis.avplay.play();
-        Logger.addLog('Player', 'info', 'Video is playing...');
+        const interval = setInterval(() => {
+          if (webapis.avplay.getState() === 'READY') {
+            webapis.avplay.play();
+            Logger.addLog('Player', 'info', 'Video is playing...');
+            clearInterval(interval);
+          }
+        }, 750);
       } else if (this.videoElement) {
         this.videoElement.play();
       } else if (this.objectPlayer) {
@@ -947,19 +952,6 @@ class Player {
         if (this.playerInfo.subtitleEnabled) {
           this.Subtitle.target.innerText = '';
           this.Subtitle.setCurrentSubtitle();
-        }
-        const avplayState = webapis.avplay.getState();
-        if (
-          avplayState !== 'IDLE' &&
-          avplayState !== 'NONE' &&
-          avplayState === 'READY' &&
-          (this.autoLoop === true ||
-            this.playerInfo.currentState === 'Play' ||
-            this.playerInfo.currentState === 'Playing')
-        ) {
-          this.playerInfo.currentState = 'Play';
-          webapis.avplay.play();
-          Logger.addLog('Player', 'info', 'buffer completed, video play');
         }
       },
       onstreamcompleted: () => {

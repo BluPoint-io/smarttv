@@ -23,9 +23,9 @@ class DeviceTizen extends Device {
   }
 
   addTizenLib() {
-    this.scriptfile = document.createElement('script');
-    this.scriptfile.src = '$WEBAPIS/webapis/webapis.js';
-    document.head.appendChild(this.scriptfile);
+    const scriptfile = document.createElement('script');
+    scriptfile.src = '$WEBAPIS/webapis/webapis.js';
+    document.head.appendChild(scriptfile);
     Logger.addLog('Device_Tizen', 'info', 'Tizen Library loaded successfully');
   }
 
