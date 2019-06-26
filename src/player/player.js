@@ -846,13 +846,17 @@ class Player {
     const { tizen, webapis } = window;
     try {
       if (tizen && webapis) {
+        let tryCount = 0;
         const interval = setInterval(() => {
-          if (webapis.avplay.getState() === 'READY') {
+          tryCount += 1;
+          const playerState = webapis.avplay.getState();
+          if (['READY', 'PAUSED', 'PLAYING'].includes(playerState)) {
             webapis.avplay.play();
             Logger.addLog('Player', 'info', 'Video is playing...');
             clearInterval(interval);
           }
-        }, 750);
+          if (tryCount > 5) clearInterval(interval);
+        }, 500);
       } else if (this.videoElement) {
         this.videoElement.play();
       } else if (this.objectPlayer) {
