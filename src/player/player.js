@@ -850,7 +850,7 @@ class Player {
         const interval = setInterval(() => {
           tryCount += 1;
           const playerState = webapis.avplay.getState();
-          if (['READY', 'PAUSED', 'PLAYING'].includes(playerState)) {
+          if (['READY', 'PAUSED', 'PLAYING'].indexOf(playerState) > -1) {
             webapis.avplay.play();
             Logger.addLog('Player', 'info', 'Video is playing...');
             clearInterval(interval);
