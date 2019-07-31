@@ -856,8 +856,6 @@ class Player {
       } else if (this.objectPlayer) {
         this.objectPlayer.play(1);
       }
-      this.Events.triggerEvent('player_onPlay', ['Play']);
-      this.playerInfo.currentState = 'Play';
     } catch (error) {
       Logger.addLog('Player', 'error', 'Player not ready', error.message);
     }
@@ -973,8 +971,10 @@ class Player {
         const state = webapis.avplay.getState();
         switch (state) {
           case 'PLAYING':
-            this.Events.triggerEvent('player_onPlay', ['Play']);
-            this.playerInfo.currentState = 'Play';
+            if (this.playerInfo.currentState !== 'Play') {
+              this.Events.triggerEvent('player_onPlay', ['Play']);
+              this.playerInfo.currentState = 'Play';
+            }
             break;
 
           case 'PAUSED':
