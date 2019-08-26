@@ -1,6 +1,6 @@
 {
   "name": "smarttv-framework",
-  "version": "0.6.7",
+  "version": "0.6.8",
   "description": "SmartTV Framework",
   "main": "dist/smarttv-framework.js",
   "author": {
@@ -53,7 +53,7 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
-    "smarttv-device-recognizer": "^1.1.0",
+    "smarttv-device-recognizer": "^1.2.0",
     "smarttv-ui-controller": "0.0.24"
   }
 }
