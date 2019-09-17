@@ -967,7 +967,6 @@ class Player {
         tizenSetScreenSaver(true);
       },
       oncurrentplaytime: (currentTime) => {
-        this.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(currentTime)]);
         const state = webapis.avplay.getState();
         switch (state) {
           case 'PLAYING':
@@ -995,6 +994,7 @@ class Player {
           default:
             break;
         }
+        this.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(currentTime)]);
       },
       onerror: (eventType) => {
         Logger.addLog('Player', 'error', 'event type error', eventType);
