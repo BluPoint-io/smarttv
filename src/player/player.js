@@ -137,7 +137,7 @@ class Player {
    * @method addVideoSource
    *
    */
-  addVideoSource(src, contentType, customData, drm) {
+  addVideoSource(src, contentType, customData, drm, isLive = false) {
     const { webapis, tizen } = window;
     this.autoLoop = false;
     this.playerInfo.customData = customData;
@@ -228,6 +228,9 @@ class Player {
       this.videoElement.style.visibility = 'visible';
       webapis.avplay.close();
       webapis.avplay.open(this.playerInfo.src);
+      if (isLive) {
+        webapis.avplay.setStreamingProperty('ADAPTIVE_INFO', this.Config.adaptiveInfo);
+      }
       webapis.avplay.prepareAsync(() => {
         tizen.systeminfo.getPropertyValue('DISPLAY', (result) => {
           webapis.avplay.setDisplayRect(0, 0, result.resolutionWidth, result.resolutionHeight);
