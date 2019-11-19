@@ -20,7 +20,8 @@ const Config = {
       licenserUrl: ''
     }
   },
-  appId: ''
+  appId: '',
+  adaptiveInfo: 'BITRATES=1224000~2756000|STARTBITRATE=LOWEST|SKIPBITRATE=LOWEST'
 };
 
 export default Config;
