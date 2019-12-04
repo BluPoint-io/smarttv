@@ -884,13 +884,17 @@ class Player {
    * @method pause
    */
   pause() {
-    const { tizen, webapis } = window;
-    if (tizen && webapis) {
-      webapis.avplay.pause();
-    } else if (this.videoElement) {
-      this.videoElement.pause();
-    } else if (this.objectPlayer) {
-      this.objectPlayer.play(0);
+    try {
+      const { tizen, webapis } = window;
+      if (tizen && webapis) {
+        webapis.avplay.pause();
+      } else if (this.videoElement) {
+        this.videoElement.pause();
+      } else if (this.objectPlayer) {
+        this.objectPlayer.play(0);
+      }
+    } catch (e) {
+      Logger.addLog('Player', 'error', 'Pause', e);
     }
     this.Events.triggerEvent('player_onPause', ['Pause']);
     this.playerInfo.currentState = 'Paused';
