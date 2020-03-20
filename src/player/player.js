@@ -1089,9 +1089,13 @@ class Player {
           break;
         case 6: {
           const objectPlayerErrors = [
-            'A/V format not supported',
-            'cannot connect to server or lost connection',
-            'unidentified error'
+            'FormatNotSupported',
+            'RemoteConnectionError',
+            'UnknownError',
+            'UnsufficientResources',
+            'InvalidContent',
+            'ContentNotAvailable',
+            'ContentNotAvailableAtGivenPosition'
           ];
           this.Events.triggerEvent('player_onError', [objectPlayerErrors[this.objectPlayer.error]]);
           this.playerInfo.currentState = 'Error';
