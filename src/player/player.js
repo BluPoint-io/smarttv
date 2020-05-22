@@ -199,7 +199,10 @@ class Player {
 
           webapis.avplay.prepareAsync(() => {
             tizen.systeminfo.getPropertyValue('DISPLAY', (result) => {
-              webapis.avplay.setDisplayRect(0, 0, result.resolutionWidth, result.resolutionHeight);
+              const playerState = webapis.avplay.getState();
+              if (playerState !== 'NONE') {
+                webapis.avplay.setDisplayRect(0, 0, result.resolutionWidth, result.resolutionHeight);
+              }
               if (webapis.productinfo.isUdPanelSupported()) {
                 Logger.addLog('Player', 'info', '4K UHD is supported');
                 this.playerInfo.uhd = true;
@@ -233,7 +236,10 @@ class Player {
       }
       webapis.avplay.prepareAsync(() => {
         tizen.systeminfo.getPropertyValue('DISPLAY', (result) => {
-          webapis.avplay.setDisplayRect(0, 0, result.resolutionWidth, result.resolutionHeight);
+          const playerState = webapis.avplay.getState();
+          if (playerState !== 'NONE') {
+            webapis.avplay.setDisplayRect(0, 0, result.resolutionWidth, result.resolutionHeight);
+          }
           if (webapis.productinfo.isUdPanelSupported()) {
             Logger.addLog('Player', 'info', '4K UHD is supported');
             this.playerInfo.uhd = true;
@@ -887,7 +893,10 @@ class Player {
     try {
       const { tizen, webapis } = window;
       if (tizen && webapis) {
-        webapis.avplay.pause();
+        const playerState = webapis.avplay.getState();
+        if (['PLAYING', 'PAUSED'].indexOf(playerState) > -1) {
+          webapis.avplay.pause();
+        }
       } else if (this.videoElement) {
         this.videoElement.pause();
       } else if (this.objectPlayer) {
@@ -910,7 +919,7 @@ class Player {
     const { tizen, webapis } = window;
     let pausedState;
     if (tizen && webapis) {
-      pausedState = webapis.avplay.getState() !== 'PLAYING';
+      pausedState = webapis.avplay.getState() === 'PAUSED';
     } else if (this.videoElement) {
       pausedState = this.videoElement.paused;
     } else if (this.objectPlayer) {
@@ -961,13 +970,8 @@ class Player {
         Logger.addLog('Player', 'info', 'Stream Completed autoLoop', this.autoLoop);
         this.playerInfo.currentState = 'Finished';
         this.Events.triggerEvent('player_onEnded', ['Video Finished']);
-        const avplayState = webapis.avplay.getState();
-        if (
-          avplayState !== 'IDLE' &&
-          avplayState !== 'NONE' &&
-          (avplayState === 'PLAYING' || avplayState === 'READY') &&
-          this.autoLoop
-        ) {
+        const playerState = webapis.avplay.getState();
+        if (['PLAYING', 'READY'].indexOf(playerState) > -1 &&  this.autoLoop) {
           Logger.addLog('Player', 'info', 'Loop video continue');
           webapis.avplay.seekTo(0);
         }
@@ -1284,8 +1288,8 @@ class Player {
     try {
       const { tizen, webapis } = window;
       if (tizen && webapis) {
-        const state = webapis.avplay.getState();
-        if (state !== 'IDLE' && state !== 'NONE') {
+        const playerState = webapis.avplay.getState();
+        if (['IDLE', 'NONE'].indexOf(playerState) === -1) {
           webapis.avplay.seekTo(value * 1000);
         }
       } else if (this.videoElement) {
