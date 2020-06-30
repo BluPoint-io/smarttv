@@ -25,26 +25,28 @@ class DevicePhilips extends Device {
    * Abstract Player createVideoElement function.
    *
    * @abstract
-   * @for Device_WebOs
+   * @for Device_Philips
    * @method createVideoElement
    * @return {Boolean} true
    */
+
   createVideoElement() {
     if (this.videoElement) {
       this.deleteVideoElement();
     }
+    this.createOIPFDrmAgent();
     this.videoElement = document.createElement('video');
     this.videoElement.style.position = 'absolute';
     this.videoElement.setAttribute('width', this.Config.width);
     this.videoElement.setAttribute('height', this.Config.height);
+    this.videoElement.setAttribute('data', '');
     this.videoElement.setAttribute('id', this.Config.videoPlayerId);
     this.videoElement.setAttribute('class', 'player');
     this.videoElement.style.visibility = 'hidden';
     document.body.appendChild(this.videoElement);
-    this.setPlayerInfo('PLAYREADY', 'PHILIPS');
+    this.setPlayerInfo('playready', 'OIPF');
     this.registerVideoEvents();
-    Logger.addLog('Device_Philips', 'info', 'Player Element Created and Registered Video Events');
-    this.initAudioClass();
+    Logger.addLog('Device_Phillips', 'info', 'Player Element Created and Registered Video Events');;
   }
 }
 
