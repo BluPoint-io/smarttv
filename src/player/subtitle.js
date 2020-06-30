@@ -91,15 +91,16 @@ class Subtitle {
   }
 
   setCurrentSubtitle() {
-    const { tizen, webapis, arSmartTV } = window;
+    const { tizen, webapis } = window;
+    const isVideoElement = !!this.Player.videoElement;
     let ct;
     for (let i = 0; i < this.subs.length; i += 1) {
       if (tizen && webapis) {
         ct = webapis.avplay.getCurrentTime();
-      } else if (arSmartTV) {
-        ct = this.Player.objectPlayer.playPosition;
-      } else {
+      } else if (isVideoElement) {
         ct = this.Player.videoElement.currentTime * 1000;
+      } else {
+        ct = this.Player.objectPlayer.playPosition;
       }
       if (this.subs[i].startTime > Math.trunc(ct)) {
         this.currentSubIndex = i;
@@ -117,14 +118,15 @@ class Subtitle {
     const { subtitleEnabled, currentState } = this.Player.playerInfo;
     if (subtitleEnabled && (currentState === 'Playing' || currentState === 'Play')) {
       if (!this.currentSub) return;
-      const { tizen, webapis, arSmartTV } = window;
+      const { tizen, webapis } = window;
+      const isVideoElement = !!this.Player.videoElement;
       let cts;
       if (tizen && webapis) {
         cts = webapis.avplay.getCurrentTime();
-      } else if (arSmartTV) {
-        cts = this.Player.objectPlayer.playPosition;
-      } else {
+      } else if (isVideoElement) {
         cts = this.Player.videoElement.currentTime * 1000;
+      } else {
+        cts = this.Player.objectPlayer.playPosition;
       }
       if (Math.trunc(cts) > this.currentSub.startTime && Math.trunc(cts) < this.currentSub.endTime) {
         this.target.style.opacity = 1;
