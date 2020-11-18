@@ -956,10 +956,12 @@ class Player {
       onbufferingstart: () => {
         Logger.addLog('Player', 'info', 'Buffering start');
         this.Events.triggerEvent('player_onWaiting');
+        this.Events.triggerEvent('onbufferingstart');
       },
       onbufferingcomplete: () => {
         Logger.addLog('Player', 'info', 'Buffering complete');
         this.Events.triggerEvent('player_onDurationChange', [Math.trunc(webapis.avplay.getDuration())]);
+        this.Events.triggerEvent('onbufferingcomplete');
         this.playerInfo.duration = Math.trunc(webapis.avplay.getDuration() / 1000);
         if (this.playerInfo.subtitleEnabled) {
           this.Subtitle.target.innerText = '';
@@ -970,6 +972,7 @@ class Player {
         Logger.addLog('Player', 'info', 'Stream Completed autoLoop', this.autoLoop);
         this.playerInfo.currentState = 'Finished';
         this.Events.triggerEvent('player_onEnded', ['Video Finished']);
+        this.Events.triggerEvent('onstreamcompleted');
         const playerState = webapis.avplay.getState();
         if (['PLAYING', 'READY'].indexOf(playerState) > -1 &&  this.autoLoop) {
           Logger.addLog('Player', 'info', 'Loop video continue');
@@ -1006,20 +1009,25 @@ class Player {
             break;
         }
         this.Events.triggerEvent('player_onTimeUpdate', [Math.trunc(currentTime)]);
+        this.Events.triggerEvent('oncurrentplaytime');
       },
       onerror: (eventType) => {
         Logger.addLog('Player', 'error', 'event type error', eventType);
         this.Events.triggerEvent('player_onError', [eventType]);
+        this.Events.triggerEvent('onerror', [eventType]);
         this.playerInfo.currentState = 'Error';
       },
       onevent: (eventType, eventData) => {
         Logger.addLog('Player', 'info', 'Event type', eventType);
+        this.Events.triggerEvent('onevent', [eventType]);
       },
       onsubtitlechange: (duration, text) => {
         Logger.addLog('Player', 'info', 'Subittle text', text);
+        this.Events.triggerEvent('onsubtitlechange');
       },
       ondrmevent: (drmEvent, drmData) => {
         Logger.addLog('Player', 'info', `DRM callback: ${drmEvent}`, drmData);
+        this.Events.triggerEvent('ondrmevent');
       }
     };
     webapis.avplay.setListener(listener);
