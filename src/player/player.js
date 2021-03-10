@@ -861,7 +861,7 @@ class Player {
           Logger.addLog('Player', 'info', 'Video is playing...');
         }
       } else if (this.videoElement) {
-        this.videoElement.play();
+        this.playing = this.videoElement.play();
       } else if (this.objectPlayer) {
         this.objectPlayer.play(1);
       }
@@ -898,7 +898,16 @@ class Player {
           webapis.avplay.pause();
         }
       } else if (this.videoElement) {
-        this.videoElement.pause();
+
+        if (!this.playing) {
+          return this.videoElement.pause();
+        }
+
+        this.playing.then(() => {
+          this.videoElement.pause();
+        }).catch(error => {
+          Logger.addLog('Player', 'error', 'Pause', error);
+        });
       } else if (this.objectPlayer) {
         this.objectPlayer.play(0);
       }
