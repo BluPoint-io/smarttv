@@ -55,5 +55,5 @@
     "eslint:test": "eslint -c test/.eslintrc test --ext .js",
     "test": "karma start karma.conf.js --single-run"
   },
-  "version": "0.6.19"
+  "version": "0.6.20"
 }
