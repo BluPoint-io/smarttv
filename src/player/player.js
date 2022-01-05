@@ -153,9 +153,6 @@ class Player {
               <LicenseServerUriOverride>
                 <LA_URL>${this.Config.DRM.playReady.licenserUrl}</LA_URL>
               </LicenseServerUriOverride>
-              <SetCustomData>
-                <CustomData>${this.playerInfo.customData}</CustomData>
-              </SetCustomData>
             </PlayReadyInitiator>`;
 
           const mimeType = this.Config.DRM.playReady.mimeType;
