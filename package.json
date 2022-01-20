@@ -5,7 +5,7 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
-    "smarttv-device-recognizer": "^1.2.3",
+    "smarttv-device-recognizer": "^1.2.5",
     "smarttv-ui-controller": "0.0.24"
   },
   "description": "SmartTV Framework",
@@ -55,5 +55,5 @@
     "eslint:test": "eslint -c test/.eslintrc test --ext .js",
     "test": "karma start karma.conf.js --single-run"
   },
-  "version": "0.6.29"
+  "version": "0.6.30"
 }
